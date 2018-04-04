@@ -244,10 +244,6 @@ class AddStorageVolume(forms.SelfHandlingForm):
         this_stor_uuid = 0
         host_uuid = kwargs['initial']['ihost_uuid']
 
-        ihost = stx_api.sysinv.host_get(self.request, host_uuid)
-        ceph_caching = ((ihost.capabilities.get('pers_subtype') ==
-                         stx_api.sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING))
-
         avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
         disk_tuple_list = []
         for d in avail_disk_list:
@@ -260,9 +256,6 @@ class AddStorageVolume(forms.SelfHandlingForm):
                 continue
             disk_model = d.get_model_num()
             if disk_model is not None and "floppy" in disk_model.lower():
-                continue
-            if (ceph_caching and d.device_type != 'SSD' and
-                    d.device_type != 'NVME'):
                 continue
             disk_tuple_list.append(
                 (d.uuid, "%s (path: %s size:%s model:%s type: %s)" % (
@@ -283,13 +276,8 @@ class AddStorageVolume(forms.SelfHandlingForm):
 
         # Populate available journal choices. If no journal is available,
         # then the journal is collocated.
-        if ceph_caching:
-            avail_journal_list = []
-        else:
-            avail_journal_list = stx_api.sysinv.host_stor_get_by_function(
-                self.request,
-                host_uuid,
-                'journal')
+        avail_journal_list = stx_api.sysinv.host_stor_get_by_function(
+            self.request, host_uuid, 'journal')
 
         journal_tuple_list = []
         if avail_journal_list:
@@ -299,10 +287,6 @@ class AddStorageVolume(forms.SelfHandlingForm):
             journal_tuple_list.append((None, "Collocated with OSD"))
             self.fields['journal_size_mib'].widget.attrs['disabled'] = \
                 'disabled'
-
-        if ceph_caching:
-            self.fields['function'].choices = (
-                AddStorageVolume.FUNCTION_CHOICES[:1])
 
         self.fields['disks'].choices = disk_tuple_list
         self.fields['journal_locations'].choices = journal_tuple_list

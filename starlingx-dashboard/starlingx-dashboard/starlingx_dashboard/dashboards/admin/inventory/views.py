@@ -77,10 +77,7 @@ class UpdateView(workflows.WorkflowView):
                 'bm_type': host.bm_type,
                 'bm_ip': host.bm_ip,
                 'bm_username': host.bm_username,
-                'ttys_dcd': host.ttys_dcd,
-                'pers_subtype': getattr(host,
-                                        'capabilities',
-                                        {}).get('pers_subtype', "")}
+                'ttys_dcd': host.ttys_dcd}
 
 
 class DetailView(tabs.TabbedTableView):

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -95,11 +95,6 @@ def diskprofile_applicable(host, diskprofile):
             return False
     elif stx_api.sysinv.PERSONALITY_STORAGE in host._subfunctions:
         if diskprofile.stors:
-            if (host.capabilities.get('pers_subtype') ==
-                    stx_api.sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING):
-                for pstor in diskprofile.stors:
-                    if pstor.function == 'journal':
-                        return False
             return True
         else:
             return False
@@ -233,16 +228,6 @@ class UpdateHostInfoAction(workflows.Action):
                    stx_api.sysinv.PERSONALITY_COMPUTE: _(
                        "Performance Profile")}))
 
-    pers_subtype = forms.ChoiceField(
-        label=_("Personality Sub-Type"),
-        choices=stx_api.sysinv.Host.SUBTYPE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'switched',
-                   'data-switch-on': 'personality',
-                   'data-personality-' +
-                   stx_api.sysinv.PERSONALITY_STORAGE: _(
-                       "Personality Sub-Type")}))
-
     hostname = forms.RegexField(label=_("Host Name"),
                                 max_length=255,
                                 required=False,
@@ -323,11 +308,6 @@ class UpdateHostInfoAction(workflows.Action):
         # personality cannot be modified once it is set
         host_id = self.initial['host_id']
         personality = self.initial['personality']
-
-        if (stx_api.sysinv.CINDER_BACKEND_CEPH not in stx_api.sysinv.get_cinder_backend(request)) \
-                or personality:
-            self.fields['pers_subtype'].widget.attrs['disabled'] = 'disabled'
-            self.fields['pers_subtype'].required = False
 
         mem_profile_configurable = False
 
@@ -481,8 +461,6 @@ class UpdateHostInfoAction(workflows.Action):
             else:
                 self._subfunctions = stx_api.sysinv.PERSONALITY_CONTROLLER
             cleaned_data['subfunctions'] = self._subfunctions
-        elif cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_COMPUTE:
-            cleaned_data['pers_subtype'] = None
 
         return cleaned_data
 
@@ -506,8 +484,7 @@ class UpdateHostInfo(workflows.Step):
                    "interfaceProfile",
                    "diskProfile",
                    "memoryProfile",
-                   "ttys_dcd",
-                   "pers_subtype")
+                   "ttys_dcd")
 
 
 class UpdateInstallParamsAction(workflows.Action):
@@ -815,13 +792,6 @@ class UpdateHost(workflows.Workflow):
 
             if data.get('console') == host.console:
                 data.pop('console')
-
-            if 'pers_subtype' in data:
-                if not hasattr(data, 'capabilities'):
-                    data['capabilities'] = {}
-                pers_subtype = data.pop('pers_subtype')
-                if pers_subtype:
-                    data['capabilities']['pers_subtype'] = pers_subtype
 
             # subfunctions cannot be modified once host is configured
             if host._subfunctions and 'subfunctions' in data:
