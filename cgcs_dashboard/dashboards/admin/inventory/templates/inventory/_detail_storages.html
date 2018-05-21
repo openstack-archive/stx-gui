@@ -1,0 +1,28 @@
+{% load i18n sizeformat %}
+
+{% block main %}
+    {% autoescape off %}
+      <div id="disks">
+        {{ disks_table.render }}
+      </div>
+
+      <div id="partitions">
+        {{ partitions_table.render }}
+      </div>
+
+      {% if host.personality == "Storage" %}
+        <div id="storagevolumes">
+          {{ storagevolumes_table.render }}
+        </div>
+      {% else %}
+        <div id="localvolumegroups">
+          {{ localvolumegroups_table.render }}
+        </div>
+
+        <div id="physicalvolumes">
+          {{ physicalvolumes_table.render }}
+        </div>
+      {% endif %}
+
+    {% endautoescape %}
+{% endblock %}

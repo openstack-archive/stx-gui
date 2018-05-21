@@ -1,0 +1,55 @@
+{% load i18n sizeformat %}
+
+{% block main %}
+    {% autoescape off %}
+      <div id="storageservice">
+          {% if cluster %}
+              <div id="health" class="info detail">
+                <dl>
+                  <dt>{% trans "Storage Cluster UUID " %}</dt>
+                  <dd>{{ cluster.fsid }}</dd>
+                  <dt>{% trans "Storage Cluster Health Status" %}</dt>
+                  <dd>{{ cluster.health }}</dd>
+                  <dt>{% trans "Storage Cluster Health Details" %}</dt>
+                  <dd>{{ cluster.detail }}</dd>
+                </dl>
+              </div>
+
+              {% if storage %}
+                <div id="storage" class="info detail">
+                    <dl>
+                        <dt>{% trans "Storage Usage" %}</dt>
+                        <dd>{{ storage.used }} {{" MiB used, "}} 
+                            {{ storage.available }} {{" GiB available, "}} 
+                            {{ storage.total }} {{" GiB total"}}</dd>
+                        <dt>{% trans "Storage I/O" %}</dt>
+                        <dd>{{ storage.writes_per_sec }} {{" kiB/s write, "}}
+                            {{ storage.operations_per_sec }} {{" operations/second"}}</dd>
+                    </dl>
+                </div>
+              {% else %}
+                <dl><dd><em>{% trans "No storage information available" %}</em></dd></dl>
+              {% endif %}
+
+              {% if monitors %}
+                  <div id="monitors">
+                      {{ monitors_table.render }}
+                  </div>
+              {% else %}
+                  <dl><dd><em>{% trans "No monitor information available" %}</em></dd></dl>
+              {% endif %}
+
+              {% if osds %}
+                  <div id="osds">
+                     {{ osds_table.render }}
+                  </div>
+              {% else %}
+                  <dl><dd><em>{% trans "No OSD information available" %}</em></dd></dl>
+              {% endif %}
+          {% else %}
+              <dl><dd><em>{% trans "No cluster information available" %}</em></dd></dl>
+          {% endif %}
+
+      </div>
+    {% endautoescape %}
+{% endblock %}

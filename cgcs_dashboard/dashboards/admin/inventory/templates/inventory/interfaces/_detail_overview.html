@@ -1,0 +1,40 @@
+{% load i18n sizeformat %}
+
+<h3>{% trans "Interface Overview" %}</h3>
+
+<div class="info detail">
+  <dl>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ interface.ifname|default:_("None") }}</dd>
+    <dt>{% trans "Interface Type" %}</dt>
+    <dd>{{ interface.iftype|default:_("None") }}</dd>
+    {% if interface.vlan_id %}
+    <dt>{% trans "VLAN ID" %}</dt>
+    <dd>{{ interface.vlan_id|default:_("None") }}</dd>
+    {% endif %}
+    <dt>{% trans "MAC Address" %}</dt>
+    <dd>{{ interface.imac|default:_("None") }}</dd>
+    <dt>{% trans "MTU" %}</dt>
+    <dd>{{ interface.imtu|default:_("None") }}</dd>
+    <dt>{% trans "Network Type" %}</dt>
+    <dd>{{ interface.networktype|default:_("None") }}</dd>
+    {% if interface.networktype == "data" or interface.networktype == 'data-external' %}
+    <dt>{% trans "Provider Networks" %}</dt>
+    <dd>{{ interface.providernetworks|default:_("None") }}</dd>
+    <dt>{% trans "IPv4 Mode" %}</dt>
+    <dd>{{ interface.ipv4_mode|default:_("Disabled") }}</dd>
+    {% if interface.ipv4_mode == "pool" %}
+    <dt>{% trans "IPv4 Pool" %}</dt>
+    <dd>{{ interface.ipv4_pool_name|default:_("None") }}</dd>
+    {% endif %}
+    <dt>{% trans "IPv6 Mode" %}</dt>
+    <dd>{{ interface.ipv6_mode|default:_("Disabled") }}</dd>
+    {% if interface.ipv6_mode == "pool" %}
+    <dt>{% trans "IPv6 Pool" %}</dt>
+    <dd>{{ interface.ipv6_pool_name|default:_("None") }}</dd>
+    {% endif %}
+    {% endif %}
+    <dt>{% trans "Number of Virtual Functions" %}</dt>
+    <dd>{{ interface.sriov_numvfs|default:_("None") }}</dd>
+  </dl>
+</div>

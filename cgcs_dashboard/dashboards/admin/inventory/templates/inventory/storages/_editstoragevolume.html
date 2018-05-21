@@ -1,0 +1,44 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}update_storagevolume_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:editstoragevolume' host_id stor_uuid %}{% endblock %}
+
+{% block modal-header %}{% trans "Edit Storage Volume" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+    <script>
+    /* Obtain the journal elements. */
+    var journal_size_box = document.getElementById("id_journal_size_mib");
+    var journal_locations_dropdown = document.getElementById("id_journal_locations");
+
+    function select_journal_size() {
+        /* If the chosen journal location is collocated, make the journal
+        size textbox readonly. */
+        if (journal_locations_dropdown[journal_locations_dropdown.selectedIndex].text === "Collocated with OSD") {
+            journal_size_box.value = "1024"
+            journal_size_box.readOnly = true
+        }
+        else
+            journal_size_box.readOnly = false
+    }
+
+    /* Obtain the journal location dropdown. */
+    journal_locations_dropdown.onchange = select_journal_size;
+    select_journal_size();
+    </script>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can edit the configuration of an existing storage volume." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+    <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save" %}" />
+{% endblock %}

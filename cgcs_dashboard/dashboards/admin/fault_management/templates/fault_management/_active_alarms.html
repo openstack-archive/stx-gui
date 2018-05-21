@@ -1,0 +1,26 @@
+{% load i18n %}
+
+<div id="active-alarm-stats" class="info details">
+    <span>
+        <strong>{% trans "Active Alarms" %}:</strong>
+        <span class="badge {% if total != 0 %} badge-success{% endif %}">{{ total }}</span>
+    </span>
+    <span>
+        <strong>{% trans "Critical" %}:</strong>
+        <span class="badge{% if summary.critical != 0 %} badge-danger{% endif %}">{{ summary.critical }}</span>
+    </span>
+    <span>
+        <strong>{% trans "Major" %}:</strong>
+        <span class="badge{% if summary.major != 0 %} badge-danger{% endif %}">{{ summary.major }}</span>
+    </span>
+    <span>
+        <strong>{% trans "Minor" %}:</strong>
+        <span class="badge{% if summary.minor != 0 %} badge-warning{% endif %}">{{ summary.minor }}</span>
+    </span>
+    <span>
+        <strong>{% trans "Warning" %}:</strong>
+        <span class="badge{% if summary.warnings != 0 %} badge-success{% endif %}">{{ summary.warnings }}</span>
+    </span>
+</div>
+
+{{ table.render }}

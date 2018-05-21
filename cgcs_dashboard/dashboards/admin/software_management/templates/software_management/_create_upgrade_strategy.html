@@ -1,0 +1,35 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_action %}{% url 'horizon:admin:software_management:createupgradestrategy' %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Upgrade Strategy" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>
+        {% trans "Create a strategy to specify how the system should be upgraded." %}
+    </p>
+    <p>
+        {% trans "There are " %}{{ alarms }}{% trans " active alarms on the system, " %}{{ affecting }}{% trans " of which are management affecting." %}
+        <br/>
+		{% if affecting > 0 %}
+            {% trans "These management affecting alarms must be addressed before orchestration will be successful" %}
+        {% else %}
+            {% trans "These alarms can be ignored by choosing relaxed alarm restrictions." %}
+		{% endif %}
+    </p>
+
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Upgrade Strategy" %}" />
+{% endblock %}

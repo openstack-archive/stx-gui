@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Device Detail"%}{% endblock %}
+
+{% block main %}
+  {% include "admin/inventory/devices/_detail_overview.html" %}
+  <hr>
+{% endblock %}

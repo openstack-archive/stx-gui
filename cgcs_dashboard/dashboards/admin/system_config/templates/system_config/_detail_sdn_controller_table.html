@@ -1,0 +1,18 @@
+{% load i18n sizeformat %}
+
+<h3>{% trans "SDN Controller Overview" %}</h3>
+
+<div class="info detail">
+  <dl>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ sdn_controller_table.uuid }}</dd>
+    <dt>{% trans "Host" %}</dt>
+    <dd>{{ sdn_controller_table.ip_address }}</dd>
+    <dt>{% trans "Port Number" %}</dt>
+    <dd>{{ sdn_controller_table.port }}</dd>
+    <dt>{% trans "Transport Mode" %}</dt>
+    <dd>{{ sdn_controller_table.tranport|default:"TCP" }}</dd>
+    <dt>{% trans "Administrative State" %}</dt>
+    <dd>{{ sdn_controller_table.state|default:"Administratively Enabled" }}</dd>
+  </dl>
+</div>

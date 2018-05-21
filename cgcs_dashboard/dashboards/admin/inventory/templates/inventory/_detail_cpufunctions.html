@@ -1,0 +1,25 @@
+{% load horizon i18n sizeformat %}
+
+{% block main %}
+    {% autoescape off %}
+      <div id="cpufunctions">
+          {% if host.cpus %}
+              <dl>
+                <dt>{% trans "Processor Model: " %}</dt>
+                <dd>{{ host.cpu_model }}</dd>
+                <dt>{% trans "Processors: " %}</dt>
+                <dd>{{ host.nodes|length }}</dd>
+                <dt>{% trans "Physical Cores Per Processor: " %}</dt>
+                <dd>{{ host.physical_cores|get_value:0 }}</dd>
+                <dt>{% trans "Hyper-Threading: " %}</dt>
+                <dd>{{ host.hyperthreading }}</dd>
+              </dl>
+              <div id="cpufunctions">
+                 {{ cpufunctions_table.render }}
+              </div>
+          {% else %}
+              <dl><dd><em>{% trans "No CPU topology information available" %}</em></dd></dl>
+          {% endif %}
+      </div>
+    {% endautoescape %}
+{% endblock %}

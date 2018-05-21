@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Edit CPU Assignments" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Edit CPU Assignments") %}
+{% endblock page_header %}
+
+{% block main %}
+    {% include "admin/inventory/cpu_functions/_update.html" %}
+{% endblock %}

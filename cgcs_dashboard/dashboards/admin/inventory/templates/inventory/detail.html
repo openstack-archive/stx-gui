@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Inventory Details" %}{% endblock %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-sm-12">
+  {{ tab_group.render }}
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+
+    horizon.addInitFunction(function() {
+      /* Switchable Fields (See Horizon's Forms docs for more information) */
+      $(document).on("click", 'input.switchable', function (evt) {
+        var $fieldset = $(evt.target).closest('fieldset'),
+          $switchables = $fieldset.find('.switchable');
+          
+          $switchables.each(function (index, switchable) {
+            var $switchable = $(switchable),
+              slug = $switchable.data('slug');
+      
+            function handle_clear_switched_field(index, input){
+              var $input = $(input);
+      
+              $input.closest('.form-group').hide();
+            }
+      
+            $fieldset.find('.switched[data-switch-on*="' + slug + '"]').each(handle_clear_switched_field);
+            $fieldset.siblings().find('.switched[data-switch-on*="' + slug + '"]').each(handle_clear_switched_field);
+          });
+      
+          $switchables.each(function (index, switchable) {
+            var $switchable = $(switchable),
+              slug = $switchable.data('slug'),
+              visible = $switchable.is(':visible'),
+              val = $switchable.val(),
+              ischecked = $switchable.is(':checked');
+      
+            function handle_switched_field2(index, input){
+              var $input = $(input),
+                data = $input.data(slug + "-" + val);
+      
+              if (typeof data === "undefined" || !visible ) {
+                $input.closest('.form-group').hide();
+              } else {
+                $input.closest('.form-group').show();
+              }
+            }
+      
+            if (ischecked) {
+              $fieldset.find('.switched[data-switch-on*="' + slug + '"]').each(handle_switched_field2);
+              $fieldset.siblings().find('.switched[data-switch-on*="' + slug + '"]').each(handle_switched_field2);
+            }
+          });
+          // Fire off the change event to trigger the proper initial values.
+          $('select.switchable').trigger('change');
+          // Queue up the for new modals, too.
+          horizon.modals.addModalInitFunction(function (modal) {
+            $(modal).find('select.switchable').trigger('change');
+          });
+        });
+      
+        // Fire off two click events to trigger the proper initial values.
+        // without changing the default state.
+        for (i = 0; i < 2; i++) {
+          $('input.switchable').trigger('click');
+          // Queue up the for new modals, too.
+          horizon.modals.addModalInitFunction(function (modal) {
+            $(modal).find('input.switchable').trigger('click');
+          });
+        }
+    }); // horizon.addInitFunction
+
+
+    horizon.refresh.addRefreshFunction(function (html) {
+        var $sold_status = $('#active-sensor-stats');
+        var $snew_status = $(html).find('#active-sensor-stats');
+        if ($snew_status.html() != $sold_status.html()) {
+            $sold_status.replaceWith($snew_status);
+        }
+
+        var $old_table = $('#sensorgroups');
+        var $new_table = $(html).find('#sensorgroups');
+        if ($old_table.length && $new_table.length) {
+            var $new_table_actions = $new_table.find('.table_actions');
+            var $old_table_actions = $old_table.find('.table_actions');
+            if ($new_table_actions.html() != $old_table_actions.html())
+                $old_table_actions.replaceWith($new_table_actions);
+        }
+    }); // horizon.addRefreshFunction
+
+  </script>
+{% endblock %}
+

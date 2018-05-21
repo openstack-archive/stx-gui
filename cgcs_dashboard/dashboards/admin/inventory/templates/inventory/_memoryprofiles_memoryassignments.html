@@ -1,0 +1,21 @@
+{% load i18n %}
+<dt>{{ "Platform reserved (MiB): " }}</dt>
+{% for memory in memoryProfile.memory %}
+    <dd>
+        {% trans "Processor" %} {{ memory.numa_node }}:  {{ memory.platform_reserved_mib }} {{ "<br>" }}
+    </dd>
+{% endfor %}
+
+<dt>{{ "2M hugepages: " }}</dt>
+{% for memory in memoryProfile.memory %}
+    <dd>
+        {% trans "Processor" %} {{ memory.numa_node }}:  {{ memory.vm_hugepages_nr_2M_pending }} {{ "<br>" }}
+    </dd>
+{% endfor %}
+
+<dt>{{ "1G hugepages: " }}</dt>
+{% for memory in memoryProfile.memory %}
+    <dd>
+        {% trans "Processor" %} {{ memory.numa_node }}:  {{ memory.vm_hugepages_nr_1G_pending }} {{ "<br>" }}
+    </dd>
+{% endfor %}

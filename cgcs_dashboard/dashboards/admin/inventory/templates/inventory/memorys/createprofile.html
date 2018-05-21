@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Create Memory Profile" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Create Memory Profile") %}
+{% endblock page_header %}
+
+{% block main %}
+    {% include "admin/inventory/memory/_createprofile.html" %}
+{% endblock %}

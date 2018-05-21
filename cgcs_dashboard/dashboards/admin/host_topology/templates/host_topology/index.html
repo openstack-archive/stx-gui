@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Provider Network Topology" %}{% endblock %}
+
+{% block main %}
+
+<noscript>
+{% trans "This pane needs javascript support." %}
+</noscript>
+
+<div id="hostTopologyNavi">
+  <div id="toggleLabels">
+    <label class="btn btn-default">
+      <input type="checkbox" name="options" id="label_toggle">
+      <span class="fa fa-th-large"></span>
+      {% trans "Hide Labels" %}
+    </label>
+  </div>
+</div>
+
+<div id="hostTopologyContainer">
+  <div id="topologyCanvasContainer">
+    <div class="nodata">{% blocktrans %}There are no hosts or provider networks to display.{% endblocktrans %}</div>
+    {% include "admin/host_topology/_svg_element.html" %}
+    <div id="detail_view">{% blocktrans %}Select a host or providernet to view its details.  The current view can be moved by clicking and dragging.{% endblocktrans %}</div>
+  </div>
+  <span data-hosttopology="{% url 'horizon:admin:host_topology:json' %}" id="hosttopology"></span>
+  <div id="topologyMessages"></div>
+</div>
+
+<script type="text/javascript">
+  if (typeof horizon.host_topology !== 'undefined') {
+    horizon.host_topology.init();
+  } else {
+    addHorizonLoadEvent(function () {
+      horizon.host_topology.init();
+    });
+  }
+</script>
+{% endblock %}

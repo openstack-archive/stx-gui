@@ -1,0 +1,44 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n horizon humanize %}
+
+{% block form_id %}param_edit_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:storages:lvg:edit' lvg.uuid key %}{% endblock %}
+
+
+{% block modal_id %}param_edit_modal{% endblock %}
+{% block modal-header %}{% trans "Edit Local Volume Group Parameter" %}{% endblock %}
+
+{% block modal-body %}
+<h4>{% trans "Local Volume Group" %}: {{ lvg.lvm_vg_name }}</h4>
+{% if free %}
+<div class="quota-dynamic">
+  <div class="quota_title clearfix">
+    <strong>{% trans "Instances logical volume allocation" %}
+    {% blocktrans with a=used|intcomma b=total|intcomma %}<p>{{ a }} MiB of {{ b }} MiB Used</p>{% endblocktrans %}</strong>
+  </div>
+  <div class="quota_title clearfix">
+    <strong>{% trans "Volume group space available for instance disks" %}
+    {% blocktrans with a=free|intcomma b=total|intcomma %}<p>{{ a }} MiB of {{ b }} MiB Free</p>{% endblocktrans %}</strong>
+  </div>
+  <div class="quota_title clearfix">
+    <strong>{% trans "Acceptable instances logical volume size" %}
+    {% blocktrans with a=allowed_min|intcomma b=allowed_max|intcomma %}<p>{{ a }} MiB to {{ b }} MiB</p>{% endblocktrans %}</strong>
+  </div>
+<hr>
+{% endif %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h4>{% trans "Description " %}:</h4>
+    <p>{% trans 'Update a parameter key-value pair for a Local Volume Group.' %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save" %}" />
+{% endblock %}
+

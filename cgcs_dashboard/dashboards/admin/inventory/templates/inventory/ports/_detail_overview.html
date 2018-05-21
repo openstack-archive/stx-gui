@@ -1,0 +1,36 @@
+{% load i18n sizeformat %}
+<h3>{% trans "Port Overview" %}</h3>
+<div class="info detail">
+  <dl>
+    <dt>{% trans "Name:" %}</dt>
+    {% if port.name %}
+    <dd>{{ port.name }}</dd>
+    {% else %}
+    <dd>{{ port.namedisplay }}</dd>
+    {% endif %}
+    <dt>{% trans "MAC Address:" %}</dt>
+    <dd>{{ port.mac|default:_("None") }}</dd>
+    <dt>{% trans "PCI Address:" %}</dt>
+    <dd>{{ port.pciaddr|default:_("None") }}</dd>
+    <dt>{% trans "Processor:" %}</dt>
+    <dd>{{ port.numa_node|default:_("None") }}</dd>
+    <dt>{% trans "Auto Negotiation:" %}</dt>
+    <dd>{{ port.autoneg|default:_("None") }}</dd>
+    <dt>{% trans "Number of Virtual Functions:" %}</dt>
+    <dd>{{ port.sriov_numvfs|default:_("None") }}</dd>
+    <dt>{% trans "Max Virtual Functions:" %}</dt>
+    <dd>{{ port.sriov_totalvfs|default:_("None") }}</dd>
+    <dt>{% trans "Virtual Functions PCI Address:" %}</dt>
+    <dd>{{ port.sriov_vfs_pci_address|default:_("None") }}</dd>
+    <dt>{% trans "Driver:" %}</dt>
+    <dd>{{ port.driver|default:_("None") }}</dd>
+    <dt>{% trans "Accelerated:" %}</dt>
+    <dd>{{ port.dpdksupport|default:_("False") }}</dd>
+    <dt>{% trans "Boot Interface:" %}</dt>
+    {% if port.bootp %}
+    <dd>{{ port.bootp }}</dd>
+    {% else %}
+    <dd>{{ "False" }}</dd>
+    {% endif %}
+  </dl>
+</div>

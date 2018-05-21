@@ -1,0 +1,61 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_interface_profile_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addinterfaceprofile' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Interface Profile" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+    {{ "<br>With the following configuration:" }}
+    <strong><u>{{ "<br><br>Port Configuration:" }}</u></strong>
+        {% for ports in host.ports %}
+            <li>
+                <strong>{{ ports.namedisplay }}</strong> {{":  "}} {{ ports.pdevice }}
+                {% if ports.autoneg != 'na' %}
+                    {{" | Auto Neg ="}} {{ ports.autoneg }}
+                {% endif %}
+                {% if ports.bootp %}
+                    {{" | bootp-IF"}}
+                {% endif %}
+            </li>
+        {% endfor %}
+    <strong><u>{{ "<br><br>Interface Configuration:" }}</u></strong>
+        {% for interfaces in host.interfaces %}
+            <li>
+                <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.networktype }}
+                {% if interfaces.networktype == 'data' or interface.networktype == 'data-external' %}
+                    {{"("}} {{ interfaces.providernetworks }} {{")"}}
+                {% endif %}
+                {{ " | " }} {{ interfaces.iftype }}
+                {% if interfaces.iftype != 'ae' and interfaces.iftype != 'vlan' %}
+                    {{ " | " }}<u>{{"PORTS ="}} {{ interfaces.ports }}</u>
+                {% endif %}
+                {% if interfaces.iftype == 'ae' or interfaces.iftype == 'vlan' %}
+                    {{ " | " }}<u>{{"INTERFACES ="}} {{ interfaces.uses }}</u>
+                {% endif %}
+                {% if interfaces.iftype == 'ae' %}
+                    {{" | "}} {{ interfaces.aemode }}
+                    {% if interfaces.aemode == 'balanced' %}
+                        {{" | "}} {{ interfaces.txhashpolicy }}
+                    {% endif %}
+                {% endif %}
+                {{" | MTU="}} {{ interfaces.imtu }}
+            </li>
+        {% endfor %}
+    {{ "<br>" }}
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "Create a new Interface Profile based on the interface and port configuration of this host." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Interface Profile" %}" />
+{% endblock %}

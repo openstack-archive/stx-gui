@@ -1,0 +1,16 @@
+{% load i18n sizeformat %}
+
+<div class="info detail">
+  <dl class="dl-horizontal">
+    <h4>{% trans "VFs" %}</h4>
+    <dt>{% trans "configured" %}</dt>
+    <dd>{{ device_usage.pci_vfs_configured|default:_("None") }}</dd>
+    <dt>{% trans "used" %}</dt>
+    <dd>{{ device_usage.pci_vfs_used|default:_("None") }}</dd>
+    <h4>{% trans "PFs" %}</h4>
+    <dt>{% trans "configured" %}</dt>
+    <dd>{{ device_usage.pci_pfs_configured|default:_("None") }}</dd>
+    <dt>{% trans "used" %}</dt>
+    <dd>{{ device_usage.pci_pfs_used|default:_("None") }}</dd>
+  </dl>
+</div>

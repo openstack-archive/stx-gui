@@ -1,0 +1,12 @@
+{% for disk in diskprofile.disks %}
+    <li>
+        <strong>{{ disk.device_path }}</strong>
+        {% if disk.serial_id %}
+            {{"("}} {{ disk.serial_id }} {{")"}}
+        {% endif %}
+        {% if disk.size_mib %}
+            {{": "}} {{ disk.size_mib }}
+        {% endif %}
+    </li>
+{% endfor %}
+

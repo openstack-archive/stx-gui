@@ -1,0 +1,41 @@
+{% load i18n sizeformat %}
+
+{% block main %}
+<div id="hosts">
+   <div id="hosts-stats" class="info details">
+
+       {% for total in totals %}
+          <span>
+            <strong>{% trans total.name %}:</strong>
+            <span class="badge {{total.badge}}">{{ total.value }}</span>
+          </span>
+       {% endfor %}
+
+   </div>
+
+{% if controllers %}
+    <div id="controllers">
+        {{ hostscontroller_table.render }}
+    </div>
+{% endif %}
+
+<div id="storages">
+{% if storages %}
+    {{ hostsstorage_table.render }}
+{% endif %}
+</div>
+
+<div id="computes">
+{% if computes %}
+    {{ hostscompute_table.render }}
+{% endif %}
+</div>
+
+<div id="unprovisioned">
+{% if unprovisioned %}
+    {{ hostsunprovisioned_table.render }}
+{% endif %}
+</div>
+
+</div>
+{% endblock %}

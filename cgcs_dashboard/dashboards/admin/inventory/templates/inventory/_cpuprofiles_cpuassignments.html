@@ -1,0 +1,10 @@
+{% load horizon i18n %}
+
+{% for cpufunc in cpuProfile.core_assignment %}
+      <dt>{{ cpuFormats|get_value:cpufunc.allocated_function }}</dt>
+      {% for s,cores in cpufunc.socket_cores.items %}
+          <dd>
+              {{ "Processor " }} {{ s }} {{ ": " }} {{ cores }} {{ "<br>" }}
+          </dd>
+      {% endfor %}
+{% endfor %}

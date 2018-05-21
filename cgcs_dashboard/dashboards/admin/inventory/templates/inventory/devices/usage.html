@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Device Usage Detail"%}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Device Usage Detail") %}
+{% endblock page_header %}
+
+{% block main %}
+  <h3>{% trans device_usage.device_name %}</h3>
+  <hr>
+  {% include "admin/inventory/devices/_usage.html" %}
+  <hr>
+  <div id="usage">
+    {{ usage_table.render }}
+  </div>
+{% endblock %}

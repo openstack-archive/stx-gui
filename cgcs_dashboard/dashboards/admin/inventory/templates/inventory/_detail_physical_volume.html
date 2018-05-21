@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n  breadcrumb_nav %}
+{% block title %}{% trans "Physical Volume Details" %}{% endblock %}
+
+{% block main %}
+<h3> {{ pv.lvm_pv_name }} </h3>
+
+<div class="row-fluid">
+  <div class="col-sm-12">
+	<div class="info row-fluid detail">
+	  <h4>{% trans "Info" %}</h4>
+	  <hr class="header_rule">
+	  <dl>
+		<dt>{% trans "UUID" %}</dt>
+		<dd>{{ pv.uuid }}</dd>
+		<dt>{% trans "State" %}</dt>
+		<dd>{{ pv.pv_state }}</dd>
+        <dt>{% trans "Type" %}</dt>
+		<dd>{{ pv.pv_type }}</dd>
+        <dt>{% trans "Volume Group Name" %}</dt>
+		<dd>{{ pv.lvm_vg_name }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Physical Volume UUID" %}</dt>
+		<dd>{{ pv.lvm_pv_uuid }}</dd>
+        <dt>{% trans "Physical Volume Name" %}</dt>
+		<dd>{{ pv.lvm_pv_name }}</dd>
+        <dt>{% trans "Physical Volume Size" %}</dt>
+		<dd>{{ pv.lvm_pv_size | filesizeformat }}</dd>
+        <dt>{% trans "Physical Extents Total" %}</dt>
+		<dd>{{ pv.lvm_pe_total }}</dd>
+        <dt>{% trans "Physical Extents Allocated" %}</dt>
+		<dd>{{ pv.lvm_pe_alloced }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Disk or Partition UUID" %}</dt>
+		<dd>{{ pv.disk_or_part_uuid }}</dd>
+        <dt>{% trans "Disk or Partition Node" %}</dt>
+		<dd>{{ pv.disk_or_part_device_node }}</dd>
+        <dt>{% trans "Disk or Partition Path" %}</dt>
+		<dd>{{ pv.disk_or_part_device_path }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Created At" %}</dt>
+		<dd>{{ pv.created_at }}</dd>
+        <dt>{% trans "Updated At" %}</dt>
+		<dd>{{ pv.updated_at }}</dd>
+	   </dl>
+	</div>
+  </div>
+</div>
+{% endblock %}
+
+

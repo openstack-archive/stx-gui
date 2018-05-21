@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Cloud Overview" %}{% endblock %}
+
+{% block page_header %}
+  <hz-page-header header="{$ 'Cloud Overview' | translate $}"></hz-page-header>
+{% endblock %}
+
+{% block ng_route_base %}
+  <base href="{{ WEBROOT }}">
+{% endblock %}
+
+{% block main %}
+  {% csrf_token %}
+  <h2>System Controller</h2>
+  <ng-include src="'{{ STATIC_URL }}dashboard/dc_admin/cloud_overview/table/central_table.html'"></ng-include>
+  <br/>
+  <h2>Subclouds</h2>
+  <ng-include src="'{{ STATIC_URL }}dashboard/dc_admin/cloud_overview/table/subcloud_table.html'"></ng-include>
+{% endblock %}

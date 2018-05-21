@@ -1,0 +1,44 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_interface_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addinterface' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Interface" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can define the configuration of a new interface." %}</p>
+    <br/>
+    <h4>{% trans "Ports & LLDP Neighbors" %}</h4>
+    <table style="border:1px solid LightGray;border-collapse:collapse;table-layout:fixed;width:100%;">
+        {% for p in ports %}
+        <tbody>
+            <tr><th style="padding:5px;white-space:pre-wrap;word-wrap:break-word;">{{p.0}}</th></tr>
+            {% if p.1 %}
+                <tr><td style="padding:5px;">
+                    <ol>
+                        {% for n in p.1 %}
+                            <li>{{n}}</li>
+                        {% endfor %}
+                    </ol>
+                </td></tr>
+            {% else %}
+                <tr><td style="padding:5px"><br/></td></tr>
+            {% endif %}
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Interface" %}" />
+{% endblock %}

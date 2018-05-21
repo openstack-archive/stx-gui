@@ -1,0 +1,11 @@
+{% for ports in ifProfile.ports %}
+    <li>
+        <strong>{{ ports.name }}</strong> {{":  "}} {{ ports.pdevice }}
+        {% if ports.autoneg != 'na' %}
+            {{" | Auto Neg ="}} {{ ports.autoneg }}
+        {% endif %}
+        {% if ports.bootp %}
+            {{" | bootp-IF"}}
+        {% endif %}
+    </li>
+{% endfor %}

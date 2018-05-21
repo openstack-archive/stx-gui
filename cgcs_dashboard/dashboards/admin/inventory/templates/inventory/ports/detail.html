@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Port Detail"%}{% endblock %}
+
+{% block main %}
+  {% include "admin/inventory/ports/_detail_overview.html" %}
+{% endblock %}

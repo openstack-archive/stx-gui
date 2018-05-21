@@ -1,0 +1,42 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load horizon i18n %}
+
+{% block form_id %}add_cpu_profile_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addcpuprofile' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Create CPU Profile" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+    {{ "<br>With the following configuration:" }}
+          <table class="{% block table_css_classes %}table table-bordered table-striped datatable {{ table.css_classes }}{% endblock %}">
+            <tr>
+              <th>{% trans "Function" %}</th>
+              <th>{% trans "Processor Logical Cores" %}</th>
+            </tr>
+            {% for cpufunc in host.core_assignment %}
+                <tr>
+                  <td>{{ cpu_formats|get_value:cpufunc.allocated_function }}</td>
+                  <td>
+                  {% for s,cores in cpufunc.socket_cores.items %}
+                      {% trans "Processor " %} {{ s }} {% trans ": " %} {{ cores }} {{ "<br>" }}
+                  {% endfor %}
+                  </td>
+                </tr>
+            {% endfor %}
+          </table>
+    {{ "<br>" }}
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "Create a new CPU Profile based on the cpu core assignments of this host." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create CPU Profile" %}" />
+{% endblock %}

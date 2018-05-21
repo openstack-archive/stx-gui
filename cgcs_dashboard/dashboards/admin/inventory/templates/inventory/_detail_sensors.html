@@ -1,0 +1,42 @@
+{% load i18n sizeformat %}
+
+<div id="active-sensor-stats" class="info details">
+    <span>
+        <strong>{% trans "Sensors" %}:</strong>
+        <span class="badge {% if total != 0 %} badge-success{% endif %}">{{ total }}</span>
+    </span>
+
+    <span>
+        <strong>{% trans "  Suppressed" %}:</strong>
+        <span class="badge{% if suppressed != 0 %} badge-warning{% endif %}">{{ suppressed }}</span>
+    </span>
+
+    <span>
+        <strong>{% trans "  Critical" %}:</strong>
+        <span class="badge{% if critical != 0 %} badge-danger{% endif %}">{{ critical }}</span>
+    </span>
+
+    <span>
+        <strong>{% trans "Major" %}:</strong>
+        <span class="badge{% if major != 0 %} badge-danger{% endif %}">{{ major }}</span>
+    </span>
+
+    <span>
+        <strong>{% trans "Minor" %}:</strong>
+        <span class="badge{% if minor != 0 %} badge-warning{% endif %}">{{ minor }}</span>
+    </span>
+
+</div>
+
+{% block main %}
+    {% autoescape off %}
+      <div id="sensorgroups">
+        {{ sensorgroups_table.render }}
+      </div>
+
+      <div id="sensors">
+        {{ sensors_table.render }}
+      </div>
+
+    {% endautoescape %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Storage Overview" %}{% endblock %}
+{% block main %}
+   <div class="col-sm-12">
+    {{ tab_group.render }} 
+   </div>
+{% endblock %}

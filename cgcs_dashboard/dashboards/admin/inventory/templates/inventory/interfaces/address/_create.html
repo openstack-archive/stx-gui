@@ -1,0 +1,25 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}create_address_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addaddress' host_id interface_id %}
+{% endblock %}
+
+{% block modal-header %}{% trans "Create Address" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "You can create an IP address for a data or infrastructure interface.  The address must not overlap with any other address on this same host that are part of the same IP subnet." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Address" %}" />
+{% endblock %}

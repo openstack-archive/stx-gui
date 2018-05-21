@@ -1,0 +1,42 @@
+{% load i18n sizeformat %}
+
+<h3> {{ lvg.lvm_vg_name }} </h3>
+
+<div class="row-fluid">
+  <div class="col-sm-12">
+    <div class="info row-fluid detail">
+      <h4>{% trans "Info" %}</h4>
+      <hr class="header_rule">
+      <dl>
+	<dt>{% trans "UUID" %}</dt>
+	<dd>{{ lvg.uuid }}</dd>
+	<dt>{% trans "State" %}</dt>
+	<dd>{{ lvg.vg_state }}</dd>
+	<dt>{% trans "Access" %}</dt>
+	<dd>{{ lvg.lvm_vg_access }}</dd>
+      </dl>
+      <dl>
+	<dt>{% trans "Size" %}</dt>
+	<dd>{{ lvg.lvm_vg_size | filesizeformat  }}</dd>
+	<dt>{% trans "Max Local Volumes" %}</dt>
+	<dd>{{ lvg.lvm_max_lv }}</dd>
+	<dt>{% trans "Current Local Volumes" %}</dt>
+	<dd>{{ lvg.lvm_cur_lv }}</dd>
+	<dt>{% trans "Max Physical Volumes" %}</dt>
+	<dd>{{ lvg.lvm_max_pv }}</dd>
+	<dt>{% trans "Current Physical Volumes" %}</dt>
+	<dd>{{ lvg.lvm_cur_pv }}</dd>
+	<dt>{% trans "Volume Group Total Physical Extents" %}</dt>
+	<dd>{{ lvg.lvm_vg_total_pe }}</dd>
+	<dt>{% trans "Volume Group Free Physical Extents" %}</dt>
+	<dd>{{ lvg.lvm_vg_free_pe }}</dd>
+      </dl>
+      <dl>
+	<dt>{% trans "Created At" %}</dt>
+	<dd>{{ lvg.created_at }}</dd>
+	<dt>{% trans "Updated At" %}</dt>
+	<dd>{{ lvg.updated_at }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{% for interfaces in ifProfile.interfaces %}
+    <li>
+        <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.networktype }}
+        {% if interfaces.networktype == 'data' or interfaces.networktype == 'data-external' %}
+            {{"("}} {{ interfaces.providernetworks }} {{")"}}
+        {% endif %}
+        {{ " | " }} {{ interfaces.iftype }}
+        {% if interfaces.iftype != 'ae' and interfaces.iftype != 'vlan' %}
+            {{ " | " }}<u>{{"PORTS ="}} {{ interfaces.ports }}</u>
+        {% endif %}
+        {% if interfaces.iftype == 'ae' or interfaces.iftype == 'vlan' %}
+            {{ " | " }}<u>{{"INTERFACES ="}} {{ interfaces.uses }}</u>
+        {% endif %}
+        {% if interfaces.iftype == 'ae' %}
+            {{" | "}} {{ interfaces.aemode }}
+            {% if interfaces.aemode == 'balanced' %}
+                {{" | "}} {{ interfaces.txhashpolicy }}
+            {% endif %}
+        {% endif %}
+        {{ " | MTU =" }} {{ interfaces.imtu }}
+    </li>
+{% endfor %}

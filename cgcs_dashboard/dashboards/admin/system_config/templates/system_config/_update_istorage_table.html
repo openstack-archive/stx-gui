@@ -1,0 +1,52 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}edit_iconfig_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:system_config:update_storage_table' %}{% endblock %}
+
+{% block modal_id %}edit_iconfig_modal{% endblock %}
+{% block modal-header %}{% trans "Edit Controller Filesystem" %}{% endblock %}
+
+{% block modal-body %}
+  <div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+  </div>
+
+{% if is_system_mode_simplex %}
+  <div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can update the configuration of the Filesystem." %}</p>
+    <p>{% trans "WARNING: Filesystem sizes can not be decreased after configuration operation. " %}</p>
+    <p>{% trans "Major Alarms will be raised against the affected hosts until the configuration operation is successfully completed." %}</p>
+  </div>
+{% else %}
+  <div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can update the configuration of the Filesystem." %}</p>
+    <p>{% trans "WARNING: Filesystem sizes can not be decreased after configuration operation. " %}</p>
+    <p>{% trans "Major Alarms will be raised against the affected hosts until the configuration operation is successfully completed." %}</p>
+    <p>{% trans "For the Ceph Storage size configuration operation: the affected hosts will need to be 'host-reinstall' and/or disk replacement may be required to be performed to accomodate the increased filesystem sizes.  The host firmware should be configured to boot from network (management network)." %}</p>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block modal-footer %}
+{% if is_system_mode_simplex %}
+    <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+    <input class="btn btn-primary btn-danger" type="submit" onclick="return confirm('WARNING:' +
+     'Filesystem sizes can not be decreased after configuration operation. ' +
+     'Major Alarms will be raised against the affected hosts until the configuration operation is successfully completed. ');"
+      value="{% trans "Save" %}" />
+{% else %}
+    <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+    <input class="btn btn-primary btn-danger" type="submit" onclick="return confirm('WARNING:' +
+     'Filesystem sizes can not be decreased after configuration operation. ' +
+     'Major Alarms will be raised against the affected hosts until the configuration operation is successfully completed.  ' +
+     'For Ceph Storage size configuration operation: the affected hosts will need to be &quot;host-reinstall&quot; and/or ' +
+     'disk replacement may be required to be performed to accomodate the increased filesystem sizes.  The host firmware should be ' +
+     'configured to boot from network (management network). ');"
+      value="{% trans "Save" %}" />
+{% endif %}
+{% endblock %}

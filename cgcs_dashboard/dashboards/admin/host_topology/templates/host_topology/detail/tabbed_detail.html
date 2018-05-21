@@ -1,0 +1,16 @@
+{% load i18n sizeformat %}
+
+
+{% if host %}
+<h4>Selected Entity: <a href="{% url 'horizon:admin:inventory:detail' host.id %}" >{{host.hostname}}</a></h4>
+{% else %}
+<h4>Selected Entity: <a href="{% url 'horizon:admin:providernets:providernets:detail' providernet.id %}" >{{providernet.name}}</a></h4>
+{% endif %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-sm-12">
+  {{ tab_group.render }}
+  </div>
+</div>
+{% endblock %}

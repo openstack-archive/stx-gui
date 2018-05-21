@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Alarm Details" %}{% endblock %}
+
+{% block main %}
+<h3> {{alarm.alarm_id }} - {{alarm.reason_text }}</h3>
+
+<div class="row">
+  <div class="col-sm-12">
+	<div class="info row-fluid detail">
+	  <h4>{% trans "Info" %}</h4>
+	  <hr class="header_rule">
+	  <dl>
+		<dt>{% trans "Alarm UUID" %}</dt>
+		<dd>{{ alarm.uuid }}</dd>
+		<dt>{% trans "Alarm ID" %}</dt>
+		<dd>{{ alarm.alarm_id }}</dd>
+		<dt>{% trans "Severity" %}</dt>
+		<dd>{{ alarm.severity }}</dd>
+		<dt>{% trans "Alarm State" %}</dt>
+		<dd>{{ alarm.alarm_state }}</dd>
+		<dt>{% trans "Alarm Type" %}</dt>
+		<dd>{{ alarm.alarm_type }}</dd>
+		<dt>{% trans "Timestamp" %}</dt>
+		<dd>{{ alarm.timestamp|parse_isotime }}</dd>
+		<dt>{% trans "Suppression" %}</dt>
+		<dd>{{ alarm.suppression }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Entity Instance ID" %}</dt>
+		<dd>{{ alarm.entity_instance_id }}</dd>
+		<dt>{% trans "Entity Type ID" %}</dt>
+		<dd>{{ alarm.entity_type_id }}</dd>
+		<dt>{% trans "Probable Cause" %}</dt>
+		<dd>{{ alarm.probable_cause }}</dd>
+		<dt>{% trans "Proposed Repair Action" %}</dt>
+		<dd>{{ alarm.proposed_repair_action }}</dd>
+		<dt>{% trans "Service Affecting" %}</dt>
+		<dd>{{ alarm.service_affecting }}</dd>
+		<dt>{% trans "Management Affecting" %}</dt>
+		<dd>{{ alarm.mgmt_affecting }}</dd>
+		{% if alarm.reason_text != '' and alarm.reason_text != ' ' %}
+			<dt>{% trans "Reason" %}</dt>
+			<dd>{{ alarm.reason_text }}</dd>
+		{% endif %}
+	  </dl>
+	</div>
+  </div>
+</div>
+{% endblock %}
+
+

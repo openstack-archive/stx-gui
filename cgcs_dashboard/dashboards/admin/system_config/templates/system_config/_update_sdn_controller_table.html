@@ -1,0 +1,29 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}update_sdn_controller_table_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:system_config:update_sdn_controller_table' uuid %}{% endblock %}
+
+{% block modal-header %}{% trans "Edit SDN Controller" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <dl>
+      <dt>{% trans "UUID" %}</dt>
+      <dd>{{ uuid }}</dd>
+    </dl>
+    <hr>
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>{% trans "You may update the editable properties of the SDN Controller here." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save Changes" %}" />
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Sensor Details" %}{% endblock %}
+
+{% block main %}
+<h3> {{ sensor.sensorname }} </h3>
+
+<div class="row-fluid">
+  <div class="col-sm-12">
+	<div class="info row-fluid detail">
+	  <h4>{% trans "Info" %}</h4>
+	  <hr class="header_rule">
+	  <dl>
+		<dt>{% trans "UUID" %}</dt>
+		<dd>{{ sensor.uuid }}</dd>
+		<dt>{% trans "Status" %}</dt>
+		<dd>{{ sensor.status }}</dd>
+		<dt>{% trans "State" %}</dt>
+		<dd>{{ sensor.state }}</dd>
+        <dt>{% trans "SensorType" %}</dt>
+		<dd>{{ sensor.sensortype }}</dd>
+        <dt>{% trans "DataType" %}</dt>
+		<dd>{{ sensor.datatype }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Sensor UUID" %}</dt>
+		<dd>{{ sensor.uuid }}</dd>
+        <dt>{% trans "Sensor Name" %}</dt>
+		<dd>{{ sensor.sensorname }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Suppressed" %}</dt>
+		<dd>{{ sensor.suppress }}</dd>
+        <dt>{% trans "Minor Actions" %}</dt>
+		<dd>{{ sensor.actions_minor }}</dd>
+        <dt>{% trans "Major Actions" %}</dt>
+		<dd>{{ sensor.actions_major }}</dd>
+        <dt>{% trans "Critical Actions" %}</dt>
+		<dd>{{ sensor.actions_critical }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Sensor Group UUID" %}</dt>
+		<dd>{{ sensor.sensorgroup_uuid }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans "Created At" %}</dt>
+		<dd>{{ sensor.created_at }}</dd>
+        <dt>{% trans "Updated At" %}</dt>
+		<dd>{{ sensor.updated_at }}</dd>
+	   </dl>
+	</div>
+  </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,29 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}update_address_pool_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:system_config:updateaddrpool' address_pool_uuid %}{% endblock %}
+
+{% block modal-header %}{% trans "Update Address Pool" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <dl>
+      <dt>{% trans "ID" %}</dt>
+      <dd>{{ address_pool_uuid }}</dd>
+    </dl>
+    <hr>
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>{% trans "You may update the editable properties of your address pool here." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save Changes" %}" />
+{% endblock %}

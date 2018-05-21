@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Host Inventory" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Host Inventory") %}
+{% endblock page_header %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-sm-12">
+  {{ tab_group.render }}
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+	horizon.refresh.addRefreshFunction(function (html) {
+        var $old_status = $('#patching-status');
+        var $new_status = $(html).find('#patching-status');
+        if ($new_status.html() != $old_status.html()) {
+            $old_status.replaceWith($new_status);
+        }
+	});
+
+	horizon.refresh.addRefreshFunction(function (html) {
+        var $old_status = $('#hosts-stats');
+        var $new_status = $(html).find('#hosts-stats');
+        if ($new_status.html() != $old_status.html()) {
+            $old_status.replaceWith($new_status);
+        }
+	});
+
+	horizon.refresh.addRefreshFunction(function (html) {
+        var $old_table = $('#unprovisioned');
+        var $new_table = $(html).find('#unprovisioned');
+        if (($old_table.children().length == 0 && $new_table.children().length> 0) ||
+            ($old_table.children().length > 0 && $new_table.children().length == 0)) {
+            $old_table.replaceWith($new_table);
+        }
+	});
+
+	horizon.refresh.addRefreshFunction(function (html) {
+        var $old_table = $('#storages');
+        var $new_table = $(html).find('#storages');
+        if (($old_table.children().length == 0 && $new_table.children().length> 0) ||
+            ($old_table.children().length > 0 && $new_table.children().length == 0)) {
+            $old_table.replaceWith($new_table);
+        }
+	});
+
+	horizon.refresh.addRefreshFunction(function (html) {
+        var $old_table = $('#computes');
+        var $new_table = $(html).find('#computes');
+        if (($old_table.children().length == 0 && $new_table.children().length> 0) ||
+            ($old_table.children().length > 0 && $new_table.children().length == 0)) {
+            $old_table.replaceWith($new_table);
+        }
+	});
+
+  </script>
+{% endblock %}

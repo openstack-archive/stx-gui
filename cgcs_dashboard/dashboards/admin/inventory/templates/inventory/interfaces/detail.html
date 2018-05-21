@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Interface Detail"%}{% endblock %}
+
+{% block main %}
+  {% include "admin/inventory/interfaces/_detail_overview.html" %}
+  <hr>
+  <div id="addresses">
+    {{ addresses_table.render }}
+  </div>
+  <div id="routes">
+    {{ routes_table.render }}
+  </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% load i18n sizeformat %}
+
+{% block main %}
+    {% autoescape off %}
+      <div id="alarmss">
+        {{ alarms_table.render }}
+      </div>
+    {% endautoescape %}
+{% endblock %}

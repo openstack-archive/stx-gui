@@ -1,0 +1,62 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_storagevolume_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addstoragevolume' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Assign Storage Function" %}{% endblock %}
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+    <script>
+    /* Obtain the disks dropdown. */
+    var disks_dropdown = document.getElementById("id_disks");
+
+    function select_ssd() {
+        first_ssd = false;
+        function_selected = this.value;
+
+        /* If the chosen stor function is "journal", only show the SSD
+        drives. */
+        for (var i = 0; i < disks_dropdown.options.length; i++) {
+            var disk_option = disks_dropdown.options[i].text;
+
+            if (disk_option.indexOf("HDD") > -1) {
+                if (function_selected === "journal")
+                    disks_dropdown[i].style.display = "none";
+                else
+                    disks_dropdown[i].style.display = "block";
+            }
+            else if (first_ssd === false && function_selected === "journal") {
+                document.getElementById('id_disks').selectedIndex = i;
+                first_ssd = true;
+            }
+        }
+
+        /* If there is no SSD left and we want to configure a journal, let
+        the disk dropdown empty. */
+        if (first_ssd === false && function_selected === "journal")
+            document.getElementById('id_disks').selectedIndex = -1;
+
+        /* If there are unused disks and we want to configure osd, set the
+        first value of the dropdown to the first disk. */
+        if (disks_dropdown.options.length > 0  && function_selected === "osd")
+            document.getElementById('id_disks').selectedIndex = 0;
+    }
+
+    /* Obtain the stor function dropdown. */
+    document.getElementById("id_function").onchange = select_ssd;
+    </script>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can define the configuration of a new storage volume." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Assign Storage Function" %}" />
+{% endblock %}

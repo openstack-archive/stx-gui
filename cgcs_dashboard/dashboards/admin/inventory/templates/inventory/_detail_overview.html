@@ -1,0 +1,95 @@
+{% load i18n sizeformat %}
+
+<div class="info row-fluid detail">
+  <h4>{% trans "Host Info" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal-wide">
+    <dt>{% trans "Host Name" %}</dt>
+    <dd>{{ host.hostname }}</dd>
+    <dt>{% trans "Personality" %}</dt>
+    <dd>{{ host.personality }}</dd>
+    {% if host.personality and host.additional_subfunctions %}
+    <dt>{% trans "Subfunctions" %}</dt>
+    <dd>{{ host.subfunctions|join:", " |title }}</dd>
+    {% endif %}
+    {% if host.pers_subtype and host.personality != 'Compute' %}
+    <dt>{% trans "Personality Sub-Type" %}</dt>
+    <dd>{{ host.pers_subtype }}</dd>
+    {% endif %}
+    {% if host.peers %}
+    <dt>{% trans "Replication Group" %}</dt>
+    <dd>{{ host.peers }}</dd>
+    {% endif %}
+    <dt>{% trans "Host UUID" %}</dt>
+    <dd>{{ host.uuid }}</dd>
+    <dt>{% trans "Host ID" %}</dt>
+    <dd>{{ host.id }}</dd>
+  </dl>
+  <dl class="dl-horizontal-wide">
+    <dt>{% trans "Management MAC" %}</dt>
+    <dd>{{ host.mgmt_mac }}</dd>
+    <dt>{% trans "Management IP" %}</dt>
+    <dd>{{ host.mgmt_ip }}</dd>
+    <dt>{% trans "Serial ID" %}</dt>
+    <dd>{{ host.serialid }}</dd>
+    <dt>{% trans "Location" %}</dt>
+    <dd>{{ host.location|default:_("Not Specified") }}</dd>
+    <dt>{% trans "Serial Line Carrier Detect" %}</dt>
+    <dd>{{ host.ttys_dcd }}</dd>
+    <dt>{% trans "Created TimeStamp" %}</dt>
+    <dd>{{ host.created_at|parse_isotime }}</dd>
+    <dt>{% trans "Updated TimeStamp" %}</dt>
+    <dd>{{ host.updated_at|parse_isotime }}</dd>
+  </dl>
+  <dl class="dl-horizontal-wide">
+    <dt>{% trans "Administrative State" %}</dt>
+    <dd>{{ host.administrative }}</dd>
+    <dt>{% trans "Operational State" %}</dt>
+    <dd>{{ host.operational }}</dd>
+    <dt>{% trans "Availability State" %}</dt>
+    <dd>{{ host.availability }}</dd>
+    {% if host.personality and host.is_cpe %}
+    <dt>{% trans "Subfunction Operational State" %}</dt>
+    <dd>{{ host.subfunction_oper }}</dd>
+    <dt>{% trans "Subfunction Availability State" %}</dt>
+    <dd>{{ host.subfunction_avail }}</dd>
+    {% endif %}
+  </dl>
+  <dl class="dl-horizontal-wide">
+    <dt>{% trans "Patch Current" %}</dt>
+    <dd>{{ host.patch_current }}</dd>
+    <dt>{% trans "Reboot Required" %}</dt>
+    <dd>{{ host.requires_reboot}}</dd>
+    <dt>{% trans "Patch Agent State" %}</dt>
+    <dd>{{ host.patch_state }}</dd>
+  </dl>
+</div>
+
+<div class="info row-fluid detail">
+  <h4>{% trans "Installation Parameters" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal-wide">
+    <dt>{% trans "Boot Device" %}</dt>
+    <dd>{{ host.boot_device }}</dd>
+    <dt>{% trans "Rootfs Device" %}</dt>
+    <dd>{{ host.rootfs_device }}</dd>
+    <dt>{% trans "Installation Output" %}</dt>
+    <dd>{{ host.install_output }}</dd>
+    <dt>{% trans "Console" %}</dt>
+    <dd>{{ host.console }}</dd>
+  </dl>
+</div>
+
+<div class="info row-fluid detail">
+  <h4>{% trans "Board Management" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal-wide">
+    {% if host.bm_type %}
+    <dt>{% trans "Board Management Controller IP Address" %}</dt>
+    <dd>{{ host.bm_ip }}</dd>
+    <dt>{% trans "Board Management Controller User Name" %}</dt>
+    <dd>{{ host.bm_username }}</dd>
+    {% endif %}
+  </dl>
+</div>
+

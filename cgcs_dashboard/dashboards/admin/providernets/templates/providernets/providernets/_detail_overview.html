@@ -1,0 +1,30 @@
+{% load i18n sizeformat %}
+
+<h3>{% trans "Provider Network Overview" %}</h3>
+
+<div class="info detail">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ providernet.name|default:_("None") }}</dd>
+    <dt>{% trans "ID" %}</dt>
+    <dd>{{ providernet.id|default:_("None") }}</dd>
+    <dt>{% trans "Type" %}</dt>
+    <dd>{{ providernet.type|default:_("None") }}</dd>
+    <dt>{% trans "MTU" %}</dt>
+    <dd>{{ providernet.mtu|default:_("-") }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ providernet.description|default:_("None") }}</dd>
+    <dt>{% trans "VLAN Transparent" %}</dt>
+    <dd>{{ providernet.vlan_transparent|yesno|capfirst }}</dd>
+    {% if nova_providernet %}
+    <dt>{% trans "PCI PFs Configured" %}</dt>
+    <dd>{{ nova_providernet.pci_pfs_configured|default:_("0") }}</dd>
+    <dt>{% trans "PCI PFs Used" %}</dt>
+    <dd>{{ nova_providernet.pci_pfs_used|default:_("0") }}</dd>
+    <dt>{% trans "PCI VFs Configured" %}</dt>
+    <dd>{{ nova_providernet.pci_vfs_configured|default:_("0") }}</dd>
+    <dt>{% trans "PCI VFs Used" %}</dt>
+    <dd>{{ nova_providernet.pci_vfs_used|default:_("0") }}</dd>
+    {% endif %}
+  </dl>
+</div>

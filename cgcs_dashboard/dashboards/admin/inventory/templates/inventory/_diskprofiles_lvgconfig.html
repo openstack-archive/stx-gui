@@ -1,0 +1,15 @@
+{% for lvg in diskprofile.lvgs %}
+    <li>
+        {% if lvg.lvm_vg_name == 'nova-local' %}
+            <strong>{{ lvg.lvm_vg_name }}</strong>
+            {% for param in lvg.params %}
+                <dd>
+                {{ param.key }}
+                {{": "}}
+                {{ param.value }}
+                {{ "<br>" }}
+                </dd>
+            {% endfor %}
+        {% endif %}
+    </li>
+{% endfor %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Edit Controller Filesystem" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Edit Filesystem") %}
+{% endblock page_header %}
+
+{% block main %}
+    {% include "admin/system_config/_update_istorage_table.html" %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% load i18n sizeformat %}
+
+<div class="info row-fluid detail">
+  {% include "admin/providernets/providernets/_detail_overview.html" %}
+  <hr>
+  <div id="ranges">
+    {{ provider_network_ranges_table.render }}
+  </div>
+  <div id="tenant_networks">
+    {{ tenant_networks_table.render }}
+  </div>
+</div>
+

@@ -1,0 +1,107 @@
+<table ng-controller="dcOverviewCentralTableController as table"
+  hz-table ng-cloak
+  st-table="table.icentralClouds"
+  st-safe-src="table.centralClouds"
+  class="table table-striped table-rsp table-detail">
+
+  <thead>
+    <tr>
+      <th class="expander"></th>
+      <th class="rsp-p1" translate>System Name</th>
+      <th class="rsp-p1" translate>Alarm Status</th>
+      <th class="rsp-p2" translate>Location</th>
+      <th class="actions_column" translate>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr ng-repeat-start="cloud in table.icentralClouds track by cloud.system_name">
+      <td class="expander">
+        <span class="fa fa-chevron-right" hz-expand-detail duration="200"></span>
+      </td>
+      <td class="rsp-p1">{$ cloud.name $}</td>
+      <td class="rsp-p1">
+        <span ng-show="cloud.status==='critical' || cloud.status==='disabled'" class="fa fa-circle status-danger"></span>
+        <span ng-show="cloud.status==='degraded'" class="fa fa-circle status-warning"></span>
+        <span ng-show="cloud.status=='OK'" class="fa fa-circle status-success"></span>
+        {$ cloud.status $}
+      </td>
+      <td class="rsp-p2">{$ cloud.location | noValue $}</td>
+      <td class="action-col">
+
+        <action-list uib-dropdown dropdown="true" class="dropdown btn-group">
+
+          <button type="button" class="split-button btn btn-default"
+            ng-click="table.goToCentralAlarmDetails(cloud)">
+            Alarm & Event Details
+          </button>
+          <button class="split-caret dropdown-toggle btn btn-default"  uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
+            <span class="fa fa-caret-down"></span>
+            <span class="sr-only" translate>Toggle Dropdown</span>
+          </button>
+
+          <ul role="menu" class="dropdown-menu dropdown-menu-right">
+            <li>
+              <a role="menuitem" href="#" ng-click="table.goToCentralHostDetails(cloud)">
+                Hosts Detail
+              </a>
+            </li>
+          </ul>
+
+        </action-list>
+      </td>
+    </tr>
+
+    <tr ng-repeat-end class="detail-row">
+      <td class="detail" colspan="100">
+        <div ng-show="cloud.description" class="row">
+        </div>
+        <div class="row">
+          <dl class="col-sm-5 dl-horizontal">
+            <h4>Alarm Summary</h4>
+            <div ng-show="cloud.status=='disabled'">
+              <dd>N/A</dd>
+            </div>
+            <div ng-hide="cloud.status=='disabled'">
+              <dt translate>Critical</dt>
+              <dd>
+                <span ng-show="cloud.critical > 0" class="badge badge-danger">{$ cloud.critical $}</span>
+                <span ng-hide="cloud.critical > 0" class="badge">{$ cloud.critical $}</span>
+              </dd>
+              <dt translate>Major</dt>
+              <dd>
+                <span ng-show="cloud.major > 0" class="badge badge-danger">{$ cloud.major $}</span>
+                <span ng-hide="cloud.major > 0" class="badge">{$ cloud.major $}</span>
+              </dd>
+              <dt translate>Minor</dt>
+              <dd>
+                <span ng-show="cloud.minor > 0" class="badge badge-warning">{$ cloud.minor $}</span>
+                <span ng-hide="cloud.minor > 0" class="badge">{$ cloud.minor $}</span>
+              </dd>
+              <dt translate>Warning</dt>
+              <dd>
+                <span ng-show="cloud.warnings > 0" class="badge badge-success">{$ cloud.warnings $}</span>
+                <span ng-hide="cloud.warnings > 0" class="badge">{$ cloud.warnings $}</span>
+              </dd>
+            </div>
+          </dl>
+
+          <dl class="col-sm-7">
+            <dt translate>Description</dt>
+            <dd>{$ cloud.description | noValue $}</dd>
+            <dt translate>Software Version</dt>
+            <dd>{$ cloud.software_version $}</dd>
+            <dt translate>Created At</dt>
+            <dd>{$ cloud.created_at $}</dd>
+            <dt translate>Updated At</dt>
+            <dd>{$ cloud.updated_at  | noValue $}</dd>
+          </dl>
+        </div>
+      </td>
+    </tr>
+
+    <tr hz-no-items items="table.isubClouds"></tr>
+  </tbody>
+
+
+</table>

@@ -1,0 +1,24 @@
+{% if memory.hugepages_configured == 'True' %}
+
+    <strong>{{ "4K Pages: " }}</strong> {{ "<br>" }}
+    <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Total: " }}</strong> {{ memory.vm_hugepages_nr_4K }} {{ "<br>" }}
+
+    <strong>{{ "2M Hugepages: " }}</strong> {{ "<br>" }} 
+    {% if memory.vm_hugepages_nr_2M_pending or memory.vm_hugepages_nr_2M_pending == 0 %}
+        <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Total: " }}</strong> {{ memory.vm_hugepages_nr_2M }}
+        <strong>{{ "&nbsp;&nbsp;Pending: "}}</strong> {{ memory.vm_hugepages_nr_2M_pending }} {{ "<br>" }}
+    {% else %}
+        <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Total: " }}</strong> {{ memory.vm_hugepages_nr_2M }} {{ "<br>" }}
+    {% endif %}
+    <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Available: " }}</strong> {{ memory.vm_hugepages_avail_2M }} {{ "<br>" }}
+
+    <strong>{{ "1G Hugepages: " }}</strong> {{ "<br>" }}
+    {% if memory.vm_hugepages_nr_1G_pending or memory.vm_hugepages_nr_1G_pending == 0 %}
+        <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Total: " }}</strong> {{ memory.vm_hugepages_nr_1G }}
+        <strong>{{ "&nbsp;&nbsp;Pending: "}}</strong> {{ memory.vm_hugepages_nr_1G_pending }} {{ "<br>" }}
+    {% else %} 
+        <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Total: " }}</strong> {{ memory.vm_hugepages_nr_1G }} {{ "<br>" }}
+    {% endif %}
+    <strong>{{ "&nbsp;&nbsp;&nbsp;&nbsp;Available: " }}</strong> {{ memory.vm_hugepages_avail_1G }} {{ "<br>" }}
+
+{% endif %}

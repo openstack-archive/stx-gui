@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load i18n sizeformat breadcrumb_nav %}
+{% block title %}{% trans "LLDP Neighbor Detail"%}{% endblock %}
+
+{% block main %}
+<h3>{% trans "LLDP Neighbor Overview" %}</h3>
+<div class="info detail">
+  <dl>
+    <dt>{% trans "Local Port Name" %}</dt>
+    <dd>{{ localportname }}</dd>
+  </dl>
+  <dl>
+    <dt>{% trans "Neighbor Identifier" %}</dt>
+    <dd>{{ neighbour.port_identifier }}</dd>
+    {% if neighbour.chassis_id %}
+      <dt>{% trans "Chassis" %}</dt>
+      <dd>{{ neighbour.chassis_id }}</dd>
+    {% endif %}
+    {% if neighbour.port_description %}
+      <dt>{% trans "Description" %}</dt>
+      <dd>{{ neighbour.port_description }}</dd>
+    {% endif %}
+    {% if neighbour.ttl %}
+      <dt>{% trans "Time To Live (Rx):" %}</dt>
+      <dd>{{ neighbour.ttl }}</dd>
+    {% endif %}
+    {% if neighbour.msap %}
+      <dt>{% trans "MAC Service Access Point" %}</dt>
+      <dd>{{ neighbour.msap }}</dd>
+    {% endif %}
+    {% if neighbour.system_name %}
+      <dt>{% trans "System Name" %}</dt>
+      <dd>{{ neighbour.system_name }}</dd>
+    {% endif %}
+    {% if neighbour.system_description %}
+      <dt>{% trans "System Description" %}</dt>
+      <dd>{{ neighbour.system_description }}</dd>
+    {% endif %}
+    {% if systemcaps %}
+      <dt>{% trans "System Capabilities" %}</dt>
+      <dd>{{ systemcaps|linebreaksbr }}</dd>
+    {% endif %}
+    {% if neighbour.management_address %}
+      <dt>{% trans "Management Address" %}</dt>
+      <dd>{{ neighbour.management_address }}</dd>
+    {% endif %}
+  </dl>
+  <dl>
+    {% if dot1lag %}
+      <dt>{% trans "Dot1 Link Aggregation" %}</dt>
+      <dd>{{ dot1lag|linebreaksbr }}</dd>
+    {% endif %}
+    {% if neighbour.dot_port_vid %}
+      <dt>{% trans "Dot1 Port VID" %}</dt>
+      <dd>{{ neighbour.dot1_port_vid }}</dd>
+    {% endif %}
+    {% if dot1provids %}
+      <dt>{% trans "Dot1 Protocol VIDs" %}</dt>
+      <dd>{{ dot1provids|linebreaksbr }}</dd>
+    {% endif %}
+    {% if vlannames %}
+      <dt>{% trans "Dot1 VLANs" %}</dt>
+      <dd>{{ vlannames|linebreaksbr }}</dd>
+    {% endif %}
+    {% if dot1protoids %}
+      <dt>{% trans "Dot1 Protocol IDs" %}</dt>
+      <dd>{{ dot1protoids|linebreaksbr }}</dd>
+    {% endif %}
+    {% if neighbour.dot1_vid_digest %}
+      <dt>{% trans "Dot1 VID Digest" %}</dt>
+      <dd>{{ neighbour.dot1_vid_digest }}</dd>
+    {% endif %}
+    {% if neighbour.dot1_management_vid %}
+      <dt>{% trans "Dot1 Management VID" %}</dt>
+      <dd>{{ neighbour.dot1_management_vid }}</dd>
+    {% endif %}
+
+  </dl>
+  <dl>
+    {% if dot3macstatus %}
+      <dt>{% trans "Dot3 MAC Status" %}</dt>
+      <dd>{{ dot3macstatus|linebreaksbr }}</dd>
+    {% endif %}
+    {% if dot3powermdi %}
+      <dt>{% trans "Dot3 Power MDI" %}</dt>
+      <dd>{{ dot3powermdi|linebreaksbr }}</dd>
+    {% endif %}
+    {% if neighbour.dot3_max_frame %}
+      <dt>{% trans "Dot3 Max Frame Size" %}</dt>
+      <dd>{{ neighbour.dot3_max_frame }}</dd>
+    {% endif %}
+  </dl>
+</div>
+{% endblock %}

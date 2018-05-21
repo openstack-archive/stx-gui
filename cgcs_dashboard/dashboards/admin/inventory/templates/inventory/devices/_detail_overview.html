@@ -1,0 +1,37 @@
+{% load i18n sizeformat %}
+
+<h3>{% trans "Device Overview" %}</h3>
+
+<div class="detail">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ device.name|default:_("None") }}</dd>
+    <dt>{% trans "PCI Address" %}</dt>
+    <dd>{{ device.pciaddr|default:_("None") }}</dd>
+    <dt>{% trans "Total VFs" %}</dt>
+    <dd>{{ device.sriov_totalvfs|default:_("None") }}</dd>
+    <dt>{% trans "Number of VFs" %}</dt>
+    <dd>{{ device.sriov_numvfs|default:_("None") }}</dd>
+    <dt>{% trans "Numa Node" %}</dt>
+    <dd>{{ device.numa_node|default:_("Disabled") }}</dd>
+    <dt>{% trans "Enabled" %}</dt>
+    <dd>{{ device.enabled|default:_("None") }}</dd>
+    <dt>{% trans "Extra Info" %}</dt>
+    <dd>{{ device.extra_info|default:_("None") }}</dd>
+    <h4>{% trans "Device" %}</h4>
+    <dt>{% trans "Id" %}</dt>
+    <dd>{{ device.pdevice_id|default:_("None") }}</dd>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ device.pdevice|default:_("None") }}</dd>
+    <h4>{% trans "Class" %}</h4>
+    <dt>{% trans "Id" %}</dt>
+    <dd>{{ device.pclass_id|default:_("None") }}</dd>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ device.pclass|default:_("None") }}</dd>
+    <h4>{% trans "Vendor" %}</h4>
+    <dt>{% trans "Id" %}</dt>
+    <dd>{{ device.pvendor_id|default:_("None") }}</dd>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ device.pvendor|default:_("None") }}</dd>
+  </dl>
+</div>
