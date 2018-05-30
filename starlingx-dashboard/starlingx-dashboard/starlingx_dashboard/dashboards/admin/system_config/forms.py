@@ -685,10 +685,10 @@ class UpdateiStorage(forms.SelfHandlingForm):
         help_text=_("Database storage space in gibibytes."),
         min_value=0)
 
-    cgcs = forms.IntegerField(
-        label=_("CGCS Storage (GiB)"),
+    glance = forms.IntegerField(
+        label=_("Glance Storage (GiB)"),
         required=True,
-        help_text=_("CGCS image storage space in gibibytes."),
+        help_text=_("Glance image storage space in gibibytes."),
         min_value=0)
 
     backup = forms.IntegerField(
