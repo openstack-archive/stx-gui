@@ -27,14 +27,11 @@ from starlingx_dashboard.dashboards.admin.system_config.views import \
 from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateiStorageView
 from starlingx_dashboard.dashboards.admin.system_config.views import \
-    UpdatePipelineView
-from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateSDNControllerView
 from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateSystemView
 
 UUID = r'^(?P<uuid>[^/]+)/%s$'
-PIPELINE = r'^(?P<pipeline_name>[^/]+)/%s$'
 TIER = r'^(?P<tier_name>[^/]+)/%s$'
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -74,6 +71,4 @@ urlpatterns = [
         CreateSDNControllerView.as_view(),
         name='create_sdn_controller_table'),
 
-    url(PIPELINE % 'update', UpdatePipelineView.as_view(),
-        name='update')
 ]

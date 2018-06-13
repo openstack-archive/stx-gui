@@ -265,31 +265,8 @@ class SDNControllerTab(tabs.TableTab):
             return False
 
 
-class CeilometerConfigTab(tabs.TableTab):
-    table_classes = (toplevel_tables.CeilometerPipelinesTable,)
-    name = _("Pipelines")
-    slug = "ceilometer_config"
-    template_name = ("horizon/common/_detail_table.html")
-
-    def get_ceilometer_pipelines_data(self):
-        request = self.tab_group.request
-        pipelines = []
-        try:
-            pipelines = api.ceilometer.pipeline_list(request)
-        except Exception:
-            msg = _('Unable to retrieve ceilometer pipeline data.')
-            exceptions.handle(request, msg)
-        return pipelines
-
-    def allowed(self, request):
-        if request.user.services_region == 'SystemController':
-            return False
-        return stx_api.base.is_stx_region(request)
-
-
 class ConfigTabs(tabs.TabGroup):
     slug = "system_config_tab"
     tabs = (SystemsTab, AddressPoolsTab, cDNSTab, cNTPTab, cPTPTab,
-            cEXTOAMTab, iStorageTab, iStoragePoolsTab, SDNControllerTab,
-            CeilometerConfigTab)
+            cEXTOAMTab, iStorageTab, iStoragePoolsTab, SDNControllerTab)
     sticky = True
