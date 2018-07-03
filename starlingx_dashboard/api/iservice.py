@@ -19,23 +19,22 @@ import logging
 
 from django.conf import settings
 import sm_client as smc
+from openstack_dashboard.api import base
 
 # Swap out with SM API
 LOG = logging.getLogger(__name__)
+SM_API_SERVICENAME = "smapi"
 
 
 def sm_client(request):
     # o = urlparse.urlparse(url_for(request, 'inventory'))
     # url = "://".join((o.scheme, o.netloc))
     insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
-    # LOG.debug('sysinv client conn using token "%s" and url "%s"'
-    # % (request.user.token.id, url))
-    # return smc.Client('1', url, token=request.user.token.id,
-    #                            insecure=insecure)
 
-    return smc.Client('1', 'http://localhost:7777',
-                      token=request.user.token.id,
-                      insecure=insecure)
+    sm_api_path = base.url_for(request, SM_API_SERVICENAME)
+    return smc.Client('1', sm_api_path,
+                       token=request.user.token.id,
+                       insecure=insecure)
 
 
 def sm_sda_list(request):
