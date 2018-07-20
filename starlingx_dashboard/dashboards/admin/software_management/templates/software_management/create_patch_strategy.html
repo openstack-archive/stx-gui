@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Create Patch Strategy" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Create Patch Strategy") %}
+{% endblock page_header %}
+
+{% block main %}
+  {% include 'project/software_management/_create_patch_strategy.html' %}
+{% endblock %}
