@@ -1,0 +1,53 @@
+{% load i18n sizeformat parse_date %}
+{% load url from future %}
+
+<h3>{% trans "Server Group Overview" %}: {{server_group.name }}</h3>
+
+<div class="info row-fluid detail">
+  <h4>{% trans "Info" %}</h4>
+  <hr class="header_rule">
+  <dl>
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ server_group.name }}</dd>
+    <dt>{% trans "ID" %}</dt>
+    <dd>{{ server_group.id }}</dd>
+    <dt>{% trans "Status" %}</dt>
+    <dd>{{ server_group.status|capfirst }}</dd>
+  </dl>
+</div>
+
+<div class="members row-fluid detail">
+  <h4>{% trans "Members" %}</h4>
+  <hr class="header_rule">
+  <dl>
+  {% for member in server_group.members_display %}
+      <dd>
+        {% url 'horizon:admin:instances:detail' member.id as instance_url%}
+        <a href="{{ instance_url }}">{{ member.instance.name }} ({{ member.id }})</a>
+      </dd>
+  {% empty %}
+      <dd><em>{% trans "No members" %}</em></dd>
+  {% endfor %}
+  </dl>
+</div>
+
+<div class="policies row-fluid detail">
+  <h4>{% trans "Policies" %}</h4>
+  <hr class="header_rule">
+  <dl>
+  {% for policy in server_group.policies %}
+    <dd>{{ policy }}</dd>
+  {% endfor %}
+  </dl>
+</div>
+
+<div class="status row-fluid detail">
+  <h4>{% trans "Metadata" %}</h4>
+  <hr class="header_rule">
+  <dl>
+  {% for key, value in server_group.metadata.items %}
+    <dt>{{ key }}</dt>
+    <dd>{{ value }}</dd>
+  {% endfor %}
+  </dl>
+</div>
