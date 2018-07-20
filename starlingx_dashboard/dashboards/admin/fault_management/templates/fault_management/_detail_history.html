@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Historical Alarm Details" %}{% endblock %}
+
+{% block main %}
+{% if history.event_log_id == '' or history.event_log_id == ' ' %}
+    <h3> {{history.reason_text }} </h3>
+{% else %}
+    <h3> {{history.state }} - {{history.event_log_id }} - {{history.reason_text }} </h3>
+{% endif %}
+
+<div class="row">
+  <div class="col-sm-12">
+	<div class="info row-fluid detail">
+	  <h4>{% trans "Info" %}</h4>
+	  <hr class="header_rule">
+	  <dl>
+		<dt>{% trans "Alarm UUID" %}</dt>
+		<dd>{{ history.uuid }}</dd>
+		{% if history.event_log_id != '' and history.event_log_id != ' ' %}
+			<dt>{% trans "Alarm ID" %}</dt>
+			<dd>{{ history.event_log_id }}</dd>
+		{% endif %}
+		<dt>{% trans "Severity" %}</dt>
+		<dd>{{ history.severity }}</dd>
+		<dt>{% trans "Alarm State" %}</dt>
+		<dd>{{ history.state }}</dd>
+		<dt>{% trans "Alarm Type" %}</dt>
+		<dd>{{ history.event_log_type }}</dd>
+		<dt>{% trans "Timestamp" %}</dt>
+		<dd>{{ history.timestamp|parse_isotime }}</dd>
+		<dt>{% trans "Suppression" %}</dt>
+		<dd>{{ history.suppression }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Entity Instance ID" %}</dt>
+		<dd>{{ history.entity_instance_id }}</dd>
+		{% if history.entity_type_id != '' and history.entity_type_id != ' ' %}
+			<dt>{% trans "Entity Type ID" %}</dt>
+			<dd>{{ history.entity_type_id }}</dd>
+		{% endif %}
+		<dt>{% trans "Probable Cause" %}</dt>
+		<dd>{{ history.probable_cause }}</dd>
+		{% if history.proposed_repair_action != '' and history.proposed_repair_action != ' ' %}
+			<dt>{% trans "Proposed Repair Action" %}</dt>
+			<dd>{{ history.proposed_repair_action }}</dd>
+		{% endif %}
+		<dt>{% trans "Service Affecting" %}</dt>
+		<dd>{{ history.service_affecting }}</dd>
+		{% if history.reason_text != '' and history.reason_text != ' ' %}
+			<dt>{% trans "Reason" %}</dt>
+			<dd>{{ history.reason_text }}</dd>
+		{% endif %}
+	  </dl>
+	</div>
+  </div>
+</div>
+{% endblock %}

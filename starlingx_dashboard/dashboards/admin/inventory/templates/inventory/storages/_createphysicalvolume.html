@@ -1,0 +1,68 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_physicalvolume_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:addphysicalvolume' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Physical Volume" %}{% endblock %}
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+    <script>
+    var pv_type_dropdown = document.getElementById('id_pv_type');
+    var lvg_dropdown = document.getElementById('id_lvg');
+
+    if (pv_type_dropdown.options[0].text.indexOf("Disk") !== -1) {
+        disk_index = 0;
+        partition_index = 1;
+    }
+    else {
+        partition_index = 0;
+        disk_index = 1;
+    }
+
+    /* If the selected volume group is cinder-volumes, we should only allow
+       partition type physical volumes. */
+    function set_pv_type() {
+        lvg = this.options[this.selectedIndex].text;
+
+        if (lvg.indexOf("cinder-volumes") !== -1) {
+            pv_type_dropdown.selectedIndex = partition_index;
+            pv_type_dropdown[disk_index].style.display = "none";
+        } else {
+            pv_type_dropdown[disk_index].style.display = "block";
+        }
+    }
+
+    /* If the selected volume group is cgts-vg, ask for confirmation, since the
+       operation is permanent and cannot be undone. */
+    function confirm_pv_device() {
+        lvg = lvg_dropdown.options[lvg_dropdown.selectedIndex].text;
+        if (lvg.indexOf("cgts-vg") !== -1) {
+            var str = "This operation is irreversible. Are you sure you want to add the selected device to cgts-vg?";
+            var confirm = window.confirm(str);
+            if (confirm != true) {
+                return false;
+            }
+        }
+
+        document.getElementById('add_physicalvolume_form').submit();
+    }
+
+    /* Obtain the stor function dropdown. */
+    lvg_dropdown.onchange = set_pv_type;
+    </script>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "From here you can define the configuration of a new physical volume." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" onclick="return confirm_pv_device()" value="{% trans "Create Physical Volume" %}" />
+{% endblock %}
+

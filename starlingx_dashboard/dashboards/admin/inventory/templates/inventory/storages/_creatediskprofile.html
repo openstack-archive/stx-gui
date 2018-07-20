@@ -1,0 +1,94 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_disk_profile_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:inventory:adddiskprofile' host_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Storage Profile" %}{% endblock %}
+
+{% block modal-body %}
+
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "Create a new Storage Profile based on the storage and disk configuration of this host." %}</p>
+</div>
+
+ {{ "<br>With the following configuration:" }}
+        <table class="{% block table_css_classes %}table table-bordered table-striped datatable {{ table.css_classes }}{% endblock %}">
+           {% if host.stors and 'storage' in host.subfunctions %}
+            <tr>
+              <th>{% trans "Disk" %}</th>
+              <th>{% trans "Storage" %}</th>
+            </tr>
+            {% for disk in host.disks %}
+                <tr>
+                  <td>{{ disk.device_path }} {{"( "}} {{ disk.device_node }}{{", "}} {{disk.serial_id}} {{" )"}} {{": "}} {{ disk.size_mib }} {{ "MiB" }}</td>
+                  {% for stor in host.stors %}
+                      {% if stor.uuid == disk.istor_uuid %}
+                          <td>
+                              {% if stor.function == 'osd' %}
+                                  {{ stor.function }} {{"stor"}}
+                                  {{"- ceph journal size: "}} {{stor.journal_size_mib}}{{","}}
+                                  {% if stor.journal_location == stor.uuid %}
+                                      {{ "collocated on osd stor" }}
+                                  {% else %}
+                                      {{ "on journal stor" }} {{stor.count}}
+                                  {% endif %}
+                                  {{", for tier:"}} {{stor.tier_name}}
+                              {% else %}
+                                  {{ stor.function }} {{"stor"}} {{stor.count}}
+                              {% endif %}
+                          </td>
+                      {% endif %}
+                  {% endfor %}
+
+                </tr>
+            {% endfor %}
+            {% endif %}
+
+
+            <tr>
+                {% if host.lvgs %}
+                    <th>{% trans "Logical Volume Group" %}</th>
+                    <th>{% trans "Physical Volumes" %}</th>
+                    <th>{% trans "Physical Volume Partitions" %}</th>
+                {% endif %}
+            </tr>
+
+            <tr>
+                {% if host.lvgs %}
+                    {% for lvg in host.lvgs %}
+                        <td>{{ "name"}} {{": "}} {{ lvg.lvm_vg_name }}
+                        {{ "<br>" }}
+                        {{ "instance backing"}} {{": "}} {{lvg.instance_backing }}
+                        {{ "<br>" }}
+                        {% if lvg.instances_lv_size_mib %}
+                            {{ "instances_lv size MiB"}} {{": "}} {{lvg.instances_lv_size_mib }}
+                            {{ "<br>" }}
+                        {% endif %}
+                        {{ "concurrent disk operations"}} {{": "}} {{lvg.concurrent_disk_operations }}</td>
+                        <td>{{ "devices"}} {{": "}} {{ lvg.dev_paths }}</td>
+                    {% endfor %}
+                    <td>{% for part in host.partitions %}
+                        {{ part.device_path}} {{": "}} {{ part.size_mib }} {{" MiB"}}
+                        {{ "<br>" }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+            </tr>
+          </table>
+    {{ "<br>" }}
+
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Storage Profile" %}" />
+{% endblock %}
+

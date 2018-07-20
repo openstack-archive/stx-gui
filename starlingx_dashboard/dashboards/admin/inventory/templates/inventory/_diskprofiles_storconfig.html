@@ -1,0 +1,26 @@
+{% for stor in diskprofile.stors %}
+    <li>
+        {% if stor.osdid %}
+            <strong>{{ stor.osdid }}</strong>
+            {% if stor.function %}
+                {{": "}}
+            {% endif %}
+        {% endif %}
+
+        {% if stor.function %}
+            {% if stor.function == 'osd' %}
+                {{ stor.function }} {{"stor"}}
+                {{"- ceph journal size: "}} {{stor.journal_size_mib}}{{","}}
+                {% if stor.journal_location == stor.uuid %}
+                   {{ "collocated on osd stor" }}
+                {% else %}
+                   {{ "on journal stor" }} {{stor.count}}
+                {% endif %}
+                {{", for tier:"}} {{stor.tier_name}}
+            {% else %}
+                {{ stor.function }} {{"stor"}} {{stor.count}}
+            {% endif %}
+        {% endif %}
+
+    </li>
+{% endfor %}

@@ -1,0 +1,61 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}edit_iconfig_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:system_config:update_storage_pools_table' tier_name %}{% endblock %}
+
+{% block modal_id %}edit_iconfig_modal{% endblock %}
+{% block modal-header %}{% trans "Edit size of Ceph Storage Pools" %}{% endblock %}
+
+{% block modal-body %}
+<script type="text/javascript" charset="utf-8">
+    function add_total_quota() {
+        var glance = document.getElementById('id_glance_pool_gib'),
+            ephemeral = document.getElementById('id_ephemeral_pool_gib'),
+            cinder = document.getElementById('id_cinder_pool_gib'),
+            obj = document.getElementById('id_object_pool_gib');
+
+        var dynamic_quota = document.getElementById('total_quota');
+
+
+        current_quota_total = (parseInt(glance.value) || 0)
+                + (parseInt(cinder.value) || 0)
+                + (parseInt(ephemeral.value) || 0)
+                + (parseInt(obj.value) || 0);
+
+        total_tier_size = parseInt(document.getElementById('total_tier_size').innerHTML) || 0;
+        dynamic_quota.innerHTML = current_quota_total;
+
+        if (current_quota_total == total_tier_size) {
+            document.getElementById('quota_text').style.color='green';
+        }
+        else {
+            document.getElementById('quota_text').style.color='red';
+        }
+    }
+</script>
+
+<div class="left">
+  <fieldset>
+  {% include "horizon/common/_form_fields.html" %}
+  </fieldset>
+</div>
+<div class="right">
+  <h3>{% trans "Description" %}:</h3>
+  <p>{% trans "From here you can update the quota allocated to the pools associated with this Ceph storage tier." %}</p>
+  <p>{% trans "A quota value of 0 will allow the storage associated with that pool to consume all available space in the tier." %}</p>
+  {% if tier_name == 'storage'  %}
+      <p>{% trans "A quota value of 0 is not allowed for the cinder pool or glance pool." %}</p>
+      <p>{% trans "The sum of the desired quotas must equal 100% of the cluster size." %}</p>
+  {% else  %}
+      <p>{% trans "A quota value of 0 is allowed for the cinder pool." %}</p>
+  {% endif  %}
+
+  <p> <strong><span id="quota_text" style="color:red"><span id="total_quota">{{ configured_quota }}</span> GiB out of <span id="total_tier_size">{{ tier_total }}</span>  GiB configured</span></strong></p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+  <input class="btn btn-primary" type="submit" value="{% trans "Save" %}" />
+{% endblock %}
