@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Patch Details" %}{% endblock %}
+
+{% block main %}
+<h3> {{patch.patch_id }} </h3>
+
+<div class="row-fluid">
+  <div class="col-sm-12">
+	<div class="info row-fluid detail">
+	  <h4>{% trans "Info" %}</h4>
+	  <hr class="header_rule">
+	  <dl>
+		<dt>{% trans "Patch State" %}</dt>
+		<dd>{{ patch.patchstate }}</dd>
+		<dt>{% trans "Platform Release Version" %}</dt>
+		<dd>{{ patch.sw_version }}</dd>
+		<dt>{% trans "Reboot-Required" %}</dt>
+		<dd>{{ patch.reboot_required }}</dd>
+		<dt>{% trans "Patch Status Code" %}</dt>
+		<dd>{{ patch.status }}</dd>
+	    {% if patch.unremovable == "Y" %}
+		<dt>{% trans "Unremovable" %}</dt>
+		<dd>{% trans "This patch cannot be removed" %}</dd>
+	    {% endif %}
+        <dt>{% trans "Required Patches" %}</dt>
+		<dd>{{ patch.requires_display|linebreaks }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Summary" %}</dt>
+		<dd>{{ patch.summary|linebreaks }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Description" %}</dt>
+		<dd>{{ patch.description|linebreaks }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Warnings" %}</dt>
+		<dd>{{ patch.warnings|linebreaks }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Installation Instructions" %}</dt>
+		<dd>{{ patch.install_instructions|linebreaks }}</dd>
+	   </dl>
+	   <dl>
+		<dt>{% trans "Contents" %}</dt>
+		<dd>{{ patch.contents_display|linebreaks }}</dd>
+	   </dl>
+	</div>
+  </div>
+</div>
+{% endblock %}
+
+
