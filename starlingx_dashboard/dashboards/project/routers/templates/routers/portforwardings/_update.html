@@ -1,0 +1,27 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}update_portforwarding_rule_form{% endblock %}
+{% block form_action %}{% url 'horizon:project:routers:updateportforwardingrule' router.id portforwarding.id %}
+{% endblock %}
+
+{% block modal-header %}{% trans "Update Port Forwarding Rule" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>
+      {% trans "You can update the port forwarding rule details." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Update Rule" %}"/>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_portforwarding_rule_form{% endblock %}
+{% block form_action %}{% url 'horizon:project:routers:addportforwardingrule' router.id %}
+{% endblock %}
+
+{% block modal-header %}{% trans "Add Port Forwarding Rule" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>
+      {% trans "You can create a port forwarding rule from a public port to a private address and port." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Add Rule" %}"/>
+{% endblock %}
