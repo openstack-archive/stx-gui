@@ -17,23 +17,22 @@ from horizon import tabs
 from horizon.utils import memoized
 from horizon import views
 
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     AddDiskProfile
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     AddLocalVolumeGroup
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     AddPhysicalVolume
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     AddStorageVolume
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     CreatePartition
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     EditPartition
-from openstack_dashboard.dashboards.admin.inventory.storages.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.storages.forms import \
     EditStorageVolume
-
-from openstack_dashboard.dashboards.admin.inventory.storages.tabs \
+from starlingx_dashboard.dashboards.admin.inventory.storages.tabs \
     import LocalVolumeGroupDetailTabs
 
 LOG = logging.getLogger(__name__)
@@ -62,7 +61,7 @@ class AddStorageVolumeView(forms.ModalFormView):
         initial = super(AddStorageVolumeView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['ihost_uuid'] = host.uuid
@@ -86,7 +85,7 @@ class EditStorageVolumeView(forms.ModalFormView):
             LOG.debug("stor_id=%s kwargs=%s",
                       stor_uuid, self.kwargs)
             try:
-                self._object = api.sysinv.host_stor_get(self.request,
+                self._object = stx_api.sysinv.host_stor_get(self.request,
                                                         stor_uuid)
                 self._object.host_id = host_id
             except Exception:
@@ -131,24 +130,24 @@ class AddDiskProfileView(forms.ModalFormView):
         if not hasattr(self, "_host"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
+                host = stx_api.sysinv.host_get(self.request, host_id)
 
-                all_disks = api.sysinv.host_disk_list(self.request, host.uuid)
+                all_disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
                 host.disks = [d for d in all_disks if
                               (d.istor_uuid or d.ipv_uuid)]
 
-                host.partitions = api.sysinv.host_disk_partition_list(
+                host.partitions = stx_api.sysinv.host_disk_partition_list(
                     self.request, host.uuid)
 
-                host.stors = api.sysinv.host_stor_list(self.request, host.uuid)
+                host.stors = stx_api.sysinv.host_stor_list(self.request, host.uuid)
 
-                all_lvgs = api.sysinv.host_lvg_list(self.request, host.uuid)
+                all_lvgs = stx_api.sysinv.host_lvg_list(self.request, host.uuid)
                 host.lvgs = [l for l in all_lvgs if
-                             l.lvm_vg_name == api.sysinv.LVG_NOVA_LOCAL]
+                             l.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL]
 
-                all_pvs = api.sysinv.host_pv_list(self.request, host.uuid)
+                all_pvs = stx_api.sysinv.host_pv_list(self.request, host.uuid)
                 host.pvs = [p for p in all_pvs if
-                            p.lvm_vg_name == api.sysinv.LVG_NOVA_LOCAL]
+                            p.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL]
 
                 journals = {}
                 count = 0
@@ -175,21 +174,21 @@ class AddDiskProfileView(forms.ModalFormView):
 
                 for l in host.lvgs:
                     l.instance_backing = l.capabilities.get(
-                        api.sysinv.LVG_NOVA_PARAM_BACKING)
+                        stx_api.sysinv.LVG_NOVA_PARAM_BACKING)
                     l.concurrent_disk_operations = l.capabilities.get(
-                        api.sysinv.LVG_NOVA_PARAM_DISK_OPS)
+                        stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS)
                     if (l.instance_backing and
-                       l.instance_backing == api.sysinv.LVG_NOVA_BACKING_LVM):
+                       l.instance_backing == stx_api.sysinv.LVG_NOVA_BACKING_LVM):
                         l.instances_lv_size_mib = l.capabilities.get(
-                            api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB)
+                            stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB)
 
                     l.lvm_type = l.capabilities.get(
-                        api.sysinv.LVG_CINDER_PARAM_LVM_TYPE)
+                        stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE)
 
                     l.dev_paths = [p.disk_or_part_device_path
                                    for p in all_pvs if
                                    p.lvm_vg_name and
-                                   p.lvm_vg_name == api.sysinv.LVG_NOVA_LOCAL]
+                                   p.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL]
                     l.dev_paths = ", ".join(l.dev_paths)
 
             except Exception:
@@ -212,7 +211,7 @@ class AddDiskProfileView(forms.ModalFormView):
         initial = super(AddDiskProfileView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['personality'] = host._personality
@@ -243,7 +242,7 @@ class AddLocalVolumeGroupView(forms.ModalFormView):
         initial = super(AddLocalVolumeGroupView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['ihost_uuid'] = host.uuid
@@ -274,7 +273,7 @@ class AddPhysicalVolumeView(forms.ModalFormView):
         initial = super(AddPhysicalVolumeView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['ihost_uuid'] = host.uuid
@@ -306,7 +305,7 @@ class DetailPhysicalVolumeView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')
@@ -317,7 +316,7 @@ class DetailPhysicalVolumeView(views.HorizonTemplateView):
         if not hasattr(self, "_pv"):
             pv_id = self.kwargs['pv_id']
             try:
-                pv = api.sysinv.host_pv_get(self.request, pv_id)
+                pv = stx_api.sysinv.host_pv_get(self.request, pv_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,
@@ -355,7 +354,7 @@ class DetailLocalVolumeGroupView(tabs.TabbedTableView):
         if not hasattr(self, "_lvg"):
             lvg_id = self.kwargs['lvg_id']
             try:
-                lvg = api.sysinv.host_lvg_get(self.request, lvg_id)
+                lvg = stx_api.sysinv.host_lvg_get(self.request, lvg_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,
@@ -369,7 +368,7 @@ class DetailLocalVolumeGroupView(tabs.TabbedTableView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')
@@ -404,7 +403,7 @@ class CreatePartitionView(forms.ModalFormView):
         initial = super(CreatePartitionView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['ihost_uuid'] = host.uuid
@@ -428,7 +427,7 @@ class EditPartitionView(forms.ModalFormView):
             LOG.debug("partition_id=%s kwargs=%s",
                       partition_uuid, self.kwargs)
             try:
-                self._object = api.sysinv.host_disk_partition_get(
+                self._object = stx_api.sysinv.host_disk_partition_get(
                     self.request,
                     partition_uuid)
                 self._object.host_id = host_id

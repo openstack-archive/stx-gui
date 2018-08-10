@@ -16,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class AddSensorGroup(forms.SelfHandlingForm):
             del data['hostname']
 
             # The REST API takes care of creating the sensorgroup and assoc
-            sensorgroup = api.sysinv.host_sensorgroup_create(request, **data)
+            sensorgroup = stx_api.sysinv.host_sensorgroup_create(request, **data)
 
             msg = _('Sensor group was successfully created.')
             LOG.debug(msg)
@@ -153,7 +153,7 @@ class UpdateSensorGroup(forms.SelfHandlingForm):
     def __init__(self, *args, **kwargs):
         super(UpdateSensorGroup, self).__init__(*args, **kwargs)
 
-        sensorgroup = api.sysinv.host_sensorgroup_get(
+        sensorgroup = stx_api.sysinv.host_sensorgroup_get(
             self.request, kwargs['initial']['uuid'])
 
         self.fields['actions_critical_group'].choices = \
@@ -206,7 +206,7 @@ class UpdateSensorGroup(forms.SelfHandlingForm):
         mysensorgroupname = data.pop('sensorgroupname', None)
 
         try:
-            sensorgroup = api.sysinv.host_sensorgroup_update(request,
+            sensorgroup = stx_api.sysinv.host_sensorgroup_update(request,
                                                              sensorgroup_id,
                                                              **data)
 

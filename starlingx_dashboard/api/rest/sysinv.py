@@ -18,7 +18,7 @@ from django.views import generic
 
 from openstack_dashboard.api.rest import urls
 from openstack_dashboard.api.rest import utils as rest_utils
-from openstack_dashboard.api import sysinv
+from starlingx_dashboard.api import sysinv
 
 
 @urls.register

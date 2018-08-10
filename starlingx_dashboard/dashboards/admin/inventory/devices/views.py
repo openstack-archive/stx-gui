@@ -17,9 +17,10 @@ from horizon import tables
 from horizon.utils import memoized
 from horizon import views
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.devices.forms import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.devices.forms import \
     UpdateDevice
-from openstack_dashboard.dashboards.admin.inventory.devices.tables import \
+from starlingx_dashboard.dashboards.admin.inventory.devices.tables import \
     UsageTable
 
 LOG = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ class UpdateView(forms.ModalFormView):
             device_uuid = self.kwargs['device_uuid']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_device_get(self.request,
+                self._object = stx_api.sysinv.host_device_get(self.request,
                                                           device_uuid)
                 self._object.host_id = host_id
             except Exception:
@@ -83,7 +84,7 @@ class DetailView(views.HorizonTemplateView):
             device_uuid = self.kwargs['device_uuid']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_device_get(self.request,
+                self._object = stx_apl.sysinv.host_device_get(self.request,
                                                           device_uuid)
                 self._object.host_id = host_id
 
@@ -98,7 +99,7 @@ class DetailView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_apl.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')
@@ -137,7 +138,7 @@ class UsageView(tables.MultiTableView):
         if not hasattr(self, "_detail_object"):
             dev_id = self.kwargs['device_id']
             try:
-                _object = api.nova.get_detail_usage(self.request, dev_id)
+                _object = stx_apl.nova.get_detail_usage(self.request, dev_id)
                 _object.sort(key=lambda f: (f.host))
                 id = 0
                 for u in _object:

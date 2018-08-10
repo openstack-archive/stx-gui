@@ -12,8 +12,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
 
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
     import utils as cpufunctions_utils
 
 LOG = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class CreateCpuProfile(tables.LinkAction):
         return reverse(self.url, args=(host_id,))
 
     def allowed(self, request, cpufunction=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 def get_function_name(datum):

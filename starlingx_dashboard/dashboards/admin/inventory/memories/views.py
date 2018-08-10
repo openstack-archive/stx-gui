@@ -13,10 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import forms
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.memorys.forms import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.memorys.forms import \
     AddMemoryProfile
-from openstack_dashboard.dashboards.admin.inventory.memorys.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.memorys.forms import \
     UpdateMemory
 
 LOG = logging.getLogger(__name__)
@@ -36,11 +36,11 @@ class UpdateMemoryView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
-                host.memorys = api.sysinv.host_memory_list(self.request,
+                host = stx_api.sysinv.host_get(self.request, host_id)
+                host.memorys = stx_api.sysinv.host_memory_list(self.request,
                                                            host.uuid)
                 host.nodes = \
-                    api.sysinv.host_node_list(self.request, host.uuid)
+                    stx_api.sysinv.host_node_list(self.request, host.uuid)
                 self._object = host
                 self._object.host_id = host_id
             except Exception as e:
@@ -83,14 +83,14 @@ class AddMemoryProfileView(forms.ModalFormView):
         if not hasattr(self, "_host"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
-                host.nodes = api.sysinv.host_node_list(self.request, host.uuid)
+                host = stx_api.sysinv.host_get(self.request, host_id)
+                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
                 host.memory = \
-                    api.sysinv.host_memory_list(self.request, host.uuid)
+                    stx_api.sysinv.host_memory_list(self.request, host.uuid)
 
                 numa_node_tuple_list = []
                 for m in host.memory:
-                    node = api.sysinv.host_node_get(self.request, m.inode_uuid)
+                    node = stx_api.sysinv.host_node_get(self.request, m.inode_uuid)
                     numa_node_tuple_list.append((node.numa_node, m))
 
                 host.numa_nodes = numa_node_tuple_list
