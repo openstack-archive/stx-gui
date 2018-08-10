@@ -1060,7 +1060,6 @@ def alarm_list(request, search_opts=None):
     sort_key = search_opts.get('sort_key', None)
     sort_dir = search_opts.get('sort_dir', None)
     page_size = stx_base.get_request_page_size(request, limit)
-
     if "suppression" in search_opts:
         suppression = search_opts.pop('suppression')
 

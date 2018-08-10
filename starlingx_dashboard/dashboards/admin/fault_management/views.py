@@ -30,7 +30,9 @@ from horizon import exceptions
 from horizon import tabs
 from horizon import views
 from openstack_dashboard.api.base import is_service_enabled
-from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.api import sysinv
+from starlingx_dashboard.api import dc_manager
+
 from starlingx_dashboard.dashboards.admin.fault_management import \
     tabs as project_tabs
 
@@ -56,7 +58,7 @@ class DetailView(views.HorizonTemplateView):
         if not hasattr(self, "_alarm"):
             alarm_uuid = self.kwargs['id']
             try:
-                alarm = stx_api.sysinv.alarm_get(self.request, alarm_uuid)
+                alarm = sysinv.alarm_get(self.request, alarm_uuid)
 
             except Exception:
                 redirect = reverse('horizon:admin:fault_management:index')
@@ -118,7 +120,7 @@ class EventLogDetailView(views.HorizonTemplateView):
         if not hasattr(self, "_eventlog"):
             uuid = self.kwargs['id']
             try:
-                self._eventlog = stx_api.sysinv.event_log_get(self.request, uuid)
+                self._eventlog = sysinv.event_log_get(self.request, uuid)
                 self._detectEventLogType()
             except Exception:
                 redirect = reverse('horizon:admin:fault_management:index')
@@ -163,11 +165,11 @@ class BannerView(TemplateView):
     def get_data(self):
         summary = None
         try:
-            summary = stx_api.sysinv.alarm_summary_get(self.request)
+            summary = sysinv.alarm_summary_get(self.request)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve alarm summary.'))
         return summary
 
     def get_subcloud_data(self):
-        return stx_api.dc_manager.alarm_summary_list(self.request)
+        return dc_manager.alarm_summary_list(self.request)

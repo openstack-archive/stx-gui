@@ -15,3 +15,4 @@ def get_request_page_size(request, limit=None):
     except Exception:
         default_page_size = getattr(settings, 'API_RESULT_PAGE_SIZE', 20)
         return request.session.get('horizon_pagesize', default_page_size)
+
