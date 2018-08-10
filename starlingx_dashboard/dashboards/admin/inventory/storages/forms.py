@@ -16,8 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
-from openstack_dashboard.api import sysinv
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class AddDiskProfile(forms.SelfHandlingForm):
     def handle(self, request, data):
         diskProfileName = data['profilename']
         try:
-            diskProfile = api.sysinv.host_diskprofile_create(request, **data)
+            diskProfile = stx_api.sysinv.host_diskprofile_create(request, **data)
 
             msg = _('Storage Profile "%s" was successfully created.') \
                 % diskProfileName
@@ -74,7 +73,7 @@ class EditStorageVolume(forms.SelfHandlingForm):
 
     journal_size_mib = forms.CharField(label=_("Journal Size MiB"),
                                        required=False,
-                                       initial=sysinv.JOURNAL_DEFAULT_SIZE,
+                                       initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
                                        widget=forms.TextInput(attrs={
                                            'data-slug': 'journal_size_mib'}),
                                        help_text=_("Journal's size for the "
@@ -85,7 +84,7 @@ class EditStorageVolume(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         super(EditStorageVolume, self).__init__(request, *args, **kwargs)
 
-        stor = api.sysinv.host_stor_get(
+        stor = stx_api.sysinv.host_stor_get(
             self.request, kwargs['initial']['uuid'])
 
         initial_journal_location = kwargs['initial']['journal_location']
@@ -93,7 +92,7 @@ class EditStorageVolume(forms.SelfHandlingForm):
 
         # Populate available journal choices. If no journal is available,
         # then the journal is collocated.
-        avail_journal_list = api.sysinv.host_stor_get_by_function(
+        avail_journal_list = stx_api.sysinv.host_stor_get_by_function(
             self.request,
             host_uuid,
             'journal')
@@ -127,13 +126,13 @@ class EditStorageVolume(forms.SelfHandlingForm):
                 data['journal_location'] = journal
             else:
                 data['journal_location'] = None
-                data['journal_size_mib'] = sysinv.JOURNAL_DEFAULT_SIZE
+                data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE
 
             del data['journal_locations']
             del data['id']
 
             # The REST API takes care of updating the stor journal information.
-            stor = api.sysinv.host_stor_update(request, stor_id, **data)
+            stor = stx_api.sysinv.host_stor_update(request, stor_id, **data)
 
             msg = _('Storage volume was successfully updated.')
             LOG.debug(msg)
@@ -217,7 +216,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
 
     journal_size_mib = forms.CharField(label=_("Journal Size MiB"),
                                        required=False,
-                                       initial=sysinv.JOURNAL_DEFAULT_SIZE,
+                                       initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
                                        widget=forms.TextInput(attrs={
                                            'class': 'switched',
                                            'data-switch-on': 'function',
@@ -244,11 +243,11 @@ class AddStorageVolume(forms.SelfHandlingForm):
         this_stor_uuid = 0
         host_uuid = kwargs['initial']['ihost_uuid']
 
-        ihost = api.sysinv.host_get(self.request, host_uuid)
+        ihost = stx_api.sysinv.host_get(self.request, host_uuid)
         ceph_caching = ((ihost.capabilities.get('pers_subtype') ==
-                         sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING))
+                         stx_api.sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING))
 
-        avail_disk_list = api.sysinv.host_disk_list(self.request, host_uuid)
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
         disk_tuple_list = []
         for d in avail_disk_list:
             if d.istor_uuid and d.istor_uuid != this_stor_uuid:
@@ -273,11 +272,11 @@ class AddStorageVolume(forms.SelfHandlingForm):
                     d.device_type)))
 
         # Get the cluster
-        cluster_list = api.sysinv.cluster_list(self.request)
+        cluster_list = stx_api.sysinv.cluster_list(self.request)
         cluster_uuid = cluster_list[0].uuid
 
         # Populate the available tiers for OSD assignment
-        avail_tier_list = api.sysinv.storage_tier_list(self.request,
+        avail_tier_list = stx_api.sysinv.storage_tier_list(self.request,
                                                        cluster_uuid)
         tier_tuple_list = [(t.uuid, t.name) for t in avail_tier_list]
 
@@ -286,7 +285,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
         if ceph_caching:
             avail_journal_list = []
         else:
-            avail_journal_list = api.sysinv.host_stor_get_by_function(
+            avail_journal_list = stx_api.sysinv.host_stor_get_by_function(
                 self.request,
                 host_uuid,
                 'journal')
@@ -336,7 +335,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
             data['journal_location'] = journal
         else:
             data['journal_location'] = None
-            data['journal_size_mib'] = sysinv.JOURNAL_DEFAULT_SIZE
+            data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE
 
         try:
             del data['host_id']
@@ -347,7 +346,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
 
             # The REST API takes care of creating the stor
             # and updating disk.foristorid
-            stor = api.sysinv.host_stor_create(request, **data)
+            stor = stx_api.sysinv.host_stor_create(request, **data)
 
             msg = _('Storage volume was successfully created.')
             LOG.debug(msg)
@@ -405,23 +404,23 @@ class AddLocalVolumeGroup(forms.SelfHandlingForm):
         host_uuid = kwargs['initial']['ihost_uuid']
         host_id = kwargs['initial']['host_id']
 
-        host = api.sysinv.host_get(self.request, host_id)
+        host = stx_api.sysinv.host_get(self.request, host_id)
         subfunctions = host.subfunctions
 
         # LVGs that are considered as "present" in the system are those
         # in an adding or provisioned state.
-        ilvg_list = api.sysinv.host_lvg_list(self.request, host_uuid)
-        current_lvg_states = [api.sysinv.LVG_ADD, api.sysinv.LVG_PROV]
+        ilvg_list = stx_api.sysinv.host_lvg_list(self.request, host_uuid)
+        current_lvg_states = [stx_api.sysinv.LVG_ADD, stx_api.sysinv.LVG_PROV]
         current_lvgs = [lvg.lvm_vg_name for lvg in ilvg_list
                         if lvg.vg_state in current_lvg_states]
 
         compatible_lvgs = []
         if host.personality.lower().startswith(
-                api.sysinv.PERSONALITY_CONTROLLER):
-            compatible_lvgs += [api.sysinv.LVG_CINDER_VOLUMES]
+                stx_api.sysinv.PERSONALITY_CONTROLLER):
+            compatible_lvgs += [stx_api.sysinv.LVG_CINDER_VOLUMES]
 
-        if api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
-            compatible_lvgs += [api.sysinv.LVG_NOVA_LOCAL]
+        if stx_api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
+            compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
 
         allowed_lvgs = set(compatible_lvgs) - set(current_lvgs)
 
@@ -444,7 +443,7 @@ class AddLocalVolumeGroup(forms.SelfHandlingForm):
 
             # The REST API takes care of creating the stor
             # and updating disk.foristorid
-            lvg = api.sysinv.host_lvg_create(request, **data)
+            lvg = stx_api.sysinv.host_lvg_create(request, **data)
 
             msg = _('Local volume group was successfully created.')
             LOG.debug(msg)
@@ -545,35 +544,35 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
         host_uuid = kwargs['initial']['ihost_uuid']
         host_id = kwargs['initial']['host_id']
 
-        host = api.sysinv.host_get(self.request, host_id)
+        host = stx_api.sysinv.host_get(self.request, host_id)
         subfunctions = host.subfunctions
 
         compatible_lvgs = []
         if host.personality.lower().startswith(
-                api.sysinv.PERSONALITY_CONTROLLER):
-            compatible_lvgs += [api.sysinv.LVG_CGTS_VG,
-                                api.sysinv.LVG_CINDER_VOLUMES]
+                stx_api.sysinv.PERSONALITY_CONTROLLER):
+            compatible_lvgs += [stx_api.sysinv.LVG_CGTS_VG,
+                                stx_api.sysinv.LVG_CINDER_VOLUMES]
 
-        if api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
-            compatible_lvgs += [api.sysinv.LVG_NOVA_LOCAL]
+        if stx_api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
+            compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
 
-        avail_disk_list = api.sysinv.host_disk_list(self.request, host_uuid)
-        ilvg_list = api.sysinv.host_lvg_list(self.request, host_uuid)
-        partitions = api.sysinv.host_disk_partition_list(self.request,
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
+        ilvg_list = stx_api.sysinv.host_lvg_list(self.request, host_uuid)
+        partitions = stx_api.sysinv.host_disk_partition_list(self.request,
                                                          host_uuid)
-        ipv_list = api.sysinv.host_pv_list(self.request, host_uuid)
+        ipv_list = stx_api.sysinv.host_pv_list(self.request, host_uuid)
         disk_tuple_list = []
         partitions_tuple_list = []
         ilvg_tuple_list = []
 
         pv_cinder_volumes = next(
             (pv for pv in ipv_list
-             if pv.lvm_vg_name == api.sysinv.LVG_CINDER_VOLUMES), None)
+             if pv.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES), None)
 
         for lvg in ilvg_list:
             if (lvg.lvm_vg_name in compatible_lvgs and
-                    lvg.vg_state in [api.sysinv.LVG_ADD, api.sysinv.LVG_PROV]):
-                if (lvg.lvm_vg_name == api.sysinv.LVG_CINDER_VOLUMES and
+                    lvg.vg_state in [stx_api.sysinv.LVG_ADD, stx_api.sysinv.LVG_PROV]):
+                if (lvg.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES and
                         pv_cinder_volumes):
                     continue
                 ilvg_tuple_list.append((lvg.uuid, lvg.lvm_vg_name))
@@ -619,17 +618,17 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
                     disk_model)))
 
         for p in partitions:
-            if p.type_guid != api.sysinv.USER_PARTITION_PHYS_VOL:
+            if p.type_guid != stx_api.sysinv.USER_PARTITION_PHYS_VOL:
                 continue
             if p.ipv_uuid:
                 continue
-            if p.status == api.sysinv.PARTITION_IN_USE_STATUS:
+            if p.status == stx_api.sysinv.PARTITION_IN_USE_STATUS:
                 # If partition is in use, but the PV it is attached to
                 # is in a "removing" state, we should allow the partition
                 # to be listed as a possible option.
                 for pv in ipv_list:
                     if (pv.disk_or_part_device_path == p.device_path and
-                            pv.pv_state == api.sysinv.PV_DEL):
+                            pv.pv_state == stx_api.sysinv.PV_DEL):
                         break
                 else:
                     continue
@@ -667,7 +666,7 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
             del data['lvg']
             del data['partitions']
 
-            stor = api.sysinv.host_pv_create(request, **data)
+            stor = stx_api.sysinv.host_pv_create(request, **data)
 
             msg = _('Physical volume was successfully created.')
             messages.success(request, msg)
@@ -717,7 +716,7 @@ class EditPartition(forms.SelfHandlingForm):
         try:
             del data['id']
             # The REST API takes care of updating the partition information.
-            partition = api.sysinv.host_disk_partition_update(
+            partition = stx_api.sysinv.host_disk_partition_update(
                 request, partition_id, **data)
 
             msg = _('Partition was successfully updated.')
@@ -789,7 +788,7 @@ class CreatePartition(forms.SelfHandlingForm):
 
         # Populate disk choices.
         host_uuid = kwargs['initial']['ihost_uuid']
-        avail_disk_list = api.sysinv.host_disk_list(self.request, host_uuid)
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
         disk_tuple_list = []
         for d in avail_disk_list:
             disk_model = d.get_model_num()
@@ -820,9 +819,9 @@ class CreatePartition(forms.SelfHandlingForm):
             del data['host_id']
             del data['disks']
             del data['hostname']
-            data['type_guid'] = sysinv.USER_PARTITION_PHYS_VOL
+            data['type_guid'] = stx_api.sysinv.USER_PARTITION_PHYS_VOL
             # The REST API takes care of creating the partition.
-            partition = api.sysinv.host_disk_partition_create(request, **data)
+            partition = stx_api.sysinv.host_disk_partition_create(request, **data)
 
             msg = _('Partition was successfully created.')
             LOG.debug(msg)

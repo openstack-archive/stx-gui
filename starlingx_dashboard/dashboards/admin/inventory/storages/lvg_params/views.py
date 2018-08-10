@@ -12,8 +12,8 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import forms
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.storages.lvg_params \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.storages.lvg_params \
     import forms as project_forms
 
 LOG = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class EditView(forms.ModalFormView):
         lvg_id = self.kwargs['lvg_id']
         key = self.kwargs['key']
         try:
-            params = api.sysinv.host_lvg_get_params(
+            params = stx_api.sysinv.host_lvg_get_params(
                 self.request, lvg_id, raw=True)
         except Exception:
             params = {}

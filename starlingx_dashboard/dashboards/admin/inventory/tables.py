@@ -17,9 +17,8 @@ from horizon import exceptions
 from horizon import messages
 from horizon import tables
 from horizon.utils import functions
-from openstack_dashboard import api
-from openstack_dashboard.api.sysinv import Host
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
     import utils as cpufunctions_utils
 
 import cgcs_patch.constants as patch_constants
@@ -42,7 +41,7 @@ def host_board_management(host=None):
 def host_controller(host=None):
     if not host:
         return False
-    return host._personality == api.sysinv.PERSONALITY_CONTROLLER
+    return host._personality == stx_api.sysinv.PERSONALITY_CONTROLLER
 
 
 def host_powered_off(host=None):
@@ -119,7 +118,7 @@ class AddHost(tables.LinkAction):
     ajax = True
 
     def allowed(self, request, host=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class EditHost(tables.LinkAction):
@@ -150,7 +149,7 @@ class DeleteHost(tables.DeleteAction):
         return host_locked(host)
 
     def delete(self, request, host_id):
-        api.sysinv.host_delete(request, host_id)
+        stx_api.sysinv.host_delete(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -182,7 +181,7 @@ class LockHost(tables.BatchAction):
         return not host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_lock(request, host_id)
+        stx_api.sysinv.host_lock(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -213,13 +212,13 @@ class ForceLockHost(tables.BatchAction):
         return not host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_force_lock(request, host_id)
+        stx_api.sysinv.host_force_lock(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
 
     def get_confirm_message(self, request, datum):
-        if datum._personality == api.sysinv.PERSONALITY_CONTROLLER:
+        if datum._personality == stx_api.sysinv.PERSONALITY_CONTROLLER:
             return _(
                 "<b>WARNING</b>: This will cause an uncontrolled switch"
                 " of services on host '%s'.\n\n"
@@ -230,7 +229,7 @@ class ForceLockHost(tables.BatchAction):
                 "unsuccessful and this host MUST be locked.\n\n"
                 "If you proceed, then this action will be logged"
                 " and cannot be undone.") % datum.hostname
-        elif datum._personality == api.sysinv.PERSONALITY_COMPUTE:
+        elif datum._personality == stx_api.sysinv.PERSONALITY_COMPUTE:
             return _(
                 "<b>WARNING</b>: This will cause a service OUTAGE"
                 " for all VMs currently using resources on '%s'.\n\n"
@@ -241,7 +240,7 @@ class ForceLockHost(tables.BatchAction):
                 " unsuccessful and this host MUST be locked.\n\n"
                 "If you proceed, then this action will be logged"
                 " and cannot be undone.") % datum.hostname
-        elif datum._personality == api.sysinv.PERSONALITY_STORAGE:
+        elif datum._personality == stx_api.sysinv.PERSONALITY_STORAGE:
             return _(
                 "<b>WARNING</b>: This will cause an uncontrolled"
                 " loss of storage services on host '%s'.\n\n"
@@ -282,7 +281,7 @@ class UnlockHost(tables.BatchAction):
         return host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_unlock(request, host_id)
+        stx_api.sysinv.host_unlock(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -314,7 +313,7 @@ class ForceUnlockHost(tables.BatchAction):
         return host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_force_unlock(request, host_id)
+        stx_api.sysinv.host_force_unlock(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -351,10 +350,10 @@ class PowerOnHost(tables.BatchAction):
 
     def allowed(self, request, host=None):
         return (host_board_management(host) and host_locked(host) and
-                not api.sysinv.is_system_mode_simplex(request))
+                not stx_api.sysinv.is_system_mode_simplex(request))
 
     def action(self, request, host_id):
-        api.sysinv.host_power_on(request, host_id)
+        stx_api.sysinv.host_power_on(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -383,10 +382,10 @@ class PowerOffHost(tables.BatchAction):
     def allowed(self, request, host=None):
         return (host_board_management(host) and host_locked(host) and
                 not host_powered_off(host) and
-                not api.sysinv.is_system_mode_simplex(request))
+                not stx_api.sysinv.is_system_mode_simplex(request))
 
     def action(self, request, host_id):
-        api.sysinv.host_power_off(request, host_id)
+        stx_api.sysinv.host_power_off(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -414,10 +413,10 @@ class ResetHost(tables.BatchAction):
 
     def allowed(self, request, host=None):
         return (host_board_management(host) and host_locked(host) and
-                not api.sysinv.is_system_mode_simplex(request))
+                not stx_api.sysinv.is_system_mode_simplex(request))
 
     def action(self, request, host_id):
-        api.sysinv.host_reset(request, host_id)
+        stx_api.sysinv.host_reset(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -447,7 +446,7 @@ class RebootHost(tables.BatchAction):
         return host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_reboot(request, host_id)
+        stx_api.sysinv.host_reboot(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -477,7 +476,7 @@ class ReinstallHost(tables.BatchAction):
         return host_locked(host)
 
     def action(self, request, host_id):
-        api.sysinv.host_reinstall(request, host_id)
+        stx_api.sysinv.host_reinstall(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -505,10 +504,10 @@ class SwactHost(tables.BatchAction):
 
     def allowed(self, request, host=None):
         return (host_controller(host) and not host_locked(host) and
-                not api.sysinv.is_system_mode_simplex(request))
+                not stx_api.sysinv.is_system_mode_simplex(request))
 
     def action(self, request, host_id):
-        api.sysinv.host_swact(request, host_id)
+        stx_api.sysinv.host_swact(request, host_id)
 
     def handle(self, table, request, obj_ids):
         return handle_sysinv(self, table, request, obj_ids)
@@ -543,14 +542,14 @@ class PatchInstallAsync(tables.BatchAction):
 
         for host_id in obj_ids:
             try:
-                ihost = api.sysinv.host_get(request, host_id)
+                ihost = stx_api.sysinv.host_get(request, host_id)
             except Exception:
                 exceptions.handle(request,
                                   _('Unable to retrieve host.'))
 
             try:
                 LOG.info("Installing patch for host %s ...", ihost.hostname)
-                api.patch.host_install_async(request, ihost.hostname)
+                stx_api.patch.host_install_async(request, ihost.hostname)
             except Exception as ex:
                 messages.error(request, ex)
                 return
@@ -562,9 +561,9 @@ class UpdateRow(tables.Row):
     ajax = True
 
     def get_data(self, request, host_id):
-        host = api.sysinv.host_get(request, host_id)
+        host = stx_api.sysinv.host_get(request, host_id)
 
-        phost = api.patch.get_host(request, host.hostname)
+        phost = stx_api.patch.get_host(request, host.hostname)
         if phost is not None:
             if phost.interim_state is True:
                 host.patch_current = "Pending"
@@ -716,16 +715,16 @@ class Hosts(tables.DataTable):
     personality = tables.Column(
         "personality",
         verbose_name=_("Personality"),
-        display_choices=Host.PERSONALITY_DISPLAY_CHOICES)
+        display_choices=stx_api.sysinv.Host.PERSONALITY_DISPLAY_CHOICES)
     admin = tables.Column("administrative",
                           verbose_name=_("Admin State"),
-                          display_choices=Host.ADMIN_DISPLAY_CHOICES)
+                          display_choices=stx_api.sysinv.Host.ADMIN_DISPLAY_CHOICES)
     oper = tables.Column("operational",
                          verbose_name=_("Operational State"),
-                         display_choices=Host.OPER_DISPLAY_CHOICES)
+                         display_choices=stx_api.sysinv.Host.OPER_DISPLAY_CHOICES)
     avail = tables.Column("availability",
                           verbose_name=_("Availability State"),
-                          display_choices=Host.AVAIL_DISPLAY_CHOICES)
+                          display_choices=stx_api.sysinv.Host.AVAIL_DISPLAY_CHOICES)
     uptime = tables.Column('boottime',
                            verbose_name=_('Uptime'),
                            filters=(timesince,),
@@ -837,7 +836,7 @@ class DeleteInterfaceProfile(tables.DeleteAction):
 
     def delete(self, request, interfaceprofile_id):
         try:
-            api.sysinv.host_interfaceprofile_delete(request,
+            stx_api.sysinv.host_interfaceprofile_delete(request,
                                                     interfaceprofile_id)
         except Exception:
             msg = _(
@@ -902,7 +901,7 @@ class DeleteCpuProfile(tables.DeleteAction):
 
     def delete(self, request, cpuprofile_id):
         try:
-            api.sysinv.host_cpuprofile_delete(request, cpuprofile_id)
+            stx_api.sysinv.host_cpuprofile_delete(request, cpuprofile_id)
         except Exception:
             msg = _('Failed to delete cpu profile %s') % cpuprofile_id
             LOG.info(msg)
@@ -958,7 +957,7 @@ class DeleteDiskProfile(tables.DeleteAction):
 
     def delete(self, request, diskprofile_id):
         try:
-            api.sysinv.host_diskprofile_delete(request, diskprofile_id)
+            stx_api.sysinv.host_diskprofile_delete(request, diskprofile_id)
         except Exception as e:
             msg = _('Failed to delete storage profile %s') % diskprofile_id
             LOG.info(msg)
@@ -1054,7 +1053,7 @@ class DeleteMemoryProfile(tables.DeleteAction):
 
     def delete(self, request, memoryprofile_id):
         try:
-            api.sysinv.host_memprofile_delete(request, memoryprofile_id)
+            stx_api.sysinv.host_memprofile_delete(request, memoryprofile_id)
         except Exception as e:
             msg = _('Failed to delete memory profile %s') % memoryprofile_id
             LOG.info(msg)

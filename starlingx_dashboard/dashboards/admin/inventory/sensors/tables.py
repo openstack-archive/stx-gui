@@ -15,8 +15,8 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory import tables as itables
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory import tables as itables
 
 LOG = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class RemoveSensorGroup(tables.DeleteAction):
     def delete(self, request, sensorgroup_id):
         host_id = self.table.kwargs['host_id']
         try:
-            api.sysinv.host_sensorgroup_delete(request, sensorgroup_id)
+            stx_api.sysinv.host_sensorgroup_delete(request, sensorgroup_id)
         except Exception:
             msg = _('Failed to delete host %(hid)s '
                     'sensor group %(sensorgroup)s') % \
@@ -127,7 +127,7 @@ class SuppressSensorGroup(tables.BatchAction):
         return not sensorgroup_suppressed(sensorgroup)
 
     def action(self, request, sensorgroup_id):
-        api.sysinv.host_sensorgroup_suppress(request, sensorgroup_id)
+        stx_api.sysinv.host_sensorgroup_suppress(request, sensorgroup_id)
 
     def handle(self, table, request, obj_ids):
         return itables.handle_sysinv(self, table, request, obj_ids)
@@ -157,7 +157,7 @@ class UnSuppressSensorGroup(tables.BatchAction):
         return sensorgroup_suppressed(sensorgroup)
 
     def action(self, request, sensorgroup_id):
-        api.sysinv.host_sensorgroup_unsuppress(request, sensorgroup_id)
+        stx_api.sysinv.host_sensorgroup_unsuppress(request, sensorgroup_id)
 
     def handle(self, table, request, obj_ids):
         return itables.handle_sysinv(self, table, request, obj_ids)
@@ -209,7 +209,7 @@ class RelearnSensorModel(tables.Action):
     def single(self, table, request, obj_ids):
         LOG.debug("requesting relearn of sensor model for host "
                   "%s", table.kwargs['host'].uuid)
-        api.sysinv.host_sensorgroup_relearn(request, table.kwargs['host'].uuid)
+        stx_api.sysinv.host_sensorgroup_relearn(request, table.kwargs['host'].uuid)
 
 
 class SensorGroupsTable(tables.DataTable):
@@ -312,7 +312,7 @@ class SuppressSensor(tables.BatchAction):
         return not sensor_suppressed(sensor)
 
     def action(self, request, sensor_id):
-        api.sysinv.host_sensor_suppress(request, sensor_id)
+        stx_api.sysinv.host_sensor_suppress(request, sensor_id)
 
     def handle(self, table, request, obj_ids):
         return itables.handle_sysinv(self, table, request, obj_ids)
@@ -342,7 +342,7 @@ class UnSuppressSensor(tables.BatchAction):
         return sensor_suppressed(sensor)
 
     def action(self, request, sensor_id):
-        api.sysinv.host_sensor_unsuppress(request, sensor_id)
+        stx_api.sysinv.host_sensor_unsuppress(request, sensor_id)
 
     def handle(self, table, request, obj_ids):
         return itables.handle_sysinv(self, table, request, obj_ids)

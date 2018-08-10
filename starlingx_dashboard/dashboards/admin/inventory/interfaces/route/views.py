@@ -18,7 +18,7 @@ import logging
 from django.core.urlresolvers import reverse  # noqa
 
 from horizon import forms
-from openstack_dashboard.dashboards.admin.inventory.interfaces.route import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.route import \
     forms as route_forms
 
 LOG = logging.getLogger(__name__)

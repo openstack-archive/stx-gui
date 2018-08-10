@@ -14,24 +14,24 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions import \
     tables as cpufunctions_tables
-from openstack_dashboard.dashboards.admin.inventory.devices import \
+from starlingx_dashboard.dashboards.admin.inventory.devices import \
     tables as device_tables
-from openstack_dashboard.dashboards.admin.inventory.interfaces import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as interface_tables
-from openstack_dashboard.dashboards.admin.inventory.lldp import \
+from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     tables as lldp_tables
-from openstack_dashboard.dashboards.admin.inventory.memorys import \
+from starlingx_dashboard.dashboards.admin.inventory.memorys import \
     tables as memory_tables
-from openstack_dashboard.dashboards.admin.inventory.ports import \
+from starlingx_dashboard.dashboards.admin.inventory.ports import \
     tables as port_tables
-from openstack_dashboard.dashboards.admin.inventory.sensors import \
+from starlingx_dashboard.dashboards.admin.inventory.sensors import \
     tables as sensor_tables
-from openstack_dashboard.dashboards.admin.inventory.storages import \
+from starlingx_dashboard.dashboards.admin.inventory.storages import \
     tables as storage_tables
-from openstack_dashboard.dashboards.admin.inventory import \
+from starlingx_dashboard.dashboards.admin.inventory import \
     tables as toplevel_tables
 
 LOG = logging.getLogger(__name__)
@@ -55,13 +55,13 @@ class HostsTab(tabs.TableTab):
         request = self.request
         self.all_hosts = []
         try:
-            self.all_hosts = api.sysinv.host_list(request)
+            self.all_hosts = stx_api.sysinv.host_list(request)
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve host list.'))
         self.all_phosts = []
         try:
-            self.all_phosts = api.patch.get_hosts(request)
+            self.all_phosts = stx_api.patch.get_hosts(request)
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve host list from'
@@ -71,11 +71,11 @@ class HostsTab(tabs.TableTab):
         hosts = self.all_hosts
         phosts = self.all_phosts
 
-        if personality == api.sysinv.PERSONALITY_CONTROLLER:
+        if personality == stx_api.sysinv.PERSONALITY_CONTROLLER:
             hosts = [h for h in hosts if h._personality and
                      h._personality.lower().startswith(
-                         api.sysinv.PERSONALITY_CONTROLLER)]
-        elif personality == api.sysinv.PERSONALITY_UNKNOWN:
+                         stx_api.sysinv.PERSONALITY_CONTROLLER)]
+        elif personality == stx_api.sysinv.PERSONALITY_UNKNOWN:
             hosts = [h for h in hosts if not h._personality]
         else:
             hosts = [h for h in hosts if h._personality and
@@ -100,22 +100,22 @@ class HostsTab(tabs.TableTab):
         return hosts
 
     def get_hostscontroller_data(self):
-        controllers = self.get_hosts_data(api.sysinv.PERSONALITY_CONTROLLER)
+        controllers = self.get_hosts_data(stx_api.sysinv.PERSONALITY_CONTROLLER)
 
         return controllers
 
     def get_hostsstorage_data(self):
-        storages = self.get_hosts_data(api.sysinv.PERSONALITY_STORAGE)
+        storages = self.get_hosts_data(stx_api.sysinv.PERSONALITY_STORAGE)
 
         return storages
 
     def get_hostscompute_data(self):
-        computes = self.get_hosts_data(api.sysinv.PERSONALITY_COMPUTE)
+        computes = self.get_hosts_data(stx_api.sysinv.PERSONALITY_COMPUTE)
 
         return computes
 
     def get_hostsunprovisioned_data(self):
-        unprovisioned = self.get_hosts_data(api.sysinv.PERSONALITY_UNKNOWN)
+        unprovisioned = self.get_hosts_data(stx_api.sysinv.PERSONALITY_UNKNOWN)
 
         return unprovisioned
 
@@ -209,7 +209,7 @@ class CpuProfilesTab(tabs.TableTab):
     def get_cpuprofiles_data(self):
         cpuprofiles = []
         try:
-            cpuprofiles = api.sysinv.host_cpuprofile_list(self.request)
+            cpuprofiles = stx_api.sysinv.host_cpuprofile_list(self.request)
             cpuprofiles.sort(key=lambda f: (f.profilename))
         except Exception:
             cpuprofiles = []
@@ -218,7 +218,7 @@ class CpuProfilesTab(tabs.TableTab):
         return cpuprofiles
 
     def allowed(self, request, datum=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class InterfaceProfilesTab(tabs.TableTab):
@@ -231,7 +231,7 @@ class InterfaceProfilesTab(tabs.TableTab):
     def get_interfaceprofiles_data(self):
         interfaceprofiles = []
         try:
-            interfaceprofiles = api.sysinv.host_interfaceprofile_list(
+            interfaceprofiles = stx_api.sysinv.host_interfaceprofile_list(
                 self.request)
         except Exception:
             exceptions.handle(self.request,
@@ -240,7 +240,7 @@ class InterfaceProfilesTab(tabs.TableTab):
         return interfaceprofiles
 
     def allowed(self, request, dataum=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class DiskProfilesTab(tabs.TableTab):
@@ -253,7 +253,7 @@ class DiskProfilesTab(tabs.TableTab):
     def get_diskprofiles_data(self):
         diskprofiles = []
         try:
-            diskprofiles = api.sysinv.host_diskprofile_list(self.request)
+            diskprofiles = stx_api.sysinv.host_diskprofile_list(self.request)
 
             for diskprofile in diskprofiles:
                 journals = {}
@@ -278,7 +278,7 @@ class DiskProfilesTab(tabs.TableTab):
         return diskprofiles
 
     def allowed(self, request, dataum=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class MemoryProfilesTab(tabs.TableTab):
@@ -291,7 +291,7 @@ class MemoryProfilesTab(tabs.TableTab):
     def get_memoryprofiles_data(self):
         memoryprofiles = []
         try:
-            memoryprofiles = api.sysinv.host_memprofile_list(self.request)
+            memoryprofiles = stx_api.sysinv.host_memprofile_list(self.request)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve memory profile list.'))
@@ -299,7 +299,7 @@ class MemoryProfilesTab(tabs.TableTab):
         return memoryprofiles
 
     def allowed(self, request, dataum=None):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class DeviceUsageTab(tabs.TableTab):
@@ -310,7 +310,7 @@ class DeviceUsageTab(tabs.TableTab):
     preload = False
 
     def get_sysinv_devices(self, request):
-        device_list = api.sysinv.device_list_all(request)
+        device_list = stx_api.sysinv.device_list_all(request)
         return device_list
 
     def get_device_description(self, usage, devices):
@@ -328,7 +328,7 @@ class DeviceUsageTab(tabs.TableTab):
         deviceusage = []
         devices = []
         try:
-            deviceusage = api.nova.get_device_usage_list(self.request)
+            deviceusage = stx_api.nova.get_device_usage_list(self.request)
             devices = self.get_sysinv_devices(self.request)
             for du in deviceusage:
                 du.description = self.get_device_description(du, devices)
@@ -495,7 +495,7 @@ class StorageTab(tabs.TableTab):
                               _('Unable to retrieve inventory details.'),
                               redirect=redirect)
 
-        context['cinder_backend'] = api.sysinv.get_cinder_backend(request)
+        context['cinder_backend'] = stx_api.sysinv.get_cinder_backend(request)
 
         return context
 

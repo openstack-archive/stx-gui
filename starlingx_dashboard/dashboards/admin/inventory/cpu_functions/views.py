@@ -15,12 +15,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import forms
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions.forms \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions.forms \
     import AddCpuProfile
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions.forms \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions.forms \
     import UpdateCpuFunctions
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
     import utils as cpufunctions_utils
 
 LOG = logging.getLogger(__name__)
@@ -40,9 +40,9 @@ class UpdateCpuFunctionsView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
-                host.nodes = api.sysinv.host_node_list(self.request, host.uuid)
-                host.cpus = api.sysinv.host_cpu_list(self.request, host.uuid)
+                host = stx_api.sysinv.host_get(self.request, host_id)
+                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
+                host.cpus = stx_api.sysinv.host_cpu_list(self.request, host.uuid)
                 icpu_utils.restructure_host_cpu_data(host)
                 self._object = host
                 self._object.host_id = host_id
@@ -165,9 +165,9 @@ class AddCpuProfileView(forms.ModalFormView):
         if not hasattr(self, "_host"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
-                host.nodes = api.sysinv.host_node_list(self.request, host.uuid)
-                host.cpus = api.sysinv.host_cpu_list(self.request, host.uuid)
+                host = stx_api.sysinv.host_get(self.request, host_id)
+                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
+                host.cpus = stx_api.sysinv.host_cpu_list(self.request, host.uuid)
                 icpu_utils.restructure_host_cpu_data(host)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')

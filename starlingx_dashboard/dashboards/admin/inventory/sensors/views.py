@@ -15,10 +15,10 @@ from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
 from horizon import views
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.sensors.forms import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.sensors.forms import \
     AddSensorGroup
-from openstack_dashboard.dashboards.admin.inventory.sensors.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.sensors.forms import \
     UpdateSensorGroup
 # from openstack_dashboard.dashboards.admin.inventory.sensors.forms import \
 #     AddSensor
@@ -51,7 +51,7 @@ class AddSensorGroupView(forms.ModalFormView):
         initial = super(AddSensorGroupView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['host_uuid'] = host.uuid
@@ -75,7 +75,7 @@ class UpdateSensorGroupView(forms.ModalFormView):
             LOG.debug("sensorgroup_id=%s kwargs=%s",
                       sensorgroup_id, self.kwargs)
             try:
-                self._object = api.sysinv.host_sensorgroup_get(self.request,
+                self._object = stx_api.sysinv.host_sensorgroup_get(self.request,
                                                                sensorgroup_id)
                 self._object.host_id = host_id
 
@@ -97,7 +97,7 @@ class UpdateSensorGroupView(forms.ModalFormView):
     def get_initial(self):
         sensorgroup = self._get_object()
         # try:
-        #     host = api.sysinv.host_get(self.request, sensorgroup.host_uuid)
+        #     host = stx_api.sysinv.host_get(self.request, sensorgroup.host_uuid)
         # except Exception:
         #     exceptions.handle(self.request, _('Unable to retrieve host.'))
         # this is how we can do the analog vs discrete
@@ -145,7 +145,7 @@ class DetailSensorView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')
@@ -156,7 +156,7 @@ class DetailSensorView(views.HorizonTemplateView):
         if not hasattr(self, "_sensor"):
             sensor_id = self.kwargs['sensor_id']
             try:
-                sensor = api.sysinv.host_sensor_get(self.request, sensor_id)
+                sensor = stx_api.sysinv.host_sensor_get(self.request, sensor_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,
@@ -192,7 +192,7 @@ class DetailSensorGroupView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')
@@ -203,7 +203,7 @@ class DetailSensorGroupView(views.HorizonTemplateView):
         if not hasattr(self, "_sensorgroup"):
             sensorgroup_id = self.kwargs['sensorgroup_id']
             try:
-                sensorgroup = api.sysinv.host_sensorgroup_get(self.request,
+                sensorgroup = stx_api.sysinv.host_sensorgroup_get(self.request,
                                                               sensorgroup_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
