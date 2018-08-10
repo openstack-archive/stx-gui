@@ -14,54 +14,53 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 from oslo_serialization import jsonutils
 
-from openstack_dashboard.api import sysinv
 
 LOG = logging.getLogger(__name__)
 
 NOVA_PARAMS_FIELD_MAP = {
-    sysinv.LVG_NOVA_PARAM_BACKING:
-    sysinv.LVG_NOVA_PARAM_BACKING,
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
-    sysinv.LVG_NOVA_PARAM_DISK_OPS:
-    sysinv.LVG_NOVA_PARAM_DISK_OPS,
+    stx_api.sysinv.LVG_NOVA_PARAM_BACKING:
+    stx_api.sysinv.LVG_NOVA_PARAM_BACKING,
+    stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
+    stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
+    stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS:
+    stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS,
 }
 
 CINDER_PARAMS_FIELD_MAP = {
-    sysinv.LVG_CINDER_PARAM_LVM_TYPE:
-    sysinv.LVG_CINDER_PARAM_LVM_TYPE,
+    stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE:
+    stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE,
 }
 
 NOVA_PARAMS_KEY_MAP = (
-    (sysinv.LVG_NOVA_PARAM_BACKING,
+    (stx_api.sysinv.LVG_NOVA_PARAM_BACKING,
      _("Instance Backing")),
-    (sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
+    (stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
      _("Instances LV Size [in MiB]")),
-    (sysinv.LVG_NOVA_PARAM_DISK_OPS,
+    (stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS,
      _("Concurrent Disk Operations")),
 )
 
 CINDER_PARAMS_KEY_MAP = (
-    (sysinv.LVG_CINDER_PARAM_LVM_TYPE,
+    (stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE,
      _("LVM Provisioning Type")),
 )
 
 PARAMS_HELP = {
-    sysinv.LVG_NOVA_PARAM_BACKING:
+    stx_api.sysinv.LVG_NOVA_PARAM_BACKING:
     'Determines the format and location of instance disks. Local CoW image \
     file backed, local RAW LVM logical volume backed, or remote RAW Ceph \
     storage backed',
-    sysinv.LVG_NOVA_PARAM_DISK_OPS:
+    stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS:
     'Number of parallel disk I/O intensive operations (glance image downloads, \
     image format conversions, etc.).',
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
+    stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
     'An integer specifying the size (in MiB) of the instances logical volume. \
     (.e.g. 10 GiB = 10240). Volume is created from nova-local and will be \
     mounted at /etc/nova/instances.',
-    sysinv.LVG_CINDER_PARAM_LVM_TYPE:
+    stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE:
     'Cinder configuration setting which determines how the volume group is \
     provisioned. Thick provisioning will be used if the value is set to: \
     default. Thin provisioning will be used in the value is set to: thin',
@@ -76,14 +75,14 @@ CINDER_PARAMS_KEY_NAMES = dict(CINDER_PARAMS_KEY_MAP)
 CINDER_PARAMS_CHOICES = CINDER_PARAMS_KEY_MAP
 
 BACKING_CHOICES = (
-    (sysinv.LVG_NOVA_BACKING_LVM, _("Local RAW LVM backed")),
-    (sysinv.LVG_NOVA_BACKING_IMAGE, _("Local CoW image backed")),
-    (sysinv.LVG_NOVA_BACKING_REMOTE, _("Remote RAW Ceph storage backed")),
+    (stx_api.sysinv.LVG_NOVA_BACKING_LVM, _("Local RAW LVM backed")),
+    (stx_api.sysinv.LVG_NOVA_BACKING_IMAGE, _("Local CoW image backed")),
+    (stx_api.sysinv.LVG_NOVA_BACKING_REMOTE, _("Remote RAW Ceph storage backed")),
 )
 
 LVM_TYPE_CHOICES = (
-    (sysinv.LVG_CINDER_LVM_TYPE_THICK, _("Thick Provisioning (default)")),
-    (sysinv.LVG_CINDER_LVM_TYPE_THIN, _("Thin Provisioning (thin)")),
+    (stx_api.sysinv.LVG_CINDER_LVM_TYPE_THICK, _("Thick Provisioning (default)")),
+    (stx_api.sysinv.LVG_CINDER_LVM_TYPE_THIN, _("Thin Provisioning (thin)")),
 )
 
 
@@ -98,7 +97,7 @@ class ParamMixin(object):
 
     def _host_lvg_get(self, lvg_id):
         try:
-            return api.sysinv.host_lvg_get(self.request, lvg_id)
+            return stx_api.sysinv.host_lvg_get(self.request, lvg_id)
         except Exception:
             exceptions.handle(
                 self.request,
@@ -107,7 +106,7 @@ class ParamMixin(object):
 
     def _host_pv_list(self, host_id):
         try:
-            return api.sysinv.host_pv_list(self.request, host_id)
+            return stx_api.sysinv.host_pv_list(self.request, host_id)
         except Exception:
             exceptions.handle(
                 self.request,
@@ -116,7 +115,7 @@ class ParamMixin(object):
 
     def _host_pv_disk_get(self, pv):
         try:
-            return api.sysinv.host_disk_get(self.request, pv.disk_or_part_uuid)
+            return stx_api.sysinv.host_disk_get(self.request, pv.disk_or_part_uuid)
         except Exception:
             exceptions.handle(
                 self.request,
@@ -341,7 +340,7 @@ class EditParam(ParamForm):
                           'value': jsonutils.dumps(metadata),
                           'op': 'replace'})
 
-            api.sysinv.host_lvg_update(request, lvg_id, patch)
+            stx_api.sysinv.host_lvg_update(request, lvg_id, patch)
             msg = _('Updated parameter "%s".') % data['key']
             messages.success(request, msg)
             return True

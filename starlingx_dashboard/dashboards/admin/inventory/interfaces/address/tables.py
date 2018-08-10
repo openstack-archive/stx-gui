@@ -20,7 +20,7 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -52,7 +52,7 @@ class DeleteAddress(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            api.sysinv.address_delete(request, obj_id)
+            stx_api.sysinv.address_delete(request, obj_id)
         except Exception:
             exceptions.handle(request, redirect=self.get_redirect_url())
 
@@ -115,7 +115,7 @@ class AddressTable(tables.DataTable):
         if not hasattr(self, "_interface"):
             try:
                 interface_id = self.kwargs["interface_id"]
-                self._interface = api.sysinv.host_interface_get(
+                self._interface = stx_api.sysinv.host_interface_get(
                     self.request, interface_id)
             except Exception:
                 redirect = reverse(self.failure_url,

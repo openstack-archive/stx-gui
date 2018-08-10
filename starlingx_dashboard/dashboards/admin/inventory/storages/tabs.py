@@ -12,8 +12,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.storages.lvg_params \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.storages.lvg_params \
     import tables as params_table
 
 LOG = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class LocalVolumeGroupOverviewTab(tabs.Tab):
     def get_context_data(self, request):
         lvg_id = self.tab_group.kwargs['lvg_id']
         try:
-            lvg = api.sysinv.host_lvg_get(request, lvg_id)
+            lvg = stx_api.sysinv.host_lvg_get(request, lvg_id)
         except Exception:
             redirect = reverse('horizon:admin:storages:index')
             exceptions.handle(self.request,
@@ -47,7 +47,7 @@ class LocalVolumeGroupParametersTab(tabs.TableTab):
         request = self.tab_group.request
         lvg_id = self.tab_group.kwargs['lvg_id']
         try:
-            params = api.sysinv.host_lvg_get_params(request, lvg_id)
+            params = stx_api.sysinv.host_lvg_get_params(request, lvg_id)
             params.sort(key=lambda es: (es.key,))
         except Exception:
             params = []

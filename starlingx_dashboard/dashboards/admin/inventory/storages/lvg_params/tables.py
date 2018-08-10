@@ -10,10 +10,10 @@ from django.template import defaultfilters as filters
 from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import tables
-from openstack_dashboard.dashboards.admin.inventory.storages.lvg_params \
+from starlingx_dashboard.dashboards.admin.inventory.storages.lvg_params \
     import forms
 
-from openstack_dashboard.api import sysinv
+from starlingx_dashboard import api as stx_api
 
 
 class ParamEdit(tables.LinkAction):
@@ -34,13 +34,13 @@ def get_parameters_name(datum):
 def get_parameters_value(datum):
     if datum is None or datum.value is None:
         return None
-    if datum.key == sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
+    if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
         value = datum.value
-    if datum.key == sysinv.LVG_NOVA_PARAM_BACKING:
+    if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_BACKING:
         value = datum.value
-    if datum.key == sysinv.LVG_NOVA_PARAM_DISK_OPS:
+    if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_DISK_OPS:
         value = datum.value
-    if datum.key == sysinv.LVG_CINDER_PARAM_LVM_TYPE:
+    if datum.key == stx_api.sysinv.LVG_CINDER_PARAM_LVM_TYPE:
         value = datum.value
     return value
 
