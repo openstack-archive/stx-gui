@@ -16,11 +16,11 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions.forms \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions.forms \
     import AddCpuProfile
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions.forms \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions.forms \
     import UpdateCpuFunctions
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
     import utils as cpufunctions_utils
 
 LOG = logging.getLogger(__name__)

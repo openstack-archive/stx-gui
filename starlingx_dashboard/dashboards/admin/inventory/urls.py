@@ -9,36 +9,36 @@
 from django.conf.urls import include  # noqa
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.admin.inventory.cpu_functions import \
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions import \
     views as cpu_functions_views
-from openstack_dashboard.dashboards.admin.inventory.devices import \
+from starlingx_dashboard.dashboards.admin.inventory.devices import \
     views as device_views
-from openstack_dashboard.dashboards.admin.inventory.interfaces.address import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.address import \
     views as address_views
-from openstack_dashboard.dashboards.admin.inventory.interfaces.route import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.route import \
     views as route_views
-from openstack_dashboard.dashboards.admin.inventory.interfaces import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     views as interface_views
-from openstack_dashboard.dashboards.admin.inventory.lldp import \
+from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     views as lldp_views
-from openstack_dashboard.dashboards.admin.inventory.memorys import \
+from starlingx_dashboard.dashboards.admin.inventory.memorys import \
     views as memory_views
-from openstack_dashboard.dashboards.admin.inventory.ports import \
+from starlingx_dashboard.dashboards.admin.inventory.ports import \
     views as port_views
-from openstack_dashboard.dashboards.admin.inventory.sensors import \
+from starlingx_dashboard.dashboards.admin.inventory.sensors import \
     views as sensor_views
-from openstack_dashboard.dashboards.admin.inventory.storages import \
+from starlingx_dashboard.dashboards.admin.inventory.storages import \
     views as storage_views
-from openstack_dashboard.dashboards.admin.inventory.views import \
+from starlingx_dashboard.dashboards.admin.inventory.views import \
     AddView
-from openstack_dashboard.dashboards.admin.inventory.views import \
+from starlingx_dashboard.dashboards.admin.inventory.views import \
     DetailView
-from openstack_dashboard.dashboards.admin.inventory.views import \
+from starlingx_dashboard.dashboards.admin.inventory.views import \
     IndexView
-from openstack_dashboard.dashboards.admin.inventory.views import \
+from starlingx_dashboard.dashboards.admin.inventory.views import \
     UpdateView
 
-from openstack_dashboard.dashboards.admin.inventory.storages \
+from starlingx_dashboard.dashboards.admin.inventory.storages \
     import urls as storages_urls
 
 
