@@ -20,7 +20,8 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class DeleteAddressPool(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            api.sysinv.address_pool_delete(request, obj_id)
+            stx_api.sysinv.address_pool_delete(request, obj_id)
         except Exception:
             exceptions.handle(request, redirect=self.get_redirect_url())
 
