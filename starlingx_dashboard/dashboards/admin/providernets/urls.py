@@ -7,9 +7,9 @@
 from django.conf.urls import include
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.admin.providernets.providernets \
+from starlingx_dashboard.dashboards.admin.providernets.providernets \
     import urls as providernet_urls
-from openstack_dashboard.dashboards.admin.providernets import views
+from starlingx_dashboard.dashboards.admin.providernets import views
 
 
 NETWORKS = r'^(?P<network_id>[^/]+)/%s$'

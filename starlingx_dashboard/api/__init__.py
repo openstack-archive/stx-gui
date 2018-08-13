@@ -26,6 +26,7 @@ from starlingx_dashboard.api import vim
 __all__ = [
     "base",
     "dc_manager",
+    "iservice",
     "patch",
     "sysinv",
     "vim",

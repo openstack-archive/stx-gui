@@ -6,29 +6,29 @@
 
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.admin.system_config.address_pools import \
+from starlingx_dashboard.dashboards.admin.system_config.address_pools import \
     views as address_pool_views
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     CreateSDNControllerView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     DetailSDNControllerView
-from openstack_dashboard.dashboards.admin.system_config.views \
+from starlingx_dashboard.dashboards.admin.system_config.views \
     import IndexView
-from openstack_dashboard.dashboards.admin.system_config.views \
+from starlingx_dashboard.dashboards.admin.system_config.views \
     import UpdatecDNSView
-from openstack_dashboard.dashboards.admin.system_config.views \
+from starlingx_dashboard.dashboards.admin.system_config.views \
     import UpdatecEXT_OAMView
-from openstack_dashboard.dashboards.admin.system_config.views \
+from starlingx_dashboard.dashboards.admin.system_config.views \
     import UpdatecNTPView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateiStoragePoolsView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateiStorageView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdatePipelineView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateSDNControllerView
-from openstack_dashboard.dashboards.admin.system_config.views import \
+from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateSystemView
 
 UUID = r'^(?P<uuid>[^/]+)/%s$'

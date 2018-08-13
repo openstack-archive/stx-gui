@@ -24,11 +24,13 @@ from django.core.urlresolvers import reverse  # noqa
 from django.template import defaultfilters as filters
 from django.utils.translation import ugettext_lazy as _  # noqa
 from django.utils.translation import ungettext_lazy
-from neutronclient.common import exceptions as neutron_exceptions
 
 from horizon import exceptions
 from horizon import tables
-from openstack_dashboard import api
+
+from neutronclient.common import exceptions as neutron_exceptions
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -57,7 +59,7 @@ class DeleteProviderNetworkRange(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            api.neutron.provider_network_range_delete(request, obj_id)
+            stx_api.neutron.provider_network_range_delete(request, obj_id)
         except neutron_exceptions.NeutronClientException as e:
             LOG.info(e.message)
             exceptions.handle(request, e.message,
