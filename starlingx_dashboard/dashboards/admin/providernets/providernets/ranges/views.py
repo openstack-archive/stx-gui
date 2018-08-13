@@ -25,10 +25,11 @@ from horizon import exceptions
 from horizon import forms
 from horizon import tabs
 from horizon.utils import memoized
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import forms as range_forms
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import tabs as range_tabs
 
 
@@ -50,7 +51,7 @@ class CreateView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             try:
                 providernet_id = self.kwargs["providernet_id"]
-                self._object = api.neutron.provider_network_get(self.request,
+                self._object = stx_api.neutron.provider_network_get(self.request,
                                                                 providernet_id)
             except Exception:
                 redirect = reverse(self.failure_url,
@@ -82,7 +83,7 @@ class DetailView(tabs.TabView):
             providernet_range_id = \
                 self.kwargs['providernet_range_id']
             try:
-                self._object = api.neutron.provider_network_range_get(
+                self._object = stx_api.neutron.provider_network_range_get(
                     self.request, providernet_range_id)
             except Exception:
                 redirect = \
@@ -112,7 +113,7 @@ class DetailView(tabs.TabView):
     @memoized.memoized_method
     def get_providernet_name(self, providernet_id):
         try:
-            providernet = api.neutron.provider_network_get(self.request,
+            providernet = stx_api.neutron.provider_network_get(self.request,
                                                            providernet_id)
             providernet.set_id_as_name_if_empty(length=0)
         except Exception:
@@ -142,7 +143,7 @@ class UpdateView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             providernet_range_id = self.kwargs['providernet_range_id']
             try:
-                self._object = api.neutron.provider_network_range_get(
+                self._object = stx_api.neutron.provider_network_range_get(
                     self.request, providernet_range_id)
             except Exception:
                 redirect = \

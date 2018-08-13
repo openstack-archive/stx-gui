@@ -20,7 +20,7 @@
 
 from django.conf.urls import url  # noqa
 
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import views
 
 RANGES = r'^(?P<providernet_range_id>[^/]+)/%s$'

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import tabs
 
-from openstack_dashboard.dashboards.admin.providernets \
+from starlingx_dashboard.dashboards.admin.providernets \
     import tabs as project_tabs
 
 
