@@ -8,11 +8,11 @@ import logging
 
 from django.utils.translation import ugettext_lazy as _
 
-from openstack_dashboard.dashboards.admin.fault_management import \
+from starlingx_dashboard.dashboards.admin.fault_management import \
     tables as fm_tables
-from openstack_dashboard.dashboards.admin.inventory.interfaces import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as if_tables
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges import \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges import \
     tables as sr_tables
 
 LOG = logging.getLogger(__name__)

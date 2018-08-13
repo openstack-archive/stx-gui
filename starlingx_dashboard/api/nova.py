@@ -10,13 +10,11 @@ def server_group_create(request, **kwargs):
     return novaclient(request).server_groups.create(**kwargs)
 
 
-# WRS: Nova extension for provider network.
 def provider_network_get(request, providernet_id):
     return wrs_providernets.ProviderNetsManager(novaclient(request)).get(
         providernet_id)
 
 
-# WRS: Nova extension for device usage
 class DeviceUsage(base.APIResourceWrapper):
     """Wrapper for Inventory Device Usage
     """
@@ -39,7 +37,6 @@ def get_device_usage(request, device_id):
     return DeviceUsage(usage[0])
 
 
-# WRS: Nova extension for detail device usage
 class DetailUsage(base.APIResourceWrapper):
     """Wrapper for Inventory Device Usage
     """
