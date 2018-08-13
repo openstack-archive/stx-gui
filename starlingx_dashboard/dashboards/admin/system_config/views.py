@@ -16,27 +16,29 @@ from horizon import tables
 from horizon import tabs
 
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.system_config.forms \
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import CreateSDNController
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import EditPipeline
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdatecDNS
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdatecEXT_OAM
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdatecNTP
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdateiStorage
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdateiStoragePools
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdateSDNController
-from openstack_dashboard.dashboards.admin.system_config.forms \
+from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdateSystem
-from openstack_dashboard.dashboards.admin.system_config.tables \
+from starlingx_dashboard.dashboards.admin.system_config.tables \
     import SDNControllerTable
-from openstack_dashboard.dashboards.admin.system_config.tabs \
+from starlingx_dashboard.dashboards.admin.system_config.tabs \
     import ConfigTabs
 
 
@@ -65,7 +67,7 @@ class UpdateSystemView(forms.ModalFormView):
 
     def get_initial(self):
         try:
-            system = api.sysinv.system_get(self.request)
+            system = stx_api.sysinv.system_get(self.request)
         except Exception:
             exceptions.handle(self.request,
                               _("Unable to retrieve system data."))
@@ -82,7 +84,7 @@ class UpdatecDNSView(forms.ModalFormView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdatecDNSView, self).get_context_data(**kwargs)
-        dns_list = api.sysinv.dns_list(self.request)
+        dns_list = stx_api.sysinv.dns_list(self.request)
 
         if dns_list:
             if "uuid" in dns_list[0]._attrs:
@@ -105,7 +107,7 @@ class UpdatecDNSView(forms.ModalFormView):
                          'NAMESERVER_3': None}
 
         try:
-            dns_list = api.sysinv.dns_list(self.request)
+            dns_list = stx_api.sysinv.dns_list(self.request)
 
             if dns_list:
                 dns = dns_list[0]
@@ -130,7 +132,7 @@ class UpdatecNTPView(forms.ModalFormView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdatecNTPView, self).get_context_data(**kwargs)
-        ntp_list = api.sysinv.ntp_list(self.request)
+        ntp_list = stx_api.sysinv.ntp_list(self.request)
 
         if ntp_list:
             if "uuid" in ntp_list[0]._attrs:
@@ -152,7 +154,7 @@ class UpdatecNTPView(forms.ModalFormView):
                          'NTP_SERVER_3': None}
 
         try:
-            ntp_list = api.sysinv.ntp_list(self.request)
+            ntp_list = stx_api.sysinv.ntp_list(self.request)
 
             if ntp_list:
                 ntp = ntp_list[0]
@@ -177,7 +179,7 @@ class UpdatecEXT_OAMView(forms.ModalFormView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdatecEXT_OAMView, self).get_context_data(**kwargs)
-        extoam_list = api.sysinv.extoam_list(self.request)
+        extoam_list = stx_api.sysinv.extoam_list(self.request)
 
         if extoam_list:
             if 'uuid' in extoam_list[0]._attrs:
@@ -204,7 +206,7 @@ class UpdatecEXT_OAMView(forms.ModalFormView):
 
         try:
 
-            extoam_list = api.sysinv.extoam_list(self.request)
+            extoam_list = stx_api.sysinv.extoam_list(self.request)
 
             if extoam_list:
                 if extoam_list[0]:
@@ -240,15 +242,15 @@ class UpdateiStorageView(forms.ModalFormView):
     def get_context_data(self, **kwargs):
         context = super(UpdateiStorageView, self).get_context_data(**kwargs)
 
-        if api.sysinv.is_system_mode_simplex(self.request):
+        if stx_api.sysinv.is_system_mode_simplex(self.request):
             context['is_system_mode_simplex'] = True
 
         return context
 
     def get_initial(self):
-        system = api.sysinv.system_get(self.request)
+        system = stx_api.sysinv.system_get(self.request)
 
-        fs_list = api.sysinv.controllerfs_list(self.request)
+        fs_list = stx_api.sysinv.controllerfs_list(self.request)
         fs_form_data = {fs.name.replace("-", "_"): fs.size for fs in fs_list}
         fs_form_data.update({'uuid': system.uuid})
         return fs_form_data
@@ -263,7 +265,7 @@ class UpdateiStoragePoolsView(forms.ModalFormView):
         ctxt = super(UpdateiStoragePoolsView, self).get_context_data(**kwargs)
         ctxt['tier_name'] = self.kwargs['tier_name']
 
-        storage_list = api.sysinv.storagepool_list(self.request)
+        storage_list = stx_api.sysinv.storagepool_list(self.request)
 
         ctxt['uuid'] = " "
         for s in storage_list:
@@ -296,7 +298,7 @@ class UpdateiStoragePoolsView(forms.ModalFormView):
 
         try:
             target_tier = self.kwargs['tier_name']
-            storage_list = api.sysinv.storagepool_list(self.request)
+            storage_list = stx_api.sysinv.storagepool_list(self.request)
             for s in storage_list:
                 if s.tier_name == target_tier:
 
@@ -341,7 +343,7 @@ class DetailSDNControllerView(tables.DataTableView):
         if not hasattr(self, "_object"):
             uuid = self.kwargs['uuid']
             try:
-                self._object = api.sysinv.sdn_controller_get(self.request,
+                self._object = stx_api.sysinv.sdn_controller_get(self.request,
                                                              uuid)
             except Exception:
                 redirect = self.failure_url
@@ -381,7 +383,7 @@ class UpdateSDNControllerView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             controller_uuid = self.kwargs['uuid']
             try:
-                self._object = api.sysinv.sdn_controller_get(self.request,
+                self._object = stx_api.sysinv.sdn_controller_get(self.request,
                                                              controller_uuid)
             except Exception:
                 redirect = self.success_url

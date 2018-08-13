@@ -19,15 +19,15 @@
 from django.conf.urls import include  # noqa
 from django.conf.urls import url  # noqa
 
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import urls as range_urls
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import views as range_views
-from openstack_dashboard.dashboards.admin.providernets.providernets import \
+from starlingx_dashboard.dashboards.admin.providernets.providernets import \
     views
 
 PROVIDERNETS = r'^(?P<providernet_id>[^/]+)/%s$'
-VIEW_MOD = 'openstack_dashboard.dashboards.admin.providernets.providernets.' \
+VIEW_MOD = 'starlingx_dashboard.dashboards.admin.providernets.providernets.' \
            'views'
 
 urlpatterns = [
