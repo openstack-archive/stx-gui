@@ -115,12 +115,12 @@ class ActiveAlarmsTab(tabs.TableTab):
     def get_alarms_data(self):
         search_opts = {}
         # get retrieve parameters from request/session env
-        #marker = \
-        #    self.request.GET.get(tables.AlarmsTable._meta.pagination_param,
-        #                         None)
-        #limit = \
-        #    self.request.GET.get(tables.AlarmsTable._meta.limit_param,
-        #                         None)
+        marker = \
+            self.request.GET.get(tables.AlarmsTable._meta.pagination_param,
+                                 None)
+        limit = \
+            self.request.GET.get(tables.AlarmsTable._meta.limit_param,
+                                 None)
 
         search_opts = self.get_filters()
         search_opts.update({

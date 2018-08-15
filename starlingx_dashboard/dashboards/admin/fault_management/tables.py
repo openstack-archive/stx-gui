@@ -29,7 +29,6 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from starlingx_dashboard.horizon import tables as stx_tables
 from horizon.utils import filters as utils_filters
 from openstack_dashboard import api
 from starlingx_dashboard import api as stx_api
@@ -48,11 +47,11 @@ SUPPRESSION_STATUS_DISPLAY_CHOICES = (
 )
 
 
-class AlarmsLimitAction(stx_tables.LimitAction):
+class AlarmsLimitAction(tables.LimitAction):
     verbose_name = _("Alarms")
 
 
-class AlarmFilterAction(stx_tables.FixedWithQueryFilter):
+class AlarmFilterAction(tables.FixedWithQueryFilter):
     def __init__(self, **kwargs):
         super(AlarmFilterAction, self).__init__(**kwargs)
 
@@ -103,11 +102,11 @@ class AlarmsTable(tables.DataTable):
         hidden_title = False
 
 
-class EventLogsLimitAction(stx_tables.LimitAction):
+class EventLogsLimitAction(tables.LimitAction):
     verbose_name = _("Events")
 
 
-class EventLogsFilterAction(stx_tables.FixedWithQueryFilter):
+class EventLogsFilterAction(tables.FixedWithQueryFilter):
     def __init__(self, **kwargs):
         super(EventLogsFilterAction, self).__init__(**kwargs)
 

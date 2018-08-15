@@ -5,7 +5,7 @@ DEFAULT = False
 # A dictionary of exception classes to be added to HORIZON['exceptions'].
 ADD_EXCEPTIONS = {}
 # A list of applications to be added to INSTALLED_APPS.
-ADD_INSTALLED_APPS = ['starlingx_dashboard', ]
+ADD_INSTALLED_APPS = ['starlingx_dashboard.dashboards.dc_admin', ]
 ADD_ANGULAR_MODULES = [
     'horizon.dashboard.dc_admin',
 ]
