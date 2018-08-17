@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2017 Wind River Systems, Inc.
-*
-* SPDX-License-Identifier: Apache-2.0
-*
+ *  Copyright (c) 2018 Wind River Systems, Inc.
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
  */
 
 (function () {
@@ -10,18 +10,18 @@
 
   angular
     .module('horizon.app.core.openstack-service-api')
-    .factory('horizon.app.core.openstack-service-api.sysinv', SysinvAPI);
+    .factory('horizon.app.core.openstack-service-api.fm', FmAPI);
 
-  SysinvAPI.$inject = [
+  FmAPI.$inject = [
     '$q',
     'horizon.framework.util.http.service',
     'horizon.framework.widgets.toast.service',
     '$http'
   ];
 
-  function SysinvAPI($q, apiService, toastService, $http) {
+  function FmAPI($q, apiService, toastService, $http) {
     var service = {
-      getSystem: getSystem
+      getAlarmSummary: getAlarmSummary
     };
 
     var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
@@ -32,15 +32,15 @@
     return service;
 
 
-    ////////////
-    // System //
-    ////////////
+    ///////////////////
+    // Alarm Summary //
+    ///////////////////
 
-    function getSystem() {
-      return apiService.get('/api/sysinv/system/')
+    function getAlarmSummary() {
+      return apiService.get('/api/fm/alarm_summary/')
         .error(function () {
           toastService.clearErrors();
-          toastService.add('error', gettext("Unable to retrieve the System Controller's system."));
+          toastService.add('error', gettext("Unable to retrieve the System Controller's alarm summary."));
         });
     }
 

@@ -85,7 +85,7 @@ class CreatePatchStrategyView(forms.ModalFormView):
     def get_context_data(self, **kwargs):
         context = super(CreatePatchStrategyView, self).get_context_data(
             **kwargs)
-        alarms = stx_api.sysinv.alarm_list(self.request)
+        alarms = stx_api.fm.alarm_list(self.request)
         affecting = \
             len([alarm for alarm in alarms if alarm.mgmt_affecting == 'True'])
 
@@ -103,7 +103,7 @@ class CreateUpgradeStrategyView(forms.ModalFormView):
     def get_context_data(self, **kwargs):
         context = super(CreateUpgradeStrategyView, self).get_context_data(
             **kwargs)
-        alarms = stx_api.sysinv.alarm_list(self.request)
+        alarms = stx_api.fm.alarm_list(self.request)
         affecting = \
             len([alarm for alarm in alarms if alarm.mgmt_affecting == 'True'])
 

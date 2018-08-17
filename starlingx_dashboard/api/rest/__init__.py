@@ -15,10 +15,12 @@
 #
 
 from starlingx_dashboard.api.rest import dc_manager
+from starlingx_dashboard.api.rest import fm
 from starlingx_dashboard.api.rest import sysinv
 
 
 __all__ = [
     'dc_manager',
+    'fm',
     'sysinv',
 ]

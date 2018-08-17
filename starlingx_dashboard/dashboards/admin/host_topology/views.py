@@ -42,7 +42,7 @@ class HostDetailView(i_views.DetailView):
 
                 alarms = []
                 try:
-                    alarms = stx_api.sysinv.alarm_list(self.request)
+                    alarms = stx_api.fm.alarm_list(self.request)
                 except Exception as ex:
                     exceptions.handle(ex)
                 # Filter out unrelated alarms
@@ -77,7 +77,7 @@ class ProvidernetDetailView(tabs.TabbedTableView):
                     self.request, providernet_id)
                 providernet.set_id_as_name_if_empty(length=0)
 
-                alarms = stx_api.sysinv.alarm_list(self.request)
+                alarms = stx_api.fm.alarm_list(self.request)
                 # Filter out unrelated alarms
                 providernet.alarms = \
                     topology_tabs.get_alarms_for_entity(alarms,
@@ -173,7 +173,7 @@ class JSONView(View):
     def _get_alarms(self, request):
         alarms = []
         try:
-            alarms = stx_api.sysinv.alarm_list(request)
+            alarms = stx_api.fm.alarm_list(request)
         except Exception as ex:
             exceptions.handle(ex)
 

@@ -57,11 +57,11 @@ class AlarmFilterAction(tables.FixedWithQueryFilter):
 
         self.filter_choices = [
             (
-                (stx_api.sysinv.FM_SUPPRESS_SHOW, _("Show Suppressed"), True),
-                (stx_api.sysinv.FM_SUPPRESS_HIDE, _('Hide Suppressed'), True)
+                (stx_api.fm.FM_SUPPRESS_SHOW, _("Show Suppressed"), True),
+                (stx_api.fm.FM_SUPPRESS_HIDE, _('Hide Suppressed'), True)
             )
         ]
-        self.default_value = stx_api.sysinv.FM_SUPPRESS_HIDE
+        self.default_value = stx_api.fm.FM_SUPPRESS_HIDE
 
         self.disabled_choices = ['enabled']
 
@@ -112,16 +112,16 @@ class EventLogsFilterAction(tables.FixedWithQueryFilter):
 
         self.filter_choices = [
             (
-                (stx_api.sysinv.FM_ALL, _("All Events"), True),
-                (stx_api.sysinv.FM_ALARM, _('Alarm Events'), True),
-                (stx_api.sysinv.FM_LOG, _('Log Events'), True),
+                (stx_api.fm.FM_ALL, _("All Events"), True),
+                (stx_api.fm.FM_ALARM, _('Alarm Events'), True),
+                (stx_api.fm.FM_LOG, _('Log Events'), True),
             ),
             (
-                (stx_api.sysinv.FM_SUPPRESS_SHOW, _("Show Suppressed"), True),
-                (stx_api.sysinv.FM_SUPPRESS_HIDE, _('Hide Suppressed'), True)
+                (stx_api.fm.FM_SUPPRESS_SHOW, _("Show Suppressed"), True),
+                (stx_api.fm.FM_SUPPRESS_HIDE, _('Hide Suppressed'), True)
             )
         ]
-        self.default_value = stx_api.sysinv.FM_ALL_SUPPRESS_HIDE
+        self.default_value = stx_api.fm.FM_ALL_SUPPRESS_HIDE
 
         self.disabled_choices = ['enabled', 'enabled']
 
@@ -187,16 +187,16 @@ class SuppressEvent(tables.BatchAction):
 
     def allowed(self, request, datum):
         """Allow suppress action if Alarm ID is unsuppressed."""
-        if datum.suppression_status == stx_api.sysinv.FM_SUPPRESSED:
+        if datum.suppression_status == stx_api.fm.FM_SUPPRESSED:
             return False
 
         return True
 
     def action(self, request, obj_id):
-        kwargs = {"suppression_status": stx_api.sysinv.FM_SUPPRESSED}
+        kwargs = {"suppression_status": stx_api.fm.FM_SUPPRESSED}
 
         try:
-            stx_api.sysinv.event_suppression_update(request, obj_id, **kwargs)
+            stx_api.fm.event_suppression_update(request, obj_id, **kwargs)
         except Exception:
             exceptions.handle(request,
                               _('Unable to set specified alarm type to \
@@ -227,16 +227,16 @@ class UnsuppressEvent(tables.BatchAction):
 
     def allowed(self, request, datum):
         """Allow unsuppress action if Alarm ID is suppressed."""
-        if datum.suppression_status == stx_api.sysinv.FM_UNSUPPRESSED:
+        if datum.suppression_status == stx_api.fm.FM_UNSUPPRESSED:
             return False
 
         return True
 
     def action(self, request, obj_id):
-        kwargs = {"suppression_status": stx_api.sysinv.FM_UNSUPPRESSED}
+        kwargs = {"suppression_status": stx_api.fm.FM_UNSUPPRESSED}
 
         try:
-            stx_api.sysinv.event_suppression_update(request, obj_id, **kwargs)
+            stx_api.fm.event_suppression_update(request, obj_id, **kwargs)
         except Exception:
             exceptions.handle(request,
                               _('Unable to set specified alarm type to \
