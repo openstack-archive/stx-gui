@@ -30,6 +30,7 @@
     'horizon.framework.widgets.toast.service',
     'horizon.framework.util.i18n.gettext',
     'horizon.app.core.openstack-service-api.sysinv',
+    'horizon.app.core.openstack-service-api.fm',
   ];
 
   function dcOverviewCentralTableController(
@@ -40,7 +41,8 @@
     $window,
     toast,
     gettext,
-    sysinv
+    sysinv,
+    fm
   ){
 
     var ctrl = this;
@@ -64,7 +66,7 @@
       // Fetch central cloud data to populate the table
       $q.all([
         sysinv.getSystem().success(getSystemSuccess),
-        sysinv.getAlarmSummary().success(getAlarmSummarySuccess)
+        fm.getAlarmSummary().success(getAlarmSummarySuccess)
       ]).then(function(){
         angular.extend(ctrl.centralClouds[0], ctrl.alarmSummary);
       })
