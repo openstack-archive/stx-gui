@@ -30,8 +30,10 @@ from horizon import messages
 
 from openstack_dashboard import api
 from openstack_dashboard.api import cinder
-from starlingx_dashboard.api import nova
 from openstack_dashboard.dashboards.project.instances import tables
+
+from starlingx_dashboard.api import nova as stx_nova
+
 
 
 class CreateForm(forms.SelfHandlingForm):
@@ -74,6 +76,7 @@ class CreateForm(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
+            project_id = self.request.user.tenant_id
             policy = data['policy']
             policies = []
             if policy:
@@ -90,8 +93,10 @@ class CreateForm(forms.SelfHandlingForm):
 
             kwargs = {'name': data['name'],
                       'policies': policies,
-                      'metadata': metadata}
-            server_group = nova.server_group_create(request, **kwargs)
+                      'metadata': metadata,
+                      'project_id': project_id}
+            
+            server_group = stx_nova.server_group_create(request, **kwargs)
             return server_group
 
         except ValidationError as e:

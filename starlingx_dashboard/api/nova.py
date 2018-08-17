@@ -4,10 +4,26 @@
 # SPDX-License-Identifier: Apache-2.0 
 #
 
+from novaclient.v2 import wrs_pci
+from novaclient.v2 import wrs_providernets
+
 from openstack_dashboard.api.nova import *
 
-def server_group_create(request, **kwargs):
-    return novaclient(request).server_groups.create(**kwargs)
+def server_group_list(request, all_projects=False):
+    return novaclient(request).server_groups.list(all_projects)
+
+
+def server_group_get(request, server_group_id):
+    return novaclient(request).server_groups.get(server_group_id)
+
+
+def server_group_create(request, name, project_id, metadata, policies):
+    return novaclient(request).server_groups.create(
+        name, project_id, metadata, policies)
+
+
+def server_group_delete(request, server_group_id):
+    return novaclient(request).server_groups.delete(server_group_id)
 
 
 def provider_network_get(request, providernet_id):

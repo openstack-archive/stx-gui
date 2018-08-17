@@ -14,11 +14,11 @@
 # Copyright (c) 2017 Wind River Systems, Inc.
 #
 
-#from cgcs_dashboard.api import dc_manager
-#from cgcs_dashboard.api import iservice
-#from cgcs_dashboard.api import sysinv
 from starlingx_dashboard.api import base
 from starlingx_dashboard.api import dc_manager
+from starlingx_dashboard.api import iservice
+from starlingx_dashboard.api import neutron
+from starlingx_dashboard.api import nova
 from starlingx_dashboard.api import sysinv
 from starlingx_dashboard.api import vim
 from starlingx_dashboard.api import patch
@@ -27,6 +27,10 @@ from starlingx_dashboard.api import patch
 __all__ = [
     "base",
     "dc_manager",
+    "iservice",
+    "neutron",
+    "nova",
+    "patch",
     "sysinv",
     "vim",
 ]

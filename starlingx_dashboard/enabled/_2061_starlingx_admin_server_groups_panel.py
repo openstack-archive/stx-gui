@@ -8,5 +8,3 @@ PANEL_GROUP = 'compute'
 # Python panel class of the PANEL to be added.
 ADD_PANEL = \
     'starlingx_dashboard.dashboards.admin.server_groups.panel.ServerGroups'
-# A list of applications to be added to INSTALLED_APPS.
-ADD_INSTALLED_APPS = ['starlingx_dashboard', ]

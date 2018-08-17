@@ -23,6 +23,7 @@ from horizon import tabs
 
 from openstack_dashboard.api import nova
 
+from starlingx_dashboard.api import nova as stx_nova
 
 class OverviewTab(tabs.Tab):
     name = _("Overview")
@@ -33,7 +34,7 @@ class OverviewTab(tabs.Tab):
     def get_context_data(self, request):
         server_group_id = self.tab_group.kwargs['server_group_id']
         try:
-            server_group = nova.server_group_get(request, server_group_id)
+            server_group = stx_nova.server_group_get(request, server_group_id)
             server_group.members_display = []
             for member in server_group.members:
                 server_group.members_display.append(

@@ -33,6 +33,7 @@ from openstack_dashboard.dashboards.project.volumes.tables \
     import get_attachment_name
 from openstack_dashboard.usage import quotas
 
+from starlingx_dashboard.api import nova as stx_nova
 
 DELETABLE_STATES = ("available", "error")
 
@@ -59,7 +60,7 @@ class DeleteServerGroup(tables.DeleteAction):
         name = self.table.get_object_display(obj)
 
         try:
-            nova.server_group_delete(request, obj_id)
+            stx_nova.server_group_delete(request, obj_id)
         except Exception:
             msg = _('Unable to delete group "%s" because it is not empty. '
                     'Either delete the member instances'
@@ -117,7 +118,7 @@ class UpdateRow(tables.Row):
     ajax = True
 
     def get_data(self, request, server_group_id):
-        server_group = nova.server_group_get(request, server_group_id)
+        server_group = stx_nova.server_group_get(request, server_group_id)
         if not server_group.name:
             server_group.name = server_group_id
 

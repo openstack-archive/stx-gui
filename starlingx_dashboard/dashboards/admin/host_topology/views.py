@@ -20,12 +20,13 @@ from horizon import tabs
 from horizon.utils import settings as utils_settings
 from horizon import views
 
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.host_topology import\
-    tabs as topology_tabs
-from openstack_dashboard.dashboards.admin.inventory import\
-    views as i_views
 from openstack_dashboard.usage import quotas
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.host_topology import\
+    tabs as topology_tabs
+from starlingx_dashboard.dashboards.admin.inventory import\
+    views as i_views
 
 LOG = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class HostDetailView(i_views.DetailView):
 
                 alarms = []
                 try:
-                    alarms = api.sysinv.alarm_list(self.request)
+                    alarms = stx_api.sysinv.alarm_list(self.request)
                 except Exception as ex:
                     exceptions.handle(ex)
                 # Filter out unrelated alarms
@@ -72,11 +73,11 @@ class ProvidernetDetailView(tabs.TabbedTableView):
         if not hasattr(self, "_providernet"):
             try:
                 providernet_id = self.kwargs['providernet_id']
-                providernet = api.neutron.provider_network_get(
+                providernet = stx_api.neutron.provider_network_get(
                     self.request, providernet_id)
                 providernet.set_id_as_name_if_empty(length=0)
 
-                alarms = api.sysinv.alarm_list(self.request)
+                alarms = stx_api.sysinv.alarm_list(self.request)
                 # Filter out unrelated alarms
                 providernet.alarms = \
                     topology_tabs.get_alarms_for_entity(alarms,
@@ -99,7 +100,7 @@ class ProvidernetDetailView(tabs.TabbedTableView):
         if not hasattr(self, "_providernet_nova"):
             try:
                 providernet_id = self.kwargs['providernet_id']
-                providernet_nova = api.nova.provider_network_get(
+                providernet_nova = stx_api.nova.provider_network_get(
                     self.request, providernet_id)
             except Exception:
                 redirect = self.failure_url
@@ -172,7 +173,7 @@ class JSONView(View):
     def _get_alarms(self, request):
         alarms = []
         try:
-            alarms = api.sysinv.alarm_list(request)
+            alarms = stx_api.sysinv.alarm_list(request)
         except Exception as ex:
             exceptions.handle(ex)
 
@@ -182,7 +183,7 @@ class JSONView(View):
     def _get_hosts(self, request):
         hosts = []
         try:
-            hosts = api.sysinv.host_list(request)
+            hosts = stx_api.sysinv.host_list(request)
         except Exception as ex:
             exceptions.handle(ex)
 
@@ -192,15 +193,15 @@ class JSONView(View):
             try:
                 host_data['ports'] = [
                     p.to_dict() for p in
-                    api.sysinv.host_port_list(request, host.uuid)]
+                    stx_api.sysinv.host_port_list(request, host.uuid)]
 
                 host_data['interfaces'] = [
                     i.to_dict() for i in
-                    api.sysinv.host_interface_list(request, host.uuid)]
+                    stx_api.sysinv.host_interface_list(request, host.uuid)]
 
                 host_data['lldpneighbours'] = [
                     n.to_dict() for n in
-                    api.sysinv.host_lldpneighbour_list(request, host.uuid)]
+                    stx_api.sysinv.host_lldpneighbour_list(request, host.uuid)]
 
                 # Set the value for neighbours field for each port in the host.
                 # This will be referenced in Interfaces table
@@ -219,7 +220,7 @@ class JSONView(View):
     def _get_pnets(self, request):
         pnets = []
         try:
-            pnets = api.neutron.provider_network_list(request)
+            pnets = stx_api.neutron.provider_network_list(request)
         except Exception as ex:
             exceptions.handle(ex)
         data = [p.to_dict() for p in pnets]

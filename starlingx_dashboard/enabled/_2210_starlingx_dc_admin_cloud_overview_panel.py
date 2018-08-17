@@ -15,5 +15,3 @@ DISABLED = False
 # Python panel class of the PANEL to be added.
 ADD_PANEL = 'starlingx_dashboard.dashboards.' \
             'dc_admin.cloud_overview.panel.CloudOverview'
-# A list of applications to be added to INSTALLED_APPS.
-ADD_INSTALLED_APPS = ['starlingx_dashboard', ]

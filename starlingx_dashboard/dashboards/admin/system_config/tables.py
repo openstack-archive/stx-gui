@@ -12,7 +12,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
 from horizon import tables
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 
 LOG = logging.getLogger(__name__)
@@ -116,7 +117,7 @@ class UpdateDNSRow(tables.Row):
     ajax = True
 
     def get_data(self, request, obj_id):
-        return api.sysinv.dns_get(request, obj_id)
+        return stx_api.sysinv.dns_get(request, obj_id)
 
 
 class cDNSTable(tables.DataTable):
@@ -151,7 +152,7 @@ class UpdateNTPRow(tables.Row):
     ajax = True
 
     def get_data(self, request, obj_id):
-        return api.sysinv.ntp_get(request, obj_id)
+        return stx_api.sysinv.ntp_get(request, obj_id)
 
 
 class cNTPTable(tables.DataTable):
@@ -188,7 +189,7 @@ class UpdateOAMRow(tables.Row):
     ajax = True
 
     def get_data(self, request, obj_id):
-        return api.sysinv.extoam_get(request, obj_id)
+        return stx_api.sysinv.extoam_get(request, obj_id)
 
 
 class cOAMTable(tables.DataTable):
@@ -243,7 +244,7 @@ class cOAMTable(tables.DataTable):
     def __init__(self, request, *args, **kwargs):
         super(cOAMTable, self).__init__(request, *args, **kwargs)
 
-        if api.sysinv.is_system_mode_simplex(request):
+        if stx_api.sysinv.is_system_mode_simplex(request):
             self.columns['oam_floating_ip'].verbose_name = _('OAM IP')
             del self.columns['oam_c0_ip']
             del self.columns['oam_c1_ip']
@@ -260,7 +261,7 @@ class UpdateStorageRow(tables.Row):
     ajax = True
 
     def get_data(self, request):
-        return api.sysinv.storagefs_list(request)
+        return stx_api.sysinv.storagefs_list(request)
 
 
 class iStorageTable(tables.DataTable):
@@ -350,7 +351,7 @@ class DeleteSDNController(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            api.sysinv.sdn_controller_delete(request, obj_id)
+            stx_api.sysinv.sdn_controller_delete(request, obj_id)
         except exc.ClientException as ce:
             # Display REST API error on the GUI
             LOG.error(ce)

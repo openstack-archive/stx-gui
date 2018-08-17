@@ -33,6 +33,7 @@ from openstack_dashboard.api import cinder
 from openstack_dashboard.api import nova
 from openstack_dashboard.dashboards.project.instances import tables
 
+from starlingx_dashboard.api import nova as stx_nova
 
 class CreateForm(forms.SelfHandlingForm):
     tenantP = forms.ChoiceField(label=_("Project"), required=True)
@@ -109,7 +110,7 @@ class CreateForm(forms.SelfHandlingForm):
             if data['tenantP']:
                 project_id = data['tenantP']
 
-            server_group = nova.server_group_create(
+            server_group = stx_nova.server_group_create(
                 request, data['name'], project_id, metadata, policies)
             return server_group
 

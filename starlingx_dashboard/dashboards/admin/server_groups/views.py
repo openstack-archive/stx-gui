@@ -30,12 +30,13 @@ from horizon import tabs
 from openstack_dashboard import api
 from openstack_dashboard.usage import quotas
 
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.server_groups \
     import forms as admin_forms
 
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard.dashboards.admin.server_groups \
     import tables as admin_tables
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard.dashboards.admin.server_groups \
     import tabs as admin_tabs
 
 
@@ -47,7 +48,7 @@ class IndexView(tables.DataTableView):
 
     def get_data(self):
         try:
-            server_groups = api.nova.server_group_list(
+            server_groups = stx_api.nova.server_group_list(
                 self.request, all_projects=True)
         except Exception:
             server_groups = []

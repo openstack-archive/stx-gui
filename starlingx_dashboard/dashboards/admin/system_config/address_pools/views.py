@@ -20,11 +20,11 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import forms
-from openstack_dashboard import api
 
-from openstack_dashboard.dashboards.admin.system_config.address_pools import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.system_config.address_pools import \
     forms as address_pool_forms
-from openstack_dashboard.dashboards.admin.system_config.address_pools import \
+from starlingx_dashboard.dashboards.admin.system_config.address_pools import \
     tables as address_pool_tables
 
 LOG = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class UpdateAddressPoolView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             address_pool_uuid = self.kwargs['address_pool_uuid']
             try:
-                self._object = api.sysinv.address_pool_get(
+                self._object = stx_api.sysinv.address_pool_get(
                     self.request, address_pool_uuid)
             except Exception:
                 redirect = self.success_url

@@ -26,14 +26,17 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 from horizon import exceptions
 from horizon import forms
 from horizon import tables
+
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.providernets.providernets import \
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.providernets.providernets import \
     forms as providernet_forms
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import tables as range_tables
-from openstack_dashboard.dashboards.admin.providernets.providernets.ranges \
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
     import views as range_views
-from openstack_dashboard.dashboards.admin.providernets.providernets import \
+from starlingx_dashboard.dashboards.admin.providernets.providernets import \
     tables as providernet_tables
 
 LOG = logging.getLogger(__name__)
@@ -68,7 +71,7 @@ class DetailView(tables.MultiTableView):
         try:
             providernet_id = self.kwargs['providernet_id']
             # self.table.kwargs['providernet'] = self._get_data()
-            networks = api.neutron.provider_network_list_tenant_networks(
+            networks = stx_api.neutron.provider_network_list_tenant_networks(
                 self.request, providernet_id=providernet_id)
         except Exception:
             networks = []
@@ -80,7 +83,7 @@ class DetailView(tables.MultiTableView):
         try:
             providernet_id = self.kwargs['providernet_id']
             # self.table.kwargs['providernet'] = self._get_data()
-            ranges = api.neutron.provider_network_range_list(
+            ranges = stx_api.neutron.provider_network_range_list(
                 self.request, providernet_id=providernet_id)
         except Exception:
             ranges = []
@@ -98,7 +101,7 @@ class DetailView(tables.MultiTableView):
         if not hasattr(self, "_providernet"):
             try:
                 providernet_id = self.kwargs['providernet_id']
-                providernet = api.neutron.provider_network_get(
+                providernet = stx_api.neutron.provider_network_get(
                     self.request, providernet_id)
                 providernet.set_id_as_name_if_empty(length=0)
             except Exception:
@@ -114,7 +117,7 @@ class DetailView(tables.MultiTableView):
         if not hasattr(self, "_providernet_nova"):
             try:
                 providernet_id = self.kwargs['providernet_id']
-                providernet_nova = api.nova.provider_network_get(
+                providernet_nova = stx_api.nova.provider_network_get(
                     self.request, providernet_id)
             except Exception as ex:
                 # redirect = self.failure_url
@@ -149,7 +152,7 @@ class UpdateView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             providernet_id = self.kwargs['providernet_id']
             try:
-                self._object = api.neutron.provider_network_get(
+                self._object = stx_api.neutron.provider_network_get(
                     self.request, providernet_id)
             except Exception:
                 redirect = self.success_url
