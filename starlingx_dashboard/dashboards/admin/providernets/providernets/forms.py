@@ -20,12 +20,14 @@ import logging
 
 from django.core.urlresolvers import reverse  # noqa
 from django.utils.translation import ugettext_lazy as _  # noqa
+
 from neutronclient.common import exceptions as neutron_exceptions
 
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -66,7 +68,7 @@ class CreateProviderNetwork(forms.SelfHandlingForm):
         super(CreateProviderNetwork, self).__init__(request, *args, **kwargs)
 
         providernet_type_choices = [('', _("Select a network type"))]
-        providernet_types = api.neutron.provider_network_type_list(request)
+        providernet_types = stx_api.neutron.provider_network_type_list(request)
         for providernet_type in providernet_types:
             providernet_type_choices.append((providernet_type.type,
                                              providernet_type.type))
@@ -87,7 +89,7 @@ class CreateProviderNetwork(forms.SelfHandlingForm):
                       'mtu': data['mtu'],
                       'vlan_transparent': data['vlan_transparent']}
 
-            network = api.neutron.provider_network_create(request, **params)
+            network = stx_api.neutron.provider_network_create(request, **params)
             msg = (_('Provider network %s was successfully created.') %
                    data['name'])
             LOG.debug(msg)
@@ -135,7 +137,7 @@ class UpdateProviderNetwork(forms.SelfHandlingForm):
                       'mtu': data['mtu'],
                       'vlan_transparent': data['vlan_transparent']}
 
-            providernet = api.neutron.provider_network_modify(
+            providernet = stx_api.neutron.provider_network_modify(
                 request, data['id'], **params)
             msg = (_('Provider network %s was successfully updated.') %
                    data['name'])

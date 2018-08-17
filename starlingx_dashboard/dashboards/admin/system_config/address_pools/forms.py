@@ -20,11 +20,13 @@ import logging
 from django.core.urlresolvers import reverse
 from django import shortcuts
 from django.utils.translation import ugettext_lazy as _
-import netaddr
 
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+import netaddr
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -89,7 +91,7 @@ class CreateAddressPool(forms.SelfHandlingForm):
                     'order': data['order']}
             if data.get('ranges'):
                 body['ranges'] = data.get('ranges')
-            pool = api.sysinv.address_pool_create(request, **body)
+            pool = stx_api.sysinv.address_pool_create(request, **body)
             msg = (_('Address pool was successfully created'))
             messages.success(request, msg)
             return pool
@@ -123,7 +125,7 @@ class UpdateAddressPool(CreateAddressPool):
                 updates['order'] = data['order']
             if data.get('ranges'):
                 updates['ranges'] = data['ranges']
-            pool = api.sysinv.address_pool_update(request, data['id'],
+            pool = stx_api.sysinv.address_pool_update(request, data['id'],
                                                   **updates)
             msg = (_('Address pool was successfully updated'))
             messages.success(request, msg)

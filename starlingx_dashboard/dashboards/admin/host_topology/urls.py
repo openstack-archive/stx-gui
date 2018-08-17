@@ -7,7 +7,7 @@
 
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.admin.host_topology import views
+from starlingx_dashboard.dashboards.admin.host_topology import views
 
 
 urlpatterns = [

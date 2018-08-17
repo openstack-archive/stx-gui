@@ -10,11 +10,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard.api import base
+
 from openstack_dashboard.api import ceph
-from openstack_dashboard.api import sysinv
-from openstack_dashboard.dashboards.admin.storage_overview import constants
-from openstack_dashboard.dashboards.admin.storage_overview import tables
+
+from starlingx_dashboard.api import base as stx_base
+from starlingx_dashboard.api import sysinv
+from starlingx_dashboard.dashboards.admin.storage_overview import constants
+from starlingx_dashboard.dashboards.admin.storage_overview import tables
 
 LOG = logging.getLogger(__name__)
 
@@ -68,7 +70,7 @@ class StorageServicesTab(tabs.TableTab):
             return
 
     def allowed(self, request):
-        return base.is_TiS_region(request)
+        return stx_base.is_stx_region(request)
 
 
 class StorageUsageTab(tabs.TableTab):

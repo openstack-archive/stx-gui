@@ -12,9 +12,11 @@ from horizon import exceptions
 from horizon import tabs
 
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.system_config.address_pools import \
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.system_config.address_pools import \
     tables as address_pool_tables
-from openstack_dashboard.dashboards.admin.system_config \
+from starlingx_dashboard.dashboards.admin.system_config \
     import tables as toplevel_tables
 
 
@@ -31,7 +33,7 @@ class SystemsTab(tabs.TableTab):
         request = self.request
         systems = []
         try:
-            systems = api.sysinv.system_list(request)
+            systems = stx_api.sysinv.system_list(request)
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve systems list.'))
@@ -48,7 +50,7 @@ class AddressPoolsTab(tabs.TableTab):
         request = self.request
         pools = []
         try:
-            pools = api.sysinv.address_pool_list(request)
+            pools = stx_api.sysinv.address_pool_list(request)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve address pool list.'))
@@ -72,7 +74,7 @@ class cDNSTab(tabs.TableTab):
                         'nameserver_2': ' ',
                         'nameserver_3': ' '}
 
-            dns_list = api.sysinv.dns_list(request)
+            dns_list = stx_api.sysinv.dns_list(request)
             if dns_list:
                 dns = dns_list[0]
 
@@ -107,7 +109,7 @@ class cNTPTab(tabs.TableTab):
                         'ntpserver_2': ' ',
                         'ntpserver_3': ' '}
 
-            ntp_list = api.sysinv.ntp_list(request)
+            ntp_list = stx_api.sysinv.ntp_list(request)
             if ntp_list:
                 ntp = ntp_list[0]
 
@@ -137,7 +139,7 @@ class cEXTOAMTab(tabs.TableTab):
         oam_list = []
 
         try:
-            oam_list = api.sysinv.extoam_list(request)
+            oam_list = stx_api.sysinv.extoam_list(request)
 
         except Exception:
             exceptions.handle(request,
@@ -158,7 +160,7 @@ class iStorageTab(tabs.TableTab):
         storage_list = []
 
         try:
-            storage_list = api.sysinv.controllerfs_list(request)
+            storage_list = stx_api.sysinv.controllerfs_list(request)
 
         except Exception:
             exceptions.handle(request,
@@ -178,7 +180,7 @@ class iStoragePoolsTab(tabs.TableTab):
         storage_list = []
 
         try:
-            storage_list = api.sysinv.storagepool_list(request)
+            storage_list = stx_api.sysinv.storagepool_list(request)
 
         except Exception:
             exceptions.handle(request,
@@ -189,8 +191,8 @@ class iStoragePoolsTab(tabs.TableTab):
     def allowed(self, request):
         """Only display the Tab if we have a ceph based setup"""
         try:
-            cinder_backend = api.sysinv.get_cinder_backend(request)
-            if api.sysinv.CINDER_BACKEND_CEPH in cinder_backend:
+            cinder_backend = stx_api.sysinv.get_cinder_backend(request)
+            if stx_api.sysinv.CINDER_BACKEND_CEPH in cinder_backend:
                 return True
         except Exception:
             pass
@@ -208,7 +210,7 @@ class SDNControllerTab(tabs.TableTab):
         controllers = []
 
         try:
-            controllers = api.sysinv.sdn_controller_list(request)
+            controllers = stx_api.sysinv.sdn_controller_list(request)
 
         except Exception:
             exceptions.handle(request,
@@ -219,7 +221,7 @@ class SDNControllerTab(tabs.TableTab):
     def allowed(self, request):
         """Only display the Tab if we have a SDN based setup"""
         try:
-            sdn_enabled = api.sysinv.get_sdn_enabled(request)
+            sdn_enabled = stx_api.sysinv.get_sdn_enabled(request)
             return sdn_enabled
         except Exception:
             return False
@@ -244,7 +246,7 @@ class CeilometerConfigTab(tabs.TableTab):
     def allowed(self, request):
         if request.user.services_region == 'SystemController':
             return False
-        return api.base.is_TiS_region(request)
+        return stx_api.base.is_stx_region(request)
 
 
 class ConfigTabs(tabs.TabGroup):

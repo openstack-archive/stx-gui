@@ -30,12 +30,12 @@ from horizon import tabs
 from openstack_dashboard import api
 from openstack_dashboard.usage import quotas
 
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard.dashboards.admin.server_groups \
     import forms as admin_forms
 
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard.dashboards.admin.server_groups \
     import tables as admin_tables
-from openstack_dashboard.dashboards.admin.server_groups \
+from starlingx_dashboard.dashboards.admin.server_groups \
     import tabs as admin_tabs
 
 

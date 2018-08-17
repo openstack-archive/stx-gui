@@ -17,7 +17,7 @@
 
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.admin.server_groups import views
+from starlingx_dashboard.dashboards.admin.server_groups import views
 
 
 urlpatterns = [
