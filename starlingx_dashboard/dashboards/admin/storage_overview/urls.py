@@ -5,7 +5,8 @@
 #
 
 from django.conf.urls import url
-from openstack_dashboard.dashboards.admin.storage_overview import views
+
+from starlingx_dashboard.dashboards.admin.storage_overview import views
 
 urlpatterns = [
     url(r'^$', views.StorageOverview.as_view(), name='index')

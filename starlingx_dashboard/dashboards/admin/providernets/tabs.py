@@ -11,9 +11,10 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard.api import base
-from openstack_dashboard.api import neutron
-from openstack_dashboard.dashboards.admin.providernets.providernets import \
+
+from starlingx_dashboard.api import base as stx_base
+from starlingx_dashboard.api import neutron as stx_neutron
+from starlingx_dashboard.dashboards.admin.providernets.providernets import \
     tables as providernets_tables
 
 LOG = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class ProviderNetworkTab(tabs.TableTab):
     def get_provider_networks_data(self):
         try:
             providernets = \
-                neutron.provider_network_list(self.tab_group.request)
+                stx_neutron.provider_network_list(self.tab_group.request)
         except Exception:
             providernets = []
             msg = _('Unable to get provider network list.')
@@ -37,7 +38,7 @@ class ProviderNetworkTab(tabs.TableTab):
         return providernets
 
     def allowed(self, request):
-        return base.is_TiS_region(request)
+        return stx_base.is_stx_region(request)
 
 
 class NetworkTabs(tabs.TabGroup):

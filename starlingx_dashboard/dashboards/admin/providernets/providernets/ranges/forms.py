@@ -20,12 +20,16 @@ import logging
 
 from django.core.urlresolvers import reverse  # noqa
 from django.utils.translation import ugettext_lazy as _  # noqa
-from neutronclient.common import exceptions as neutron_exceptions
 
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
+
+from neutronclient.common import exceptions as neutron_exceptions
+
 from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -133,7 +137,7 @@ class CreateProviderNetworkRange(forms.SelfHandlingForm):
                 params['port'] = int(data['port'])
                 params['ttl'] = int(data['ttl'])
 
-            providernet_range = api.neutron.provider_network_range_create(
+            providernet_range = stx_api.neutron.provider_network_range_create(
                 request, **params)
             msg = (_('Provider network range %s was successfully created.') %
                    providernet_range['id'])
@@ -224,7 +228,7 @@ class UpdateProviderNetworkRange(forms.SelfHandlingForm):
                       'minimum': data['minimum'],
                       'maximum': data['maximum']}
 
-            providernet_range = api.neutron.provider_network_range_modify(
+            providernet_range = stx_api.neutron.provider_network_range_modify(
                 request, data['providernet_range_id'], **params)
             msg = (_('Provider network range %s was successfully updated.') %
                    data['providernet_range_id'])

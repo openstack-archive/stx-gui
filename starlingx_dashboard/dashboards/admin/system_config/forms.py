@@ -9,6 +9,7 @@ import logging
 from collections import OrderedDict
 
 from cgtsclient import exc
+
 from django.core.urlresolvers import reverse  # noqa
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,6 +18,8 @@ from horizon import forms
 from horizon import messages
 
 from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -58,7 +61,7 @@ class UpdateSystem(forms.SelfHandlingForm):
             if not data['description']:
                 data['description'] = " "
 
-            system = api.sysinv.system_update(request, system_uuid, **data)
+            system = stx_api.sysinv.system_update(request, system_uuid, **data)
             msg = _('System "%s" was successfully updated.') % system_name
             LOG.debug(msg)
             messages.success(request, msg)
@@ -135,7 +138,7 @@ class UpdatecDNS(forms.SelfHandlingForm):
                         NAMESERVERS['NAMESERVER_%s' % index] = \
                             data['NAMESERVER_%s' % index]
 
-                dns_config = api.sysinv.dns_get(request, data['uuid'])
+                dns_config = stx_api.sysinv.dns_get(request, data['uuid'])
 
                 if hasattr(dns_config, 'uuid'):
                     dns_config_uuid = dns_config.uuid
@@ -180,7 +183,7 @@ class UpdatecDNS(forms.SelfHandlingForm):
             LOG.debug(data)
 
             if send_to_sysinv is True:
-                my_dns = api.sysinv.dns_update(request,
+                my_dns = stx_api.sysinv.dns_update(request,
                                                dns_config_uuid, **data)
 
                 if my_dns:
@@ -265,7 +268,7 @@ class UpdatecNTP(forms.SelfHandlingForm):
                         NTPSERVERS['NTP_SERVER_%s' % index] = data[
                             'NTP_SERVER_%s' % index]
 
-                ntp_config = api.sysinv.ntp_get(request, data['uuid'])
+                ntp_config = stx_api.sysinv.ntp_get(request, data['uuid'])
 
                 if hasattr(ntp_config, 'uuid'):
 
@@ -312,7 +315,7 @@ class UpdatecNTP(forms.SelfHandlingForm):
 
             if send_to_sysinv:
                 my_ntp = \
-                    api.sysinv.ntp_update(request, ntp_config_uuid, **data)
+                    stx_api.sysinv.ntp_update(request, ntp_config_uuid, **data)
 
                 if my_ntp:
                     msg = _('NTP configuration was successfully updated. ')
@@ -406,7 +409,7 @@ class UpdatecEXT_OAM(forms.SelfHandlingForm):
         if not kwargs['initial'].get('EXTERNAL_OAM_GATEWAY_ADDRESS'):
             self.fields['EXTERNAL_OAM_GATEWAY_ADDRESS'].widget = \
                 forms.widgets.HiddenInput()
-        if api.sysinv.is_system_mode_simplex(request):
+        if stx_api.sysinv.is_system_mode_simplex(request):
             self.fields['EXTERNAL_OAM_FLOATING_ADDRESS'].label = \
                 _("External OAM Address")
             self.fields['EXTERNAL_OAM_FLOATING_ADDRESS'].help_text = \
@@ -434,7 +437,7 @@ class UpdatecEXT_OAM(forms.SelfHandlingForm):
                 else:
                     data['uuid'] = ' '
 
-                oam_data = api.sysinv.extoam_get(request, data['uuid'])
+                oam_data = stx_api.sysinv.extoam_get(request, data['uuid'])
 
                 if hasattr(oam_data, 'uuid'):
                     oam_data_uuid = oam_data.uuid
@@ -453,7 +456,7 @@ class UpdatecEXT_OAM(forms.SelfHandlingForm):
                         data['oam_gateway_ip'] = \
                             data['EXTERNAL_OAM_GATEWAY_ADDRESS']
 
-                    if not api.sysinv.is_system_mode_simplex(request):
+                    if not stx_api.sysinv.is_system_mode_simplex(request):
                         data['oam_c0_ip'] = data['EXTERNAL_OAM_0_ADDRESS']
                         data['oam_c1_ip'] = data['EXTERNAL_OAM_1_ADDRESS']
 
@@ -490,7 +493,7 @@ class UpdatecEXT_OAM(forms.SelfHandlingForm):
             if send_to_sysinv:
                 LOG.info("OAM sendtosysinv data=%s", data)
 
-                myoam_data = api.sysinv.extoam_update(self.request,
+                myoam_data = stx_api.sysinv.extoam_update(self.request,
                                                       oam_data_uuid,
                                                       **data)
                 if myoam_data:
@@ -595,7 +598,7 @@ class UpdateiStorage(forms.SelfHandlingForm):
 
         new_data = {k.replace("_", "-"): v for k, v in data.items()}
         try:
-            fs_list = api.sysinv.controllerfs_list(self.request)
+            fs_list = stx_api.sysinv.controllerfs_list(self.request)
             fs_data = {fs.name: fs.size for fs in fs_list}
 
             for k, v in fs_data.items():
@@ -605,17 +608,17 @@ class UpdateiStorage(forms.SelfHandlingForm):
                     ceph_data = {'ceph_mon_gib': 0}
                     ceph_data['ceph_mon_gib'] = new_data.get(k)
                     del new_data[k]
-                    ceph_mons = api.sysinv.cephmon_list(request)
+                    ceph_mons = stx_api.sysinv.cephmon_list(request)
                     if ceph_mons:
                         for ceph_mon in ceph_mons:
                             if hasattr(ceph_mon, 'uuid'):
-                                my_storage = api.sysinv.ceph_mon_update(
+                                my_storage = stx_api.sysinv.ceph_mon_update(
                                     request, ceph_mon.uuid, **ceph_data)
                                 if not my_storage:
                                     return False
 
             if new_data:
-                my_storage = api.sysinv.storfs_update_many(request,
+                my_storage = stx_api.sysinv.storfs_update_many(request,
                                                            system_uuid,
                                                            **new_data)
             return True
@@ -702,7 +705,7 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
                 else:
                     data['uuid'] = ' '
 
-                storage_config = api.sysinv.storagepool_get(request,
+                storage_config = stx_api.sysinv.storagepool_get(request,
                                                             data['uuid'])
                 data.pop('uuid')
 
@@ -746,7 +749,7 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
             LOG.debug(data)
 
             if send_to_sysinv:
-                my_storage = api.sysinv.storpool_update(request,
+                my_storage = stx_api.sysinv.storpool_update(request,
                                                         storage_config_uuid,
                                                         **data)
 
@@ -838,7 +841,7 @@ class CreateSDNController(SDNControllerForm):
     def handle(self, request, data):
         try:
             # Don't prevalidate. Let SysInv handle it
-            controller = api.sysinv.sdn_controller_create(request, **data)
+            controller = stx_api.sysinv.sdn_controller_create(request, **data)
             msg = (_('SDN Controller was successfully created.'))
             LOG.debug(msg)
             messages.success(request, msg)
@@ -855,7 +858,7 @@ class UpdateSDNController(SDNControllerForm):
 
     def handle(self, request, data):
         try:
-            controller = api.sysinv.sdn_controller_update(
+            controller = stx_api.sysinv.sdn_controller_update(
                 request, **data)
             msg = (_('SDN Controller %s was successfully updated.') %
                    data['uuid'])

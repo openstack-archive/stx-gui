@@ -12,12 +12,13 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.host_topology import \
+
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.host_topology import \
     tables as tables
-from openstack_dashboard.dashboards.admin.inventory import \
+from starlingx_dashboard.dashboards.admin.inventory import \
     tabs as i_tabs
-from openstack_dashboard.dashboards.admin.providernets.providernets import \
+from starlingx_dashboard.dashboards.admin.providernets.providernets import \
     tables as pn_tables
 
 LOG = logging.getLogger(__name__)
@@ -83,7 +84,7 @@ class OverviewTab(tabs.TableTab):
     def get_tenant_networks_data(self):
         try:
             providernet_id = self.tab_group.kwargs['providernet_id']
-            networks = api.neutron.provider_network_list_tenant_networks(
+            networks = stx_api.neutron.provider_network_list_tenant_networks(
                 self.request, providernet_id=providernet_id)
         except Exception:
             networks = []
@@ -94,7 +95,7 @@ class OverviewTab(tabs.TableTab):
     def get_provider_network_ranges_data(self):
         try:
             providernet_id = self.tab_group.kwargs['providernet_id']
-            ranges = api.neutron.provider_network_range_list(
+            ranges = stx_api.neutron.provider_network_range_list(
                 self.request, providernet_id=providernet_id)
         except Exception:
             ranges = []
