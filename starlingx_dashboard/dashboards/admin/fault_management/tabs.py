@@ -58,7 +58,7 @@ class ActiveAlarmsTab(tabs.TableTab):
     def get_context_data(self, request):
         context = super(ActiveAlarmsTab, self).get_context_data(request)
 
-        summary = stx_api.sysinv.alarm_summary_get(
+        summary = stx_api.fm.alarm_summary_get(
             self.request, include_suppress=False)
         context["total"] = summary.critical + summary.major + summary.minor \
             + summary.warnings
@@ -83,7 +83,7 @@ class ActiveAlarmsTab(tabs.TableTab):
                 self.set_suppression_filter('disabled')
                 alarms_table.columns["suppression_status"]\
                     .classes.append('hidden')
-            elif suppress_filter_state == stx_api.sysinv.FM_SUPPRESS_HIDE:
+            elif suppress_filter_state == stx_api.fm.FM_SUPPRESS_HIDE:
                 self.set_suppression_filter('enabled')
                 alarms_table.columns["suppression_status"].classes\
                     .append('hidden')
@@ -92,7 +92,7 @@ class ActiveAlarmsTab(tabs.TableTab):
                 self.set_suppression_filter('disabled')
             else:
                 self.set_suppression_filter('enabled')
-                if suppress_filter_state == stx_api.sysinv.FM_SUPPRESS_SHOW:
+                if suppress_filter_state == stx_api.fm.FM_SUPPRESS_SHOW:
                     alarms_table.columns["suppression_status"].classes\
                         .remove('hidden')
 
@@ -131,10 +131,10 @@ class ActiveAlarmsTab(tabs.TableTab):
         alarms = []
         try:
             if 'paginate' in search_opts:
-                alarms, self._more = stx_api.sysinv.alarm_list(
+                alarms, self._more = stx_api.fm.alarm_list(
                     self.request, search_opts=search_opts)
             else:
-                alarms = stx_api.sysinv.alarm_list(
+                alarms = stx_api.fm.alarm_list(
                     self.request, search_opts=search_opts)
             self._limit = limit
         except Exception:
@@ -150,7 +150,7 @@ class ActiveAlarmsTab(tabs.TableTab):
         try:
             if 'suppression_list' not in self.tab_group.kwargs:
                 self.tab_group.kwargs['suppression_list'] = \
-                    stx_api.sysinv.event_suppression_list(self.request)
+                    stx_api.fm.event_suppression_list(self.request)
             event_types = self.tab_group.kwargs['suppression_list']
         except Exception:
             exceptions.handle(self.request,
@@ -207,7 +207,7 @@ class EventLogTab(tabs.TableTab):
                 self.set_suppression_filter('disabled')
                 event_log_table.columns["suppression_status"]\
                     .classes.append('hidden')
-            elif suppress_filter_state == stx_api.sysinv.FM_SUPPRESS_HIDE:
+            elif suppress_filter_state == stx_api.fm.FM_SUPPRESS_HIDE:
                 self.set_suppression_filter('enabled')
                 event_log_table.columns["suppression_status"].\
                     classes.append('hidden')
@@ -216,7 +216,7 @@ class EventLogTab(tabs.TableTab):
                 self.set_suppression_filter('disabled')
             else:
                 self.set_suppression_filter('enabled')
-                if suppress_filter_state == stx_api.sysinv.FM_SUPPRESS_SHOW:
+                if suppress_filter_state == stx_api.fm.FM_SUPPRESS_SHOW:
                     event_log_table.columns["suppression_status"]\
                         .classes.remove('hidden')
 
@@ -253,7 +253,7 @@ class EventLogTab(tabs.TableTab):
         try:
             # now retrieve data from rest API
             events, self._more = \
-                stx_api.sysinv.event_log_list(self.request,
+                stx_api.fm.event_log_list(self.request,
                                           search_opts=search_opts)
             self._limit = limit
             return events
@@ -273,7 +273,7 @@ class EventLogTab(tabs.TableTab):
         try:
             if 'suppression_list' not in self.tab_group.kwargs:
                 self.tab_group.kwargs['suppression_list'] = \
-                    stx_api.sysinv.event_suppression_list(self.request)
+                    stx_api.fm.event_suppression_list(self.request)
             event_types = self.tab_group.kwargs['suppression_list']
         except Exception:
             exceptions.handle(self.request,
@@ -295,7 +295,7 @@ class EventsSuppressionTab(tabs.TableTab):
         try:
             if 'suppression_list' not in self.tab_group.kwargs:
                 self.tab_group.kwargs['suppression_list'] = \
-                    stx_api.sysinv.event_suppression_list(self.request)
+                    stx_api.fm.event_suppression_list(self.request)
             event_suppression_list = self.tab_group.kwargs['suppression_list']
         except Exception:
             exceptions.handle(self.request,

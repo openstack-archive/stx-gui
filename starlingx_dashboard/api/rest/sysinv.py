@@ -22,19 +22,6 @@ from starlingx_dashboard.api import sysinv
 
 
 @urls.register
-class AlarmSummary(generic.View):
-    """API for retrieving alarm summaries."""
-    url_regex = r'sysinv/alarm_summary/$'
-
-    @rest_utils.ajax()
-    def get(self, request):
-        """Get an alarm summary for the system"""
-        include_suppress = request.GET.get('include_suppress', False)
-        result = sysinv.alarm_summary_get(request, include_suppress)
-        return result.to_dict()
-
-
-@urls.register
 class System(generic.View):
     """API for retrieving the system."""
     url_regex = r'sysinv/system/$'
