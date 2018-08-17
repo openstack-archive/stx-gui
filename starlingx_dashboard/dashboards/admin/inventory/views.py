@@ -16,11 +16,11 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 from horizon import workflows
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.tabs import HostDetailTabs
-from openstack_dashboard.dashboards.admin.inventory.tabs import InventoryTabs
-from openstack_dashboard.dashboards.admin.inventory.workflows import AddHost
-from openstack_dashboard.dashboards.admin.inventory.workflows import UpdateHost
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.tabs import HostDetailTabs
+from starlingx_dashboard.dashboards.admin.inventory.tabs import InventoryTabs
+from starlingx_dashboard.dashboards.admin.inventory.workflows import AddHost
+from starlingx_dashboard.dashboards.admin.inventory.workflows import UpdateHost
 
 
 LOG = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class AddView(workflows.WorkflowView):
                 'personality': "",
                 'subfunctions': "",
                 'mgmt_mac': "",
-                'bm_type': api.sysinv.BM_TYPE_NULL,
+                'bm_type': stx_api.sysinv.BM_TYPE_NULL,
                 'bm_ip': "",
                 'bm_username': ""}
 
@@ -63,7 +63,7 @@ class UpdateView(workflows.WorkflowView):
 
     def get_initial(self):
         try:
-            host = api.sysinv.host_get(self.request, self.kwargs['host_id'])
+            host = stx_api.sysinv.host_get(self.request, self.kwargs['host_id'])
         except Exception:
             exceptions.handle(self.request,
                               _("Unable to retrieve host data."))
@@ -96,12 +96,12 @@ class DetailView(tabs.TabbedTableView):
     # Make the LVG/PV state data clearer to the end user
     def _adjust_state_data(self, state, name):
         adjustment = ''
-        if state in [api.sysinv.PV_ADD, api.sysinv.PV_DEL]:
-            if name == api.sysinv.LVG_CGTS_VG:
+        if state in [stx_api.sysinv.PV_ADD, stx_api.sysinv.PV_DEL]:
+            if name == stx_api.sysinv.LVG_CGTS_VG:
                 adjustment = ' (now)'
-            elif name == api.sysinv.LVG_CINDER_VOLUMES:
+            elif name == stx_api.sysinv.LVG_CINDER_VOLUMES:
                 adjustment = ' (with backend)'
-            elif name == api.sysinv.LVG_NOVA_LOCAL:
+            elif name == stx_api.sysinv.LVG_NOVA_LOCAL:
                 adjustment = ' (on unlock)'
         return state + adjustment
 
@@ -109,13 +109,13 @@ class DetailView(tabs.TabbedTableView):
         if not hasattr(self, "_host"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
+                host = stx_api.sysinv.host_get(self.request, host_id)
 
-                host.nodes = api.sysinv.host_node_list(self.request, host.uuid)
-                host.cpus = api.sysinv.host_cpu_list(self.request, host.uuid)
+                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
+                host.cpus = stx_api.sysinv.host_cpu_list(self.request, host.uuid)
                 icpu_utils.restructure_host_cpu_data(host)
 
-                host.memorys = api.sysinv.host_memory_list(self.request,
+                host.memorys = stx_api.sysinv.host_memory_list(self.request,
                                                            host.uuid)
                 for m in host.memorys:
                     for n in host.nodes:
@@ -123,23 +123,23 @@ class DetailView(tabs.TabbedTableView):
                             m.numa_node = n.numa_node
                             break
 
-                host.ports = api.sysinv.host_port_list(self.request, host.uuid)
-                host.interfaces = api.sysinv.host_interface_list(self.request,
+                host.ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
+                host.interfaces = stx_api.sysinv.host_interface_list(self.request,
                                                                  host.uuid)
-                host.devices = api.sysinv.host_device_list(self.request,
+                host.devices = stx_api.sysinv.host_device_list(self.request,
                                                            host.uuid)
-                host.disks = api.sysinv.host_disk_list(self.request, host.uuid)
-                host.stors = api.sysinv.host_stor_list(self.request, host.uuid)
-                host.pvs = api.sysinv.host_pv_list(self.request, host.uuid)
-                host.partitions = api.sysinv.host_disk_partition_list(
+                host.disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
+                host.stors = stx_api.sysinv.host_stor_list(self.request, host.uuid)
+                host.pvs = stx_api.sysinv.host_pv_list(self.request, host.uuid)
+                host.partitions = stx_api.sysinv.host_disk_partition_list(
                     self.request, host.uuid)
 
                 # Translate partition state codes:
                 for p in host.partitions:
-                    p.status = api.sysinv.PARTITION_STATUS_MSG[p.status]
+                    p.status = stx_api.sysinv.PARTITION_STATUS_MSG[p.status]
 
                 host.lldpneighbours = \
-                    api.sysinv.host_lldpneighbour_list(self.request, host.uuid)
+                    stx_api.sysinv.host_lldpneighbour_list(self.request, host.uuid)
 
                 # Set the value for neighbours field for each port in the host.
                 # This will be referenced in Interfaces table
@@ -153,7 +153,7 @@ class DetailView(tabs.TabbedTableView):
                     pv.pv_state = self._adjust_state_data(pv.pv_state,
                                                           pv.lvm_vg_name)
 
-                host.lvgs = api.sysinv.host_lvg_list(self.request, host.uuid,
+                host.lvgs = stx_api.sysinv.host_lvg_list(self.request, host.uuid,
                                                      get_params=True)
 
                 # Adjust lvg state to be more "user friendly"
@@ -161,13 +161,13 @@ class DetailView(tabs.TabbedTableView):
                     lvg.vg_state = self._adjust_state_data(lvg.vg_state,
                                                            lvg.lvm_vg_name)
 
-                host.sensors = api.sysinv.host_sensor_list(self.request,
+                host.sensors = stx_api.sysinv.host_sensor_list(self.request,
                                                            host.uuid)
-                host.sensorgroups = api.sysinv.host_sensorgroup_list(
+                host.sensorgroups = stx_api.sysinv.host_sensorgroup_list(
                     self.request, host.uuid)
 
                 # Add patching status data to hosts
-                phost = api.patch.get_host(self.request, host.hostname)
+                phost = stx_api.patch.get_host(self.request, host.hostname)
                 if phost is not None:
                     if phost.interim_state is True:
                         host.patch_current = "Pending"

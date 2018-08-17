@@ -14,8 +14,8 @@
 # Copyright (c) 2014 Wind River Systems, Inc.
 #
 
-from openstack_dashboard.api.rest import dc_manager
-from openstack_dashboard.api.rest import sysinv
+from starlingx_dashboard.api.rest import dc_manager
+from starlingx_dashboard.api.rest import sysinv
 
 
 __all__ = [

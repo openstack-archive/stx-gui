@@ -17,9 +17,9 @@ import logging
 
 from django.views import generic
 
-from openstack_dashboard.api import dc_manager
 from openstack_dashboard.api.rest import urls
 from openstack_dashboard.api.rest import utils as rest_utils
+from starlingx_dashboard.api import dc_manager
 
 LOG = logging.getLogger(__name__)
 

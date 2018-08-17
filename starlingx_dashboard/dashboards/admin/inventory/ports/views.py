@@ -16,8 +16,8 @@ from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
 from horizon import views
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.ports.forms import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.ports.forms import \
     UpdatePort
 
 LOG = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class UpdateView(forms.ModalFormView):
             port_id = self.kwargs['port_id']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_port_get(self.request, port_id)
+                self._object = stx_api.sysinv.host_port_get(self.request, port_id)
                 self._object.host_id = host_id
             except Exception:
                 redirect = reverse("horizon:project:networks:detail",
@@ -85,7 +85,7 @@ class DetailView(views.HorizonTemplateView):
             port_id = self.kwargs['port_id']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_port_get(self.request,
+                self._object = stx_api.sysinv.host_port_get(self.request,
                                                         port_id)
                 self._object.host_id = host_id
 
@@ -100,7 +100,7 @@ class DetailView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')

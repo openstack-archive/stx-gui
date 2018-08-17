@@ -21,7 +21,7 @@ from starlingx_dashboard.api import base
 from starlingx_dashboard.api import dc_manager
 from starlingx_dashboard.api import sysinv
 from starlingx_dashboard.api import vim
-#from starlingx_dashboard.api import patch
+from starlingx_dashboard.api import patch
 
 # TODO (ediardo): cleanup the imports below
 __all__ = [

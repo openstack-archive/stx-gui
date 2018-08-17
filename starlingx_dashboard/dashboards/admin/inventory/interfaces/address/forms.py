@@ -24,7 +24,7 @@ import netaddr
 
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class CreateAddress(forms.SelfHandlingForm):
             body = {'interface_uuid': data['interface_id'],
                     'address': str(ip_address.ip),
                     'prefix': ip_address.prefixlen}
-            address = api.sysinv.address_create(request, **body)
+            address = stx_api.sysinv.address_create(request, **body)
             msg = (_('Address %(address)s/%(prefix)s was '
                      'successfully created') % body)
             messages.success(request, msg)

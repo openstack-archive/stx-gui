@@ -24,7 +24,7 @@ import netaddr
 
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class CreateRoute(forms.SelfHandlingForm):
                     'prefix': ip_network.prefixlen,
                     'gateway': data['gateway'],
                     'metric': data['metric']}
-            route = api.sysinv.route_create(request, **body)
+            route = stx_api.sysinv.route_create(request, **body)
             msg = (_('Route to %(network)s/%(prefix)s via %(gateway)s was '
                      'successfully created') % body)
             messages.success(request, msg)

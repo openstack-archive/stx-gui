@@ -17,16 +17,16 @@ from horizon import forms
 from horizon import tables
 from horizon.utils import memoized
 
-from openstack_dashboard import api
-from openstack_dashboard.dashboards.admin.inventory.interfaces.address import \
+from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.address import \
     tables as address_tables
-from openstack_dashboard.dashboards.admin.inventory.interfaces.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.forms import \
     AddInterface
-from openstack_dashboard.dashboards.admin.inventory.interfaces.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.forms import \
     AddInterfaceProfile
-from openstack_dashboard.dashboards.admin.inventory.interfaces.forms import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.forms import \
     UpdateInterface
-from openstack_dashboard.dashboards.admin.inventory.interfaces.route import \
+from starlingx_dashboard.dashboards.admin.inventory.interfaces.route import \
     tables as route_tables
 
 LOG = logging.getLogger(__name__)
@@ -40,22 +40,22 @@ def get_port_data(request, host_id, interface=None):
         if not interface:
             # Create case, host id is not UUID. Need to get the UUID in order
             # to retrieve the ports for this host
-            host = api.sysinv.host_get(request, host_id)
+            host = stx_api.sysinv.host_get(request, host_id)
             host_id = host.uuid
         else:
             if not interface.uses:
                 show_all_ports = False
 
         port_list = \
-            api.sysinv.host_port_list(request, host_id)
+            stx_api.sysinv.host_port_list(request, host_id)
 
         if show_all_ports:
             # This is either a create or edit non-default interface
             # operation. Get the list of available ports and their
             # neighbours
             neighbour_list = \
-                api.sysinv.host_lldpneighbour_list(request, host_id)
-            interface_list = api.sysinv.host_interface_list(request, host_id)
+                stx_api.sysinv.host_lldpneighbour_list(request, host_id)
+            interface_list = stx_api.sysinv.host_interface_list(request, host_id)
 
             for p in port_list:
                 port_info = "%s (%s, %s, " % (p.get_port_display_name(),
@@ -100,7 +100,7 @@ def get_port_data(request, host_id, interface=None):
                         port_info += " - bootif"
                     # Retrieve the neighbours for the port
                     neighbours = \
-                        api.sysinv.port_lldpneighbour_list(request, p.uuid)
+                        stx_api.sysinv.port_lldpneighbour_list(request, p.uuid)
                     neighbour_info = []
                     if neighbours:
                         for n in neighbours:
@@ -146,7 +146,7 @@ class AddInterfaceView(forms.ModalFormView):
         initial = super(AddInterfaceView, self).get_initial()
         initial['host_id'] = self.kwargs['host_id']
         try:
-            host = api.sysinv.host_get(self.request, initial['host_id'])
+            host = stx_api.sysinv.host_get(self.request, initial['host_id'])
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
         initial['ihost_uuid'] = host.uuid
@@ -154,8 +154,8 @@ class AddInterfaceView(forms.ModalFormView):
 
         # get SDN configuration status
         try:
-            sdn_enabled = api.sysinv.get_sdn_enabled(self.request)
-            sdn_l3_mode = api.sysinv.get_sdn_l3_mode_enabled(self.request)
+            sdn_enabled = stx_api.sysinv.get_sdn_enabled(self.request)
+            sdn_l3_mode = stx_api.sysinv.get_sdn_l3_mode_enabled(self.request)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve SDN configuration.'))
@@ -182,14 +182,14 @@ class AddInterfaceProfileView(forms.ModalFormView):
         if not hasattr(self, "_host"):
             host_id = self.kwargs['host_id']
             try:
-                host = api.sysinv.host_get(self.request, host_id)
+                host = stx_api.sysinv.host_get(self.request, host_id)
 
-                all_ports = api.sysinv.host_port_list(self.request, host.uuid)
+                all_ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
                 host.ports = [p for p in all_ports if p.interface_uuid]
                 for p in host.ports:
                     p.namedisplay = p.get_port_display_name()
 
-                host.interfaces = api.sysinv.host_interface_list(self.request,
+                host.interfaces = stx_api.sysinv.host_interface_list(self.request,
                                                                  host.uuid)
                 for i in host.interfaces:
                     i.ports = [p.get_port_display_name()
@@ -234,7 +234,7 @@ class UpdateView(forms.ModalFormView):
             interface_id = self.kwargs['interface_id']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_interface_get(self.request,
+                self._object = stx_api.sysinv.host_interface_get(self.request,
                                                              interface_id)
                 self._object.host_id = host_id
 
@@ -267,15 +267,15 @@ class UpdateView(forms.ModalFormView):
             for pn in interface.providernetworks.split(","):
                 providernetworks.append(str(pn))
         try:
-            host = api.sysinv.host_get(self.request, interface.host_id)
+            host = stx_api.sysinv.host_get(self.request, interface.host_id)
         except Exception:
             exceptions.handle(self.request, _('Unable to retrieve host.'))
 
         # get SDN configuration status
         try:
             sdn_enabled, sdn_l3_mode = False, False
-            sdn_enabled = api.sysinv.get_sdn_enabled(self.request)
-            sdn_l3_mode = api.sysinv.get_sdn_l3_mode_enabled(self.request)
+            sdn_enabled = stx_api.sysinv.get_sdn_enabled(self.request)
+            sdn_l3_mode = stx_api.sysinv.get_sdn_l3_mode_enabled(self.request)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve SDN configuration.'))
@@ -315,7 +315,7 @@ class DetailView(tables.MultiTableView):
     def get_addresses_data(self):
         try:
             interface_id = self.kwargs['interface_id']
-            addresses = api.sysinv.address_list_by_interface(
+            addresses = stx_api.sysinv.address_list_by_interface(
                 self.request, interface_id=interface_id)
             addresses.sort(key=lambda f: (f.address, f.prefix))
         except Exception:
@@ -327,7 +327,7 @@ class DetailView(tables.MultiTableView):
     def get_routes_data(self):
         try:
             interface_id = self.kwargs['interface_id']
-            routes = api.sysinv.route_list_by_interface(
+            routes = stx_api.sysinv.route_list_by_interface(
                 self.request, interface_id=interface_id)
             routes.sort(key=lambda f: (f.network, f.prefix))
         except Exception:
@@ -337,7 +337,7 @@ class DetailView(tables.MultiTableView):
         return routes
 
     def _get_address_pools(self):
-        pools = api.sysinv.address_pool_list(self.request)
+        pools = stx_api.sysinv.address_pool_list(self.request)
         return {p.uuid: p for p in pools}
 
     def _add_pool_names(self, interface):
@@ -354,7 +354,7 @@ class DetailView(tables.MultiTableView):
             interface_id = self.kwargs['interface_id']
             host_id = self.kwargs['host_id']
             try:
-                self._object = api.sysinv.host_interface_get(self.request,
+                self._object = stx_api.sysinv.host_interface_get(self.request,
                                                              interface_id)
                 self._object.host_id = host_id
                 self._object = self._add_pool_names(self._object)
@@ -369,7 +369,7 @@ class DetailView(tables.MultiTableView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')

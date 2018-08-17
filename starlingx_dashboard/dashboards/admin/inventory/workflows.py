@@ -19,44 +19,44 @@ from horizon import exceptions
 from horizon import forms
 from horizon.utils import validators
 from horizon import workflows
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
 PERSONALITY_CHOICES = (
-    (api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
-    (api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
-    (api.sysinv.PERSONALITY_STORAGE, _("Storage")),
+    (stx_api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
+    (stx_api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
+    (stx_api.sysinv.PERSONALITY_STORAGE, _("Storage")),
 )
 
 FIELD_LABEL_PERFORMANCE_PROFILE = _("Performance Profile")
 PERFORMANCE_CHOICES = (
-    (api.sysinv.SUBFUNCTIONS_COMPUTE, _("Standard")),
-    (api.sysinv.SUBFUNCTIONS_COMPUTE + ','
-     + api.sysinv.SUBFUNCTIONS_LOWLATENCY, _("Low Latency")),
+    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE, _("Standard")),
+    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE + ','
+     + stx_api.sysinv.SUBFUNCTIONS_LOWLATENCY, _("Low Latency")),
 )
 
 PERSONALITY_CHOICES_WITHOUT_STORAGE = (
-    (api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
-    (api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
+    (stx_api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
+    (stx_api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
 )
 
 PERSONALITY_CHOICE_CONTROLLER = (
-    (api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
+    (stx_api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
 )
 
 BM_TYPES_CHOICES = (
-    (api.sysinv.BM_TYPE_NULL, _('No Board Management')),
-    (api.sysinv.BM_TYPE_GENERIC, _("Board Management Controller")),
+    (stx_api.sysinv.BM_TYPE_NULL, _('No Board Management')),
+    (stx_api.sysinv.BM_TYPE_GENERIC, _("Board Management Controller")),
 )
 
 
 def ifprofile_applicable(host, profile):
     for interface in profile.interfaces:
-        if (api.sysinv.PERSONALITY_COMPUTE == host._personality and
+        if (stx_api.sysinv.PERSONALITY_COMPUTE == host._personality and
                 interface.networktype == 'oam'):
             return False
-        if (api.sysinv.PERSONALITY_COMPUTE not in host._subfunctions and
+        if (stx_api.sysinv.PERSONALITY_COMPUTE not in host._subfunctions and
                 interface.networktype == 'data'):
             return False
     return True
@@ -78,7 +78,7 @@ def diskprofile_applicable(host, diskprofile):
     if not len(host.disks) >= len(diskprofile.disks):
         return False
 
-    if api.sysinv.PERSONALITY_COMPUTE in host._subfunctions:
+    if stx_api.sysinv.PERSONALITY_COMPUTE in host._subfunctions:
         if diskprofile.lvgs:
             for lvg in diskprofile.lvgs:
                 if (hasattr(lvg, 'lvm_vg_name') and
@@ -88,10 +88,10 @@ def diskprofile_applicable(host, diskprofile):
                     return False
         else:
             return False
-    elif api.sysinv.PERSONALITY_STORAGE in host._subfunctions:
+    elif stx_api.sysinv.PERSONALITY_STORAGE in host._subfunctions:
         if diskprofile.stors:
             if (host.capabilities.get('pers_subtype') ==
-                    api.sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING):
+                    stx_api.sysinv.PERSONALITY_SUBTYPE_CEPH_CACHING):
                 for pstor in diskprofile.stors:
                     if pstor.function == 'journal':
                         return False
@@ -114,10 +114,10 @@ def memoryprofile_applicable(host, personality, profile):
 
 
 def profile_get_uuid(request, profilename):
-    ifprofiles = api.sysinv.host_interfaceprofile_list(request)
-    cpuprofiles = api.sysinv.host_cpuprofile_list(request)
-    storprofiles = api.sysinv.host_diskprofile_list(request)
-    memoryprofiles = api.sysinv.host_memprofile_list(request)
+    ifprofiles = stx_api.sysinv.host_interfaceprofile_list(request)
+    cpuprofiles = stx_api.sysinv.host_cpuprofile_list(request)
+    storprofiles = stx_api.sysinv.host_diskprofile_list(request)
+    memoryprofiles = stx_api.sysinv.host_memprofile_list(request)
 
     profiles = ifprofiles + cpuprofiles + storprofiles + memoryprofiles
 
@@ -149,7 +149,7 @@ class AddHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_COMPUTE: _(
+                   stx_api.sysinv.PERSONALITY_COMPUTE: _(
                        "Personality Sub-Type")}))
 
     hostname = forms.RegexField(label=FIELD_LABEL_HOSTNAME,
@@ -165,7 +165,7 @@ class AddHostInfoAction(workflows.Action):
                                     attrs={'class': 'switched',
                                            'data-switch-on': 'personality',
                                            'data-personality-' +
-                                           api.sysinv.PERSONALITY_COMPUTE:
+                                           stx_api.sysinv.PERSONALITY_COMPUTE:
                                                FIELD_LABEL_HOSTNAME,
                                            }))
 
@@ -175,11 +175,11 @@ class AddHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_COMPUTE: FIELD_LABEL_MGMT_MAC,
+                   stx_api.sysinv.PERSONALITY_COMPUTE: FIELD_LABEL_MGMT_MAC,
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_CONTROLLER: FIELD_LABEL_MGMT_MAC,
+                   stx_api.sysinv.PERSONALITY_CONTROLLER: FIELD_LABEL_MGMT_MAC,
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_STORAGE: FIELD_LABEL_MGMT_MAC,
+                   stx_api.sysinv.PERSONALITY_STORAGE: FIELD_LABEL_MGMT_MAC,
                    }))
 
     class Meta(object):
@@ -191,13 +191,13 @@ class AddHostInfoAction(workflows.Action):
         super(AddHostInfoAction, self).__init__(request, *arg, **kwargs)
 
         # pesonality cannot be storage if ceph is not configured
-        cinder_backend = api.sysinv.get_cinder_backend(request)
-        if api.sysinv.CINDER_BACKEND_CEPH not in cinder_backend:
+        cinder_backend = stx_api.sysinv.get_cinder_backend(request)
+        if stx_api.sysinv.CINDER_BACKEND_CEPH not in cinder_backend:
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
         # All-in-one system, personality can only be controller.
-        systems = api.sysinv.system_list(request)
+        systems = stx_api.sysinv.system_list(request)
         system_type = systems[0].to_dict().get('system_type')
         if system_type == constants.TS_AIO:
             self.fields['personality'].choices = \
@@ -225,17 +225,17 @@ class UpdateHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_COMPUTE: _(
+                   stx_api.sysinv.PERSONALITY_COMPUTE: _(
                        "Performance Profile")}))
 
     pers_subtype = forms.ChoiceField(
         label=_("Personality Sub-Type"),
-        choices=api.sysinv.Host.SUBTYPE_CHOICES,
+        choices=stx_api.sysinv.Host.SUBTYPE_CHOICES,
         widget=forms.Select(
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   api.sysinv.PERSONALITY_STORAGE: _(
+                   stx_api.sysinv.PERSONALITY_STORAGE: _(
                        "Personality Sub-Type")}))
 
     hostname = forms.RegexField(label=_("Host Name"),
@@ -251,7 +251,7 @@ class UpdateHostInfoAction(workflows.Action):
                                     attrs={'class': 'switched',
                                            'data-switch-on': 'personality',
                                            'data-personality-' +
-                                           api.sysinv.PERSONALITY_COMPUTE: _(
+                                           stx_api.sysinv.PERSONALITY_COMPUTE: _(
                                                "Host Name")}))
 
     location = forms.CharField(label=_("Location"),
@@ -291,13 +291,13 @@ class UpdateHostInfoAction(workflows.Action):
         super(UpdateHostInfoAction, self).__init__(request, *args, **kwargs)
 
         # pesonality cannot be storage if ceph is not configured
-        cinder_backend = api.sysinv.get_cinder_backend(request)
-        if api.sysinv.CINDER_BACKEND_CEPH not in cinder_backend:
+        cinder_backend = stx_api.sysinv.get_cinder_backend(request)
+        if stx_api.sysinv.CINDER_BACKEND_CEPH not in cinder_backend:
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
         # All-in-one system, personality can only be controller.
-        systems = api.sysinv.system_list(request)
+        systems = stx_api.sysinv.system_list(request)
         self.system_mode = systems[0].to_dict().get('system_mode')
         self.system_type = systems[0].to_dict().get('system_type')
         if self.system_type == constants.TS_AIO:
@@ -319,7 +319,7 @@ class UpdateHostInfoAction(workflows.Action):
         host_id = self.initial['host_id']
         personality = self.initial['personality']
 
-        if (api.sysinv.CINDER_BACKEND_CEPH not in api.sysinv.get_cinder_backend(request)) \
+        if (stx_api.sysinv.CINDER_BACKEND_CEPH not in stx_api.sysinv.get_cinder_backend(request)) \
                 or personality:
             self.fields['pers_subtype'].widget.attrs['disabled'] = 'disabled'
             self.fields['pers_subtype'].required = False
@@ -331,15 +331,15 @@ class UpdateHostInfoAction(workflows.Action):
             self.fields['personality'].required = False
             self._personality = personality
 
-            host = api.sysinv.host_get(self.request, host_id)
-            host.nodes = api.sysinv.host_node_list(self.request, host.uuid)
-            host.cpus = api.sysinv.host_cpu_list(self.request, host.uuid)
-            host.ports = api.sysinv.host_port_list(self.request, host.uuid)
-            host.disks = api.sysinv.host_disk_list(self.request, host.uuid)
+            host = stx_api.sysinv.host_get(self.request, host_id)
+            host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
+            host.cpus = stx_api.sysinv.host_cpu_list(self.request, host.uuid)
+            host.ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
+            host.disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
 
             if 'compute' in host.subfunctions:
                 mem_profile_configurable = True
-                host.memory = api.sysinv.host_memory_list(
+                host.memory = stx_api.sysinv.host_memory_list(
                     self.request, host.uuid)
             else:
                 del self.fields['memoryProfile']
@@ -347,7 +347,7 @@ class UpdateHostInfoAction(workflows.Action):
             if host.nodes and host.cpus and host.ports:
                 # Populate Available Cpu Profile Choices
                 try:
-                    avail_cpu_profile_list = api.sysinv.host_cpuprofile_list(
+                    avail_cpu_profile_list = stx_api.sysinv.host_cpuprofile_list(
                         self.request)
 
                     host_profile = icpu_utils.HostCpuProfile(
@@ -357,7 +357,7 @@ class UpdateHostInfoAction(workflows.Action):
                     cpu_profile_tuple_list = [
                         ('', _("Copy from an available cpu profile."))]
                     for ip in avail_cpu_profile_list:
-                        nodes = api.sysinv.host_node_list(self.request,
+                        nodes = stx_api.sysinv.host_node_list(self.request,
                                                           ip.uuid)
                         cpu_profile = icpu_utils.CpuProfile(ip.cpus, nodes)
                         if host_profile.profile_applicable(cpu_profile):
@@ -374,7 +374,7 @@ class UpdateHostInfoAction(workflows.Action):
                 # Populate Available Interface Profile Choices
                 try:
                     avail_interface_profile_list = \
-                        api.sysinv.host_interfaceprofile_list(self.request)
+                        stx_api.sysinv.host_interfaceprofile_list(self.request)
 
                     interface_profile_tuple_list = [
                         ('', _("Copy from an available interface profile."))]
@@ -402,7 +402,7 @@ class UpdateHostInfoAction(workflows.Action):
                     disk_profile_tuple_list = [
                         ('', _("Copy from an available storage profile."))]
                     avail_disk_profile_list = \
-                        api.sysinv.host_diskprofile_list(self.request)
+                        stx_api.sysinv.host_diskprofile_list(self.request)
                     for dp in avail_disk_profile_list:
                         if diskprofile_applicable(host, dp):
                             disk_profile_tuple_list.append(
@@ -422,7 +422,7 @@ class UpdateHostInfoAction(workflows.Action):
                 # Populate Available Memory Profile Choices
                 try:
                     avail_memory_profile_list = \
-                        api.sysinv.host_memprofile_list(self.request)
+                        stx_api.sysinv.host_memprofile_list(self.request)
                     memory_profile_tuple_list = [
                         ('', _("Copy from an available memory profile."))]
                     for mp in avail_memory_profile_list:
@@ -449,7 +449,7 @@ class UpdateHostInfoAction(workflows.Action):
     def clean_location(self):
         try:
             host_id = self.cleaned_data['host_id']
-            host = api.sysinv.host_get(self.request, host_id)
+            host = stx_api.sysinv.host_get(self.request, host_id)
             location = host._location
             location['locn'] = self.cleaned_data.get('location')
             return location
@@ -466,17 +466,17 @@ class UpdateHostInfoAction(workflows.Action):
                 self._personality = 'controller'
             cleaned_data['personality'] = self._personality
 
-        if cleaned_data['personality'] == api.sysinv.PERSONALITY_STORAGE:
-            self._subfunctions = api.sysinv.PERSONALITY_STORAGE
+        if cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_STORAGE:
+            self._subfunctions = stx_api.sysinv.PERSONALITY_STORAGE
             cleaned_data['subfunctions'] = self._subfunctions
-        elif cleaned_data['personality'] == api.sysinv.PERSONALITY_CONTROLLER:
+        elif cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_CONTROLLER:
             if self.system_type == constants.TS_AIO:
-                self._subfunctions = (api.sysinv.PERSONALITY_CONTROLLER + ','
-                                      + api.sysinv.PERSONALITY_COMPUTE)
+                self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER + ','
+                                      + stx_api.sysinv.PERSONALITY_COMPUTE)
             else:
-                self._subfunctions = api.sysinv.PERSONALITY_CONTROLLER
+                self._subfunctions = stx_api.sysinv.PERSONALITY_CONTROLLER
             cleaned_data['subfunctions'] = self._subfunctions
-        elif cleaned_data['personality'] == api.sysinv.PERSONALITY_COMPUTE:
+        elif cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_COMPUTE:
             cleaned_data['pers_subtype'] = None
 
         return cleaned_data
@@ -507,8 +507,8 @@ class UpdateHostInfo(workflows.Step):
 
 class UpdateInstallParamsAction(workflows.Action):
     INSTALL_OUTPUT_CHOICES = (
-        (api.sysinv.INSTALL_OUTPUT_TEXT, _("text")),
-        (api.sysinv.INSTALL_OUTPUT_GRAPHICAL, _("graphical")),
+        (stx_api.sysinv.INSTALL_OUTPUT_TEXT, _("text")),
+        (stx_api.sysinv.INSTALL_OUTPUT_GRAPHICAL, _("graphical")),
     )
 
     boot_device = forms.RegexField(label=_("Boot Device"),
@@ -552,7 +552,7 @@ class UpdateInstallParamsAction(workflows.Action):
                                                         **kwargs)
 
         host_id = self.initial['host_id']
-        host = api.sysinv.host_get(self.request, host_id)
+        host = stx_api.sysinv.host_get(self.request, host_id)
 
         self.fields['boot_device'].initial = host.boot_device
         self.fields['rootfs_device'].initial = host.rootfs_device
@@ -599,7 +599,7 @@ class BoardManagementAction(workflows.Action):
             'class': 'switched',
             'data-switch-on': 'bm_type',
             'data-bm_type-' +
-            api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_IP}))
+            stx_api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_IP}))
 
     bm_username = forms.CharField(
         label=FIELD_LABEL_BM_USERNAME,
@@ -609,7 +609,7 @@ class BoardManagementAction(workflows.Action):
             'class': 'switched',
             'data-switch-on': 'bm_type',
             'data-bm_type-' +
-            api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_USERNAME}))
+            stx_api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_USERNAME}))
 
     bm_password = forms.RegexField(
         label=FIELD_LABEL_BM_PASSWORD,
@@ -620,7 +620,7 @@ class BoardManagementAction(workflows.Action):
                 'class': 'switched',
                 'data-switch-on': 'bm_type',
                 'data-bm_type-' +
-                api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_PASSWORD}),
+                stx_api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_PASSWORD}),
         regex=validators.password_validator(),
         required=False,
         error_messages={'invalid': validators.password_validator_msg()})
@@ -634,7 +634,7 @@ class BoardManagementAction(workflows.Action):
                 'class': 'switched',
                 'data-switch-on': 'bm_type',
                 'data-bm_type-' +
-                api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_CONFIRM_PASSWORD}),
+                stx_api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_CONFIRM_PASSWORD}),
         required=False)
 
     def clean(self):
@@ -730,7 +730,7 @@ class AddHost(workflows.Workflow):
         self.mgmt_mac = data['mgmt_mac']
 
         try:
-            host = api.sysinv.host_create(request, **data)
+            host = stx_api.sysinv.host_create(request, **data)
             return True if host else False
 
         except exc.ClientException as ce:
@@ -768,18 +768,18 @@ class UpdateHost(workflows.Workflow):
         self.hostname = data['hostname']
 
         try:
-            host = api.sysinv.host_get(request, data['host_id'])
+            host = stx_api.sysinv.host_get(request, data['host_id'])
 
             if data['cpuProfile']:
                 profile_uuid = profile_get_uuid(request, data['cpuProfile'])
-                api.sysinv.host_apply_profile(request, data['host_id'],
+                stx_api.sysinv.host_apply_profile(request, data['host_id'],
                                               profile_uuid)
             data.pop('cpuProfile')
 
             if data['interfaceProfile']:
                 profile_uuid = profile_get_uuid(request,
                                                 data['interfaceProfile'])
-                api.sysinv.host_apply_profile(request, data['host_id'],
+                stx_api.sysinv.host_apply_profile(request, data['host_id'],
                                               profile_uuid)
             data.pop('interfaceProfile')
 
@@ -788,13 +788,13 @@ class UpdateHost(workflows.Workflow):
 
             if data['diskProfile']:
                 profile_uuid = profile_get_uuid(request, data['diskProfile'])
-                api.sysinv.host_apply_profile(request, data['host_id'],
+                stx_api.sysinv.host_apply_profile(request, data['host_id'],
                                               profile_uuid)
             data.pop('diskProfile')
 
             if data['memoryProfile']:
                 profile_uuid = profile_get_uuid(request, data['memoryProfile'])
-                api.sysinv.host_apply_profile(request, data['host_id'],
+                stx_api.sysinv.host_apply_profile(request, data['host_id'],
                                               profile_uuid)
             data.pop('memoryProfile')
 
@@ -822,7 +822,7 @@ class UpdateHost(workflows.Workflow):
             if host._subfunctions and 'subfunctions' in data:
                 data.pop('subfunctions')
 
-            host = api.sysinv.host_update(request, **data)
+            host = stx_api.sysinv.host_update(request, **data)
             return True if host else False
 
         except exc.ClientException as ce:

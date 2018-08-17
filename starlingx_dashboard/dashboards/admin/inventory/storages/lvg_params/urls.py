@@ -7,7 +7,7 @@
 
 from django.conf.urls import url  # noqa
 
-from openstack_dashboard.dashboards.admin.inventory.storages.lvg_params \
+from starlingx_dashboard.dashboards.admin.inventory.storages.lvg_params \
     import views
 
 urlpatterns = [
