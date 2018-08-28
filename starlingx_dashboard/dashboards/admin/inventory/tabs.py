@@ -23,7 +23,7 @@ from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as interface_tables
 from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     tables as lldp_tables
-from starlingx_dashboard.dashboards.admin.inventory.memorys import \
+from starlingx_dashboard.dashboards.admin.inventory.memories import \
     tables as memory_tables
 from starlingx_dashboard.dashboards.admin.inventory.ports import \
     tables as port_tables
