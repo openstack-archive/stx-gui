@@ -101,7 +101,7 @@ class UpgradeOrchestrationTab(tabs.TableTab):
         strategy = None
         try:
             strategy = stx_api.vim.get_strategy(request,
-                                            stx_api.vim.STRATEGY_SW_UPGRADE)
+                                                stx_api.vim.STRATEGY_SW_UPGRADE)
         except Exception as ex:
             LOG.exception(ex)
             exceptions.handle(request,

@@ -127,7 +127,7 @@ class DetailStageView(tables.DataTableView):
             stage_id = self.kwargs['stage_id']
             try:
                 stage = stx_api.vim.get_stage(self.request, self.strategy_name,
-                                          phase, stage_id)
+                                              phase, stage_id)
                 stage.timeout_display = \
                     datetime.timedelta(seconds=stage.timeout)
             except Exception:

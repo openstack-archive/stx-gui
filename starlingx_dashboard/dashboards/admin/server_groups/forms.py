@@ -35,6 +35,7 @@ from openstack_dashboard.dashboards.project.instances import tables
 
 from starlingx_dashboard.api import nova as stx_nova
 
+
 class CreateForm(forms.SelfHandlingForm):
     tenantP = forms.ChoiceField(label=_("Project"), required=True)
     name = forms.CharField(max_length="255", label=_("Server Group Name"))

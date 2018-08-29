@@ -253,8 +253,8 @@ class AddStorageVolume(forms.SelfHandlingForm):
             if d.istor_uuid and d.istor_uuid != this_stor_uuid:
                 continue
             is_rootfs_device = \
-                (('stor_function' in d.capabilities)
-                 and (d.capabilities['stor_function'] == 'rootfs'))
+                (('stor_function' in d.capabilities) and
+                 (d.capabilities['stor_function'] == 'rootfs'))
             if is_rootfs_device:
                 continue
             disk_model = d.get_model_num()
@@ -277,7 +277,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
 
         # Populate the available tiers for OSD assignment
         avail_tier_list = stx_api.sysinv.storage_tier_list(self.request,
-                                                       cluster_uuid)
+                                                           cluster_uuid)
         tier_tuple_list = [(t.uuid, t.name) for t in avail_tier_list]
 
         # Populate available journal choices. If no journal is available,
@@ -559,7 +559,7 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
         avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
         ilvg_list = stx_api.sysinv.host_lvg_list(self.request, host_uuid)
         partitions = stx_api.sysinv.host_disk_partition_list(self.request,
-                                                         host_uuid)
+                                                             host_uuid)
         ipv_list = stx_api.sysinv.host_pv_list(self.request, host_uuid)
         disk_tuple_list = []
         partitions_tuple_list = []
@@ -592,12 +592,12 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
             disk_cap = d.capabilities
             # TODO(rchurch): re-factor
             is_cinder_device = \
-                (('device_function' in disk_cap)
-                 and (disk_cap['device_function'] == 'cinder_device'))
+                (('device_function' in disk_cap) and
+                 (disk_cap['device_function'] == 'cinder_device'))
 
             is_rootfs_device = \
-                (('stor_function' in disk_cap)
-                 and (disk_cap['stor_function'] == 'rootfs'))
+                (('stor_function' in disk_cap) and
+                 (disk_cap['stor_function'] == 'rootfs'))
 
             disk_model = d.get_model_num()
             # TODO(rchurch): re-factor

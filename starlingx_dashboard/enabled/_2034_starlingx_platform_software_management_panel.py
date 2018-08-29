@@ -8,4 +8,3 @@ PANEL_GROUP = 'platform'
 # Python panel class of the PANEL to be added.
 ADD_PANEL = 'starlingx_dashboard.dashboards.admin.software_management.' \
             'panel.SoftwareManagement'
-

@@ -283,7 +283,7 @@ class DeleteStrategy(tables.Action):
     def single(self, table, request, obj_id):
         try:
             result = stx_api.vim.delete_strategy(request, self.strategy_name,
-                                             self.force)
+                                                 self.force)
             if result:
                 messages.success(request, "Strategy Deleted")
             else:
@@ -443,7 +443,7 @@ class ApplyStage(tables.BatchAction):
             try:
                 stage_id = obj_id.split('-', 1)[1]
                 result = stx_api.vim.apply_strategy(request, self.strategy_name,
-                                                stage_id)
+                                                    stage_id)
                 if result is None:
                     messages.error(request, "Strategy stage %s apply failed" %
                                    stage_id)
@@ -504,7 +504,7 @@ class AbortStage(tables.BatchAction):
             try:
                 stage_id = obj_id.split('-', 1)[1]
                 result = stx_api.vim.abort_strategy(request, self.strategy_name,
-                                                stage_id)
+                                                    stage_id)
                 if result is None:
                     messages.error(request,
                                    "Strategy stage %s abort in progress" %

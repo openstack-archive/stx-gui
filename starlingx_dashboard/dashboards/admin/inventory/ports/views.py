@@ -86,7 +86,7 @@ class DetailView(views.HorizonTemplateView):
             host_id = self.kwargs['host_id']
             try:
                 self._object = stx_api.sysinv.host_port_get(self.request,
-                                                        port_id)
+                                                            port_id)
                 self._object.host_id = host_id
 
             except Exception:

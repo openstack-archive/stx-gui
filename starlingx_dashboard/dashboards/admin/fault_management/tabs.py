@@ -124,9 +124,9 @@ class ActiveAlarmsTab(tabs.TableTab):
 
         search_opts = self.get_filters()
         search_opts.update({
-                            'paginate': True,
-                            'sort_key': 'severity,entity_instance_id',
-                            'sort_dir': 'asc'})
+                           'paginate': True,
+                           'sort_key': 'severity,entity_instance_id',
+                           'sort_dir': 'asc'})
 
         alarms = []
         try:

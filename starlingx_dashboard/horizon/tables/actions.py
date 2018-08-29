@@ -1,7 +1,7 @@
-# 
-# Copyright (c) 2018 Intel Corporation 
-# 
-# SPDX-License-Identifier: Apache-2.0 
+#
+# Copyright (c) 2018 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
 #
 
 from collections import OrderedDict
@@ -13,6 +13,7 @@ from horizon.tables.actions import BaseAction
 from horizon.tables import FilterAction
 
 DEFAULT_TABLE_LIMITS = [10, 20, 50, 100, 500, 1000]
+
 
 class FixedWithQueryFilter(FilterAction):
     """A FilterAction that visually renders like a combination

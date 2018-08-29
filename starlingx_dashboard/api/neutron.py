@@ -1,10 +1,11 @@
-# 
-# Copyright (c) 2018 Intel Corporation 
-# 
-# SPDX-License-Identifier: Apache-2.0 
+#
+# Copyright (c) 2018 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
 #
 
 from openstack_dashboard.api.neutron import *
+
 
 def provider_network_type_list(request, **params):
     providernet_types = neutronclient(request).list_providernet_types(

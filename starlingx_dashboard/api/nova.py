@@ -1,13 +1,14 @@
-# 
-# Copyright (c) 2018 Intel Corporation 
-# 
-# SPDX-License-Identifier: Apache-2.0 
+#
+# Copyright (c) 2018 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
 #
 
 from novaclient.v2 import wrs_pci
 from novaclient.v2 import wrs_providernets
 
 from openstack_dashboard.api.nova import *
+
 
 def server_group_list(request, all_projects=False):
     return novaclient(request).server_groups.list(all_projects)

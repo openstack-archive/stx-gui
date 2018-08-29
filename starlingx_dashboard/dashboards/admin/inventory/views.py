@@ -116,7 +116,7 @@ class DetailView(tabs.TabbedTableView):
                 icpu_utils.restructure_host_cpu_data(host)
 
                 host.memorys = stx_api.sysinv.host_memory_list(self.request,
-                                                           host.uuid)
+                                                               host.uuid)
                 for m in host.memorys:
                     for n in host.nodes:
                         if m.inode_uuid == n.uuid:
@@ -125,9 +125,9 @@ class DetailView(tabs.TabbedTableView):
 
                 host.ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
                 host.interfaces = stx_api.sysinv.host_interface_list(self.request,
-                                                                 host.uuid)
+                                                                     host.uuid)
                 host.devices = stx_api.sysinv.host_device_list(self.request,
-                                                           host.uuid)
+                                                               host.uuid)
                 host.disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
                 host.stors = stx_api.sysinv.host_stor_list(self.request, host.uuid)
                 host.pvs = stx_api.sysinv.host_pv_list(self.request, host.uuid)
@@ -154,7 +154,7 @@ class DetailView(tabs.TabbedTableView):
                                                           pv.lvm_vg_name)
 
                 host.lvgs = stx_api.sysinv.host_lvg_list(self.request, host.uuid,
-                                                     get_params=True)
+                                                         get_params=True)
 
                 # Adjust lvg state to be more "user friendly"
                 for lvg in host.lvgs:
@@ -162,7 +162,7 @@ class DetailView(tabs.TabbedTableView):
                                                            lvg.lvm_vg_name)
 
                 host.sensors = stx_api.sysinv.host_sensor_list(self.request,
-                                                           host.uuid)
+                                                               host.uuid)
                 host.sensorgroups = stx_api.sysinv.host_sensorgroup_list(
                     self.request, host.uuid)
 

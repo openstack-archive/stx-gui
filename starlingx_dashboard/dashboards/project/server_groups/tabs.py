@@ -25,6 +25,7 @@ from openstack_dashboard.api import nova
 
 from starlingx_dashboard.api import nova as stx_nova
 
+
 class OverviewTab(tabs.Tab):
     name = _("Overview")
     slug = "overview"

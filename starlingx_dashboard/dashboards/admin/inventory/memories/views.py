@@ -38,7 +38,7 @@ class UpdateMemoryView(forms.ModalFormView):
             try:
                 host = stx_api.sysinv.host_get(self.request, host_id)
                 host.memorys = stx_api.sysinv.host_memory_list(self.request,
-                                                           host.uuid)
+                                                               host.uuid)
                 host.nodes = \
                     stx_api.sysinv.host_node_list(self.request, host.uuid)
                 self._object = host

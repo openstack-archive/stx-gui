@@ -344,7 +344,7 @@ class DetailSDNControllerView(tables.DataTableView):
             uuid = self.kwargs['uuid']
             try:
                 self._object = stx_api.sysinv.sdn_controller_get(self.request,
-                                                             uuid)
+                                                                 uuid)
             except Exception:
                 redirect = self.failure_url
                 msg = _("Unable to retrieve details for "
@@ -384,7 +384,7 @@ class UpdateSDNControllerView(forms.ModalFormView):
             controller_uuid = self.kwargs['uuid']
             try:
                 self._object = stx_api.sysinv.sdn_controller_get(self.request,
-                                                             controller_uuid)
+                                                                 controller_uuid)
             except Exception:
                 redirect = self.success_url
                 msg = _('Unable to retrieve SDN controller details.')

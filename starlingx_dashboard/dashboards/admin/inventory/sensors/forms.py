@@ -207,8 +207,8 @@ class UpdateSensorGroup(forms.SelfHandlingForm):
 
         try:
             sensorgroup = stx_api.sysinv.host_sensorgroup_update(request,
-                                                             sensorgroup_id,
-                                                             **data)
+                                                                 sensorgroup_id,
+                                                                 **data)
 
             msg = _('SensorGroup "%s" was '
                     'successfully updated.') % mysensorgroupname

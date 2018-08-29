@@ -126,7 +126,7 @@ class DeletePartition(tables.DeleteAction):
             # Get all the partitions from the same disk.
             disk_partitions = \
                 stx_api.sysinv.host_disk_partition_list(request, host.uuid,
-                                                    partition.idisk_uuid)
+                                                        partition.idisk_uuid)
 
             if partition.device_path:
                 partition_number = re.match('.*?([0-9]+)$',
@@ -195,8 +195,8 @@ class EditPartition(tables.LinkAction):
             # Get all the partitions from the same disk.
             disk_partitions = \
                 stx_api.sysinv.host_disk_partition_list(request,
-                                                    host.uuid,
-                                                    partition.idisk_uuid)
+                                                        host.uuid,
+                                                        partition.idisk_uuid)
 
             if partition.device_path:
                 partition_number = re.match('.*?([0-9]+)$',
@@ -287,7 +287,7 @@ class EditStor(tables.LinkAction):
             forihostuuid = self.table.kwargs['host'].uuid
             journal_stors = \
                 stx_api.sysinv.host_stor_get_by_function(request, forihostuuid,
-                                                     'journal')
+                                                         'journal')
 
             if not journal_stors:
                 self.classes = [c for c in self.classes] + ['disabled']
@@ -430,8 +430,7 @@ class RemoveLocalVolumeGroup(tables.DeleteAction):
         cinder_backend = stx_api.sysinv.get_cinder_backend(request)
 
         if lvg.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL:
-            return ((host._administrative == 'locked')
-                    or
+            return ((host._administrative == 'locked') or
                     (('compute' in host._subfunctions) and
                      (host.compute_config_required is True)))
         elif lvg.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES:
@@ -552,8 +551,7 @@ class RemovePhysicalVolume(tables.DeleteAction):
         cinder_backend = stx_api.sysinv.get_cinder_backend(request)
 
         if pv.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL:
-            return ((host._administrative == 'locked')
-                    or
+            return ((host._administrative == 'locked') or
                     (('compute' in host._subfunctions) and
                      (host.compute_config_required is True)))
         elif pv.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES:

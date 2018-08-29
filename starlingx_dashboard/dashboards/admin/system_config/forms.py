@@ -184,7 +184,7 @@ class UpdatecDNS(forms.SelfHandlingForm):
 
             if send_to_sysinv is True:
                 my_dns = stx_api.sysinv.dns_update(request,
-                                               dns_config_uuid, **data)
+                                                   dns_config_uuid, **data)
 
                 if my_dns:
                     msg = _('DNS Server was successfully updated.')
@@ -494,8 +494,8 @@ class UpdatecEXT_OAM(forms.SelfHandlingForm):
                 LOG.info("OAM sendtosysinv data=%s", data)
 
                 myoam_data = stx_api.sysinv.extoam_update(self.request,
-                                                      oam_data_uuid,
-                                                      **data)
+                                                          oam_data_uuid,
+                                                          **data)
                 if myoam_data:
                     msg = _('OAM configuration was successfully updated. ')
 
@@ -619,8 +619,8 @@ class UpdateiStorage(forms.SelfHandlingForm):
 
             if new_data:
                 my_storage = stx_api.sysinv.storfs_update_many(request,
-                                                           system_uuid,
-                                                           **new_data)
+                                                               system_uuid,
+                                                               **new_data)
             return True
 
         except exc.ClientException as ce:
@@ -706,7 +706,7 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
                     data['uuid'] = ' '
 
                 storage_config = stx_api.sysinv.storagepool_get(request,
-                                                            data['uuid'])
+                                                                data['uuid'])
                 data.pop('uuid')
 
                 if hasattr(storage_config, 'uuid'):
@@ -750,8 +750,8 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
 
             if send_to_sysinv:
                 my_storage = stx_api.sysinv.storpool_update(request,
-                                                        storage_config_uuid,
-                                                        **data)
+                                                            storage_config_uuid,
+                                                            **data)
 
                 if my_storage:
                     msg = _(

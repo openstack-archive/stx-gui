@@ -32,8 +32,8 @@ PERSONALITY_CHOICES = (
 FIELD_LABEL_PERFORMANCE_PROFILE = _("Performance Profile")
 PERFORMANCE_CHOICES = (
     (stx_api.sysinv.SUBFUNCTIONS_COMPUTE, _("Standard")),
-    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE + ','
-     + stx_api.sysinv.SUBFUNCTIONS_LOWLATENCY, _("Low Latency")),
+    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE + ',' +
+     stx_api.sysinv.SUBFUNCTIONS_LOWLATENCY, _("Low Latency")),
 )
 
 PERSONALITY_CHOICES_WITHOUT_STORAGE = (
@@ -358,7 +358,7 @@ class UpdateHostInfoAction(workflows.Action):
                         ('', _("Copy from an available cpu profile."))]
                     for ip in avail_cpu_profile_list:
                         nodes = stx_api.sysinv.host_node_list(self.request,
-                                                          ip.uuid)
+                                                              ip.uuid)
                         cpu_profile = icpu_utils.CpuProfile(ip.cpus, nodes)
                         if host_profile.profile_applicable(cpu_profile):
                             cpu_profile_tuple_list.append(
@@ -395,8 +395,8 @@ class UpdateHostInfoAction(workflows.Action):
                 self.fields[
                     'interfaceProfile'].widget = forms.widgets.HiddenInput()
 
-            if ((personality == 'storage' or 'compute' in host._subfunctions)
-               and host.disks):
+            if ((personality == 'storage' or 'compute' in host._subfunctions) and
+                host.disks):
                 # Populate Available Disk Profile Choices
                 try:
                     disk_profile_tuple_list = [
@@ -471,8 +471,8 @@ class UpdateHostInfoAction(workflows.Action):
             cleaned_data['subfunctions'] = self._subfunctions
         elif cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_CONTROLLER:
             if self.system_type == constants.TS_AIO:
-                self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER + ','
-                                      + stx_api.sysinv.PERSONALITY_COMPUTE)
+                self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER + ',' +
+                                      stx_api.sysinv.PERSONALITY_COMPUTE)
             else:
                 self._subfunctions = stx_api.sysinv.PERSONALITY_CONTROLLER
             cleaned_data['subfunctions'] = self._subfunctions
@@ -773,14 +773,14 @@ class UpdateHost(workflows.Workflow):
             if data['cpuProfile']:
                 profile_uuid = profile_get_uuid(request, data['cpuProfile'])
                 stx_api.sysinv.host_apply_profile(request, data['host_id'],
-                                              profile_uuid)
+                                                  profile_uuid)
             data.pop('cpuProfile')
 
             if data['interfaceProfile']:
                 profile_uuid = profile_get_uuid(request,
                                                 data['interfaceProfile'])
                 stx_api.sysinv.host_apply_profile(request, data['host_id'],
-                                              profile_uuid)
+                                                  profile_uuid)
             data.pop('interfaceProfile')
 
             if not data['bm_password']:
@@ -789,13 +789,13 @@ class UpdateHost(workflows.Workflow):
             if data['diskProfile']:
                 profile_uuid = profile_get_uuid(request, data['diskProfile'])
                 stx_api.sysinv.host_apply_profile(request, data['host_id'],
-                                              profile_uuid)
+                                                  profile_uuid)
             data.pop('diskProfile')
 
             if data['memoryProfile']:
                 profile_uuid = profile_get_uuid(request, data['memoryProfile'])
                 stx_api.sysinv.host_apply_profile(request, data['host_id'],
-                                              profile_uuid)
+                                                  profile_uuid)
             data.pop('memoryProfile')
 
             # if not trying to change personality, skip check

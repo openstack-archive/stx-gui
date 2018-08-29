@@ -86,7 +86,7 @@ class EditStorageVolumeView(forms.ModalFormView):
                       stor_uuid, self.kwargs)
             try:
                 self._object = stx_api.sysinv.host_stor_get(self.request,
-                                                        stor_uuid)
+                                                            stor_uuid)
                 self._object.host_id = host_id
             except Exception:
                 redirect = reverse("horizon:admin:inventory:detail",

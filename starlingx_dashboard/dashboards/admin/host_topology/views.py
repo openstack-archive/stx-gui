@@ -158,15 +158,15 @@ class JSONView(View):
     def add_resource_url(self, view, resources):
         tenant_id = self.request.user.tenant_id
         for resource in resources:
-            if (resource.get('tenant_id')
-                    and tenant_id != resource.get('tenant_id')):
+            if (resource.get('tenant_id') and
+                tenant_id != resource.get('tenant_id')):
                 continue
             resource['url'] = reverse(view, None, [str(resource['id'])])
 
     def _check_router_external_port(self, ports, router_id, network_id):
         for port in ports:
-            if (port['network_id'] == network_id
-                    and port['device_id'] == router_id):
+            if (port['network_id'] == network_id and
+                port['device_id'] == router_id):
                 return True
         return False
 

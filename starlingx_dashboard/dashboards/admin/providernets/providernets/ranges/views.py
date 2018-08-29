@@ -52,7 +52,7 @@ class CreateView(forms.ModalFormView):
             try:
                 providernet_id = self.kwargs["providernet_id"]
                 self._object = stx_api.neutron.provider_network_get(self.request,
-                                                                providernet_id)
+                                                                    providernet_id)
             except Exception:
                 redirect = reverse(self.failure_url,
                                    args=(self.kwargs['providernet_id'],))
@@ -114,7 +114,7 @@ class DetailView(tabs.TabView):
     def get_providernet_name(self, providernet_id):
         try:
             providernet = stx_api.neutron.provider_network_get(self.request,
-                                                           providernet_id)
+                                                               providernet_id)
             providernet.set_id_as_name_if_empty(length=0)
         except Exception:
             providernet = {}

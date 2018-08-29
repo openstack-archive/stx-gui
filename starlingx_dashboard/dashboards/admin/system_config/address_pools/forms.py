@@ -126,7 +126,7 @@ class UpdateAddressPool(CreateAddressPool):
             if data.get('ranges'):
                 updates['ranges'] = data['ranges']
             pool = stx_api.sysinv.address_pool_update(request, data['id'],
-                                                  **updates)
+                                                      **updates)
             msg = (_('Address pool was successfully updated'))
             messages.success(request, msg)
             return pool

@@ -837,7 +837,7 @@ class DeleteInterfaceProfile(tables.DeleteAction):
     def delete(self, request, interfaceprofile_id):
         try:
             stx_api.sysinv.host_interfaceprofile_delete(request,
-                                                    interfaceprofile_id)
+                                                        interfaceprofile_id)
         except Exception:
             msg = _(
                 'Failed to delete interface profile %s') % interfaceprofile_id

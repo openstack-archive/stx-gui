@@ -190,7 +190,7 @@ class AddInterfaceProfileView(forms.ModalFormView):
                     p.namedisplay = p.get_port_display_name()
 
                 host.interfaces = stx_api.sysinv.host_interface_list(self.request,
-                                                                 host.uuid)
+                                                                     host.uuid)
                 for i in host.interfaces:
                     i.ports = [p.get_port_display_name()
                                for p in all_ports if
@@ -235,7 +235,7 @@ class UpdateView(forms.ModalFormView):
             host_id = self.kwargs['host_id']
             try:
                 self._object = stx_api.sysinv.host_interface_get(self.request,
-                                                             interface_id)
+                                                                 interface_id)
                 self._object.host_id = host_id
 
             except Exception:
@@ -355,7 +355,7 @@ class DetailView(tables.MultiTableView):
             host_id = self.kwargs['host_id']
             try:
                 self._object = stx_api.sysinv.host_interface_get(self.request,
-                                                             interface_id)
+                                                                 interface_id)
                 self._object.host_id = host_id
                 self._object = self._add_pool_names(self._object)
             except Exception:

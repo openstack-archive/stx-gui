@@ -35,7 +35,6 @@ from openstack_dashboard.dashboards.project.instances import tables
 from starlingx_dashboard.api import nova as stx_nova
 
 
-
 class CreateForm(forms.SelfHandlingForm):
     name = forms.CharField(max_length="255", label=_("Server Group Name"))
     policy = forms.ChoiceField(label=_("Policy"),
@@ -95,7 +94,7 @@ class CreateForm(forms.SelfHandlingForm):
                       'policies': policies,
                       'metadata': metadata,
                       'project_id': project_id}
-            
+
             server_group = stx_nova.server_group_create(request, **kwargs)
             return server_group
 

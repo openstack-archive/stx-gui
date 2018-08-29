@@ -42,7 +42,7 @@ class UpdateView(forms.ModalFormView):
             host_id = self.kwargs['host_id']
             try:
                 self._object = stx_api.sysinv.host_device_get(self.request,
-                                                          device_uuid)
+                                                              device_uuid)
                 self._object.host_id = host_id
             except Exception:
                 redirect = reverse("horizon:admin:inventory:detail",
@@ -85,7 +85,7 @@ class DetailView(views.HorizonTemplateView):
             host_id = self.kwargs['host_id']
             try:
                 self._object = stx_api.sysinv.host_device_get(self.request,
-                                                          device_uuid)
+                                                              device_uuid)
                 self._object.host_id = host_id
 
             except Exception:

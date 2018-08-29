@@ -76,7 +76,7 @@ class UpdateSensorGroupView(forms.ModalFormView):
                       sensorgroup_id, self.kwargs)
             try:
                 self._object = stx_api.sysinv.host_sensorgroup_get(self.request,
-                                                               sensorgroup_id)
+                                                                   sensorgroup_id)
                 self._object.host_id = host_id
 
             except Exception:
@@ -196,7 +196,7 @@ class DetailSensorGroupView(views.HorizonTemplateView):
             sensorgroup_id = self.kwargs['sensorgroup_id']
             try:
                 sensorgroup = stx_api.sysinv.host_sensorgroup_get(self.request,
-                                                              sensorgroup_id)
+                                                                  sensorgroup_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,
