@@ -1153,7 +1153,7 @@ def dns_list(request):
 class NTP(base.APIResourceWrapper):
     """..."""
 
-    _attrs = ['isystem_uuid', 'ntpservers', 'uuid', 'link']
+    _attrs = ['isystem_uuid', 'enabled', 'ntpservers', 'uuid', 'link']
 
     def __init__(self, apiresource):
         super(NTP, self).__init__(apiresource)
@@ -1186,6 +1186,43 @@ def ntp_get(request, ntp_id):
 def ntp_list(request):
     ntp = cgtsclient(request).intp.list()
     return [NTP(n) for n in ntp]
+
+
+class PTP(base.APIResourceWrapper):
+    """..."""
+
+    _attrs = ['isystem_uuid', 'enabled', 'mode',
+              'transport', 'mechanism', 'uuid', 'link']
+
+    def __init__(self, apiresource):
+        super(PTP, self).__init__(apiresource)
+
+
+def ptp_update(request, ptp_id, **kwargs):
+    LOG.debug("ptp_update(): ptp_id=%s, kwargs=%s", ptp_id, kwargs)
+    mypatch = []
+
+    for key, value in kwargs.iteritems():
+        mypatch.append(dict(path='/' + key, value=value, op='replace'))
+
+    return cgtsclient(request).ptp.update(ptp_id, mypatch)
+
+
+def ptp_delete(request, ptp_id):
+    LOG.debug("ptp_delete(): ptp_id=%s", ptp_id)
+    return cgtsclient(request).ptp.delete(ptp_id)
+
+
+def ptp_get(request, ptp_id):
+    ptp = cgtsclient(request).ptp.get(ptp_id)
+    if not ptp:
+        raise ValueError('No match found for ptp_id "%s".' % ptp_id)
+    return PTP(ptp)
+
+
+def ptp_list(request):
+    ptp = cgtsclient(request).ptp.list()
+    return [PTP(n) for n in ptp]
 
 
 class EXTOAM(base.APIResourceWrapper):

@@ -219,6 +219,10 @@ class UpdatecDNS(forms.SelfHandlingForm):
 
 class UpdatecNTP(forms.SelfHandlingForm):
     uuid = forms.CharField(widget=forms.widgets.HiddenInput)
+    enabled = forms.BooleanField(
+        label=_("Enabled"),
+        help_text=_('Enable NTP service.'),
+        required=False)
 
     NTP_SERVER_1 = forms.CharField(label=_("NTP Server 1 Address"),
                                    initial='NTP_SERVER_1',
@@ -262,6 +266,12 @@ class UpdatecNTP(forms.SelfHandlingForm):
                 else:
                     data['uuid'] = ' '
 
+                if 'enabled' in data.keys():
+                    if not data['enabled']:
+                        data['enabled'] = 'False'
+                else:
+                    data['enabled'] = 'False'
+
                 for index in range(1, max_ntp_servers + 1):
                     if data['NTP_SERVER_%s' % index] and data[
                             'NTP_SERVER_%s' % index] != ' ':
@@ -273,28 +283,32 @@ class UpdatecNTP(forms.SelfHandlingForm):
                 if hasattr(ntp_config, 'uuid'):
 
                     ntp_config_uuid = ntp_config.uuid
+                    ntp_enabled = ntp_config.enabled
                     if ntp_config.ntpservers:
                         ntpservers = ntp_config.ntpservers.split(',')
                     else:
                         ntpservers = []
 
-                    # if their sizes are different, then action=apply
-                    if len(NTPSERVERS) != len(ntpservers):
+                    if ntp_enabled != data['enabled']:
                         data['action'] = 'apply'
+                        data['enabled'] = str(data['enabled'])
                         send_to_sysinv = True
-
                     else:
-                        # If lengths are same,
-                        # check if order of values have been changed
-                        if set(ntpservers) != set(NTPSERVERS.values()):
-                            for index in range(len(ntpservers)):
-
-                                if ntpservers[index] != NTPSERVERS[
-                                        'NTP_SERVER_%s' % (index + 1)]:
-                                    data['action'] = 'apply'
-                                    send_to_sysinv = True
-                                    # we need to do action=apply only once
-                                    break
+                        # if their sizes are different, then action=apply
+                        if len(NTPSERVERS) != len(ntpservers):
+                            data['action'] = 'apply'
+                            send_to_sysinv = True
+                        else:
+                            # If lengths are same,
+                            # check if order of values have been changed
+                            if set(ntpservers) != set(NTPSERVERS.values()):
+                                for index in range(len(ntpservers)):
+                                    if ntpservers[index] != NTPSERVERS[
+                                            'NTP_SERVER_%s' % (index + 1)]:
+                                        data['action'] = 'apply'
+                                        send_to_sysinv = True
+                                        # we need to do action=apply only once
+                                        break
 
                     # sysinv accepts csv values as the ntpservers
                     data['ntpservers'] = ','.join(NTPSERVERS.values())
@@ -309,7 +323,7 @@ class UpdatecNTP(forms.SelfHandlingForm):
 
             else:
                 ntp_config_uuid = ' '
-                data = {'ntpservers': ''}
+                data = {'enabled': 'False', 'ntpservers': ''}
 
             LOG.debug(data)
 
@@ -326,7 +340,7 @@ class UpdatecNTP(forms.SelfHandlingForm):
                     return False
 
             else:
-                msg = _('No NTP Server changes have been made.')
+                msg = _('No NTP configuration changes have been made.')
                 LOG.debug(msg)
                 messages.info(request, msg)
                 return True
@@ -340,6 +354,141 @@ class UpdatecNTP(forms.SelfHandlingForm):
 
         except Exception:
             msg = _('Failed to update NTP configuration.')
+            messages.error(request, msg)
+            LOG.info(msg)
+            # redirect = reverse(self.failure_url)
+            return False
+
+
+class UpdatecPTP(forms.SelfHandlingForm):
+    uuid = forms.CharField(widget=forms.widgets.HiddenInput)
+    enabled = forms.BooleanField(
+        label=_("Enabled"),
+        help_text=_('Enable PTP service.'),
+        required=False)
+
+    PTP_MODE_CHOICES = (
+        ('hardware', _('Hardware time stamping')),
+        ('software', _('Software time stamping')),
+        ('legacy', _('Legacy hardware time stamping')),
+    )
+    mode = forms.ChoiceField(label=_("PTP Time Stamping Mode"),
+                             required=False,
+                             choices=PTP_MODE_CHOICES)
+
+    PTP_TRANSPORT_CHOICES = (
+        ('l2', _('IEEE 802.3 network transport (L2)')),
+        ('udp', _('UDP IPv4/v6 network transport(UDP)')),
+    )
+    transport = forms.ChoiceField(label=_("PTP Network Transport"),
+                                  required=False,
+                                  choices=PTP_TRANSPORT_CHOICES)
+
+    PTP_MECHANISM_CHOICES = (
+        ('e2e', _('Delay request-response (E2E)')),
+        ('p2p', _('Peer delay (P2P)')),
+    )
+    mechanism = forms.ChoiceField(label=_("PTP Delay Mechanism"),
+                                  required=False,
+                                  choices=PTP_MECHANISM_CHOICES)
+
+    failure_url = 'horizon:admin:system_config:index'
+    failure_message = 'Failed to update PTP configurations.'
+
+    def __init__(self, request, *args, **kwargs):
+        super(UpdatecPTP, self).__init__(request, *args, **kwargs)
+
+    def handle(self, request, data):
+        send_to_sysinv = False
+
+        try:
+            if data:
+                if 'uuid' in data.keys():
+                    if not data['uuid']:
+                        data['uuid'] = ' '
+                else:
+                    data['uuid'] = ' '
+
+                if 'enabled' in data.keys():
+                    if not data['enabled']:
+                        data['enabled'] = 'False'
+                else:
+                    data['enabled'] = 'False'
+
+                if 'mode' in data.keys():
+                    if not data['mode']:
+                        data['mode'] = 'hardware'
+                else:
+                    data['mode'] = 'False'
+
+                if 'transport' in data.keys():
+                    if not data['transport']:
+                        data['transport'] = 'l2'
+                else:
+                    data['transport'] = 'l2'
+
+                if 'mechanism' in data.keys():
+                    if not data['mechanism']:
+                        data['mechanism'] = 'e2e'
+                else:
+                    data['mechanism'] = 'e2e'
+
+                ptp_config = stx_api.sysinv.ptp_get(request, data['uuid'])
+
+                if hasattr(ptp_config, 'uuid'):
+                    ptp_config_uuid = ptp_config.uuid
+                    ptp_enabled = ptp_config.enabled
+                    if ptp_enabled != data['enabled']:
+                        data['enabled'] = str(data['enabled'])
+                        send_to_sysinv = True
+                    if ptp_config.mode != data['mode']:
+                        send_to_sysinv = True
+                    if ptp_config.transport != data['transport']:
+                        send_to_sysinv = True
+                    if ptp_config.mechanism != data['mechanism']:
+                        send_to_sysinv = True
+
+                else:
+                    ptp_config_uuid = ' '
+
+                data.pop('uuid')
+
+            else:
+                ptp_config_uuid = ' '
+                data = {'enabled': 'False',
+                        'mode': '',
+                        'transport': '',
+                        'mechanism': ''}
+
+            LOG.debug(data)
+
+            if send_to_sysinv:
+                my_ptp = \
+                    stx_api.sysinv.ptp_update(request, ptp_config_uuid, **data)
+
+                if my_ptp:
+                    msg = _('PTP configuration was successfully updated. ')
+                    LOG.debug(msg)
+                    messages.success(request, msg)
+                    return True
+                else:
+                    return False
+
+            else:
+                msg = _('No PTP configuratiom changes have been made.')
+                LOG.debug(msg)
+                messages.info(request, msg)
+                return True
+
+        except exc.ClientException as ce:
+            messages.error(request, ce)
+            # Display REST API error on the GUI
+            LOG.error(ce)
+            # redirect = reverse(self.failure_url)
+            return False
+
+        except Exception:
+            msg = _('Failed to update PTP configuration.')
             messages.error(request, msg)
             LOG.info(msg)
             # redirect = reverse(self.failure_url)
