@@ -20,6 +20,8 @@ from starlingx_dashboard.dashboards.admin.system_config.views \
     import UpdatecEXT_OAMView
 from starlingx_dashboard.dashboards.admin.system_config.views \
     import UpdatecNTPView
+from starlingx_dashboard.dashboards.admin.system_config.views \
+    import UpdatecPTPView
 from starlingx_dashboard.dashboards.admin.system_config.views import \
     UpdateiStoragePoolsView
 from starlingx_dashboard.dashboards.admin.system_config.views import \
@@ -51,6 +53,8 @@ urlpatterns = [
         name='update_cdns_table'),
     url(r'^update_cntp_table/$', UpdatecNTPView.as_view(),
         name='update_cntp_table'),
+    url(r'^update_cptp_table/$', UpdatecPTPView.as_view(),
+        name='update_cptp_table'),
     url(r'^update_coam_table/$', UpdatecEXT_OAMView.as_view(),
         name='update_coam_table'),
 
