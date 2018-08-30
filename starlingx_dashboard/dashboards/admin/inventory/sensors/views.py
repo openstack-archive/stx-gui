@@ -15,13 +15,12 @@ from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
 from horizon import views
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory.sensors.forms import \
     AddSensorGroup
 from starlingx_dashboard.dashboards.admin.inventory.sensors.forms import \
     UpdateSensorGroup
-# from openstack_dashboard.dashboards.admin.inventory.sensors.forms import \
-#     AddSensor
 
 LOG = logging.getLogger(__name__)
 

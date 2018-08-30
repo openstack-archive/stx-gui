@@ -21,7 +21,9 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard.api import neutron
+from starlingx_dashboard.api import sysinv
 
 LOG = logging.getLogger(__name__)
 
@@ -99,7 +101,7 @@ class AddInterfaceProfile(forms.SelfHandlingForm):
         host_id = data['host_id']
         interfaceProfileName = data['profilename']
         try:
-            interfaceProfile = api.sysinv.host_interfaceprofile_create(request,
+            interfaceProfile = sysinv.host_interfaceprofile_create(request,
                                                                        **data)
             msg = _(
                 'Interface Profile "%s" was '
@@ -391,7 +393,7 @@ class AddInterface(forms.SelfHandlingForm):
         current_interface = None
         if (type(self) is UpdateInterface):
             this_interface_id = kwargs['initial']['id']
-            current_interface = api.sysinv.host_interface_get(
+            current_interface = sysinv.host_interface_get(
                 self.request, this_interface_id)
         else:
             self.fields['providernetworks_sriov'].widget = \
@@ -406,13 +408,13 @@ class AddInterface(forms.SelfHandlingForm):
         sdn_l3_mode = kwargs['initial']['sdn_l3_mode_enabled']
 
         # Populate Address Pool selections
-        pools = api.sysinv.address_pool_list(self.request)
+        pools = sysinv.address_pool_list(self.request)
         self.fields['ipv4_pool'].choices = _get_ipv4_pool_choices(pools)
         self.fields['ipv6_pool'].choices = _get_ipv6_pool_choices(pools)
 
         # Populate Provider Network Choices by querying Neutron
         self.extras = {}
-        interfaces = api.sysinv.host_interface_list(self.request, host_uuid)
+        interfaces = sysinv.host_interface_list(self.request, host_uuid)
 
         used_providernets = []
         for i in interfaces:
@@ -428,7 +430,7 @@ class AddInterface(forms.SelfHandlingForm):
         providernet_choices = []
         providernet_filtered = []
         providernet_flat = None
-        providernets = api.neutron.provider_network_list(self.request)
+        providernets = neutron.provider_network_list(self.request)
         for provider in providernets:
             label = "{} (mtu={})".format(provider.name, provider.mtu)
             providernet = (str(provider.name), label)
@@ -460,14 +462,14 @@ class AddInterface(forms.SelfHandlingForm):
             if not current_interface.uses:
                 # update default interfaces
                 self.fields['uses'].widget = forms.widgets.HiddenInput()
-                avail_port_list = api.sysinv.host_port_list(
+                avail_port_list = sysinv.host_port_list(
                     self.request, host_uuid)
                 for p in avail_port_list:
                     if p.interface_uuid == this_interface_id:
                         self.fields['ports'].initial = p.uuid
             else:
                 # update non default interfaces
-                avail_interface_list = api.sysinv.host_interface_list(
+                avail_interface_list = sysinv.host_interface_list(
                     self.request, host_uuid)
                 interface_tuple_list = []
                 for i in avail_interface_list:
@@ -487,7 +489,7 @@ class AddInterface(forms.SelfHandlingForm):
 
         else:
             # add operation
-            avail_interface_list = api.sysinv.host_interface_list(
+            avail_interface_list = sysinv.host_interface_list(
                 self.request, host_uuid)
             interface_tuple_list = []
             for i in avail_interface_list:
@@ -591,7 +593,7 @@ class AddInterface(forms.SelfHandlingForm):
             elif data['aemode'] == 'active_standby':
                 del data['txhashpolicy']
 
-            interface = api.sysinv.host_interface_create(request, **data)
+            interface = sysinv.host_interface_create(request, **data)
             msg = _('Interface "%s" was successfully'
                     ' created.') % data['ifname']
             LOG.debug(msg)
@@ -685,7 +687,7 @@ class UpdateInterface(AddInterface):
             self.fields['aemode'].choices = self.AE_MODE_CHOICES
 
         # Populate Address Pool selections
-        pools = api.sysinv.address_pool_list(self.request)
+        pools = sysinv.address_pool_list(self.request)
         self.fields['ipv4_pool'].choices = _get_ipv4_pool_choices(pools)
         self.fields['ipv6_pool'].choices = _get_ipv6_pool_choices(pools)
         self.fields['ipv4_pool'].initial = kwargs['initial'].get('ipv4_pool')
@@ -745,7 +747,7 @@ class UpdateInterface(AddInterface):
             self.fields['networktype'].initial = ('none', 'none')
 
         # Get the total possible number of VFs for SRIOV network type
-        port_list = api.sysinv.host_port_list(self.request,
+        port_list = sysinv.host_port_list(self.request,
                                               host_uuid)
         for p in port_list:
             if p.interface_uuid == this_interface_id:
@@ -801,9 +803,9 @@ class UpdateInterface(AddInterface):
                 del data['txhashpolicy']
 
             if 'none' in data['networktype']:
-                avail_port_list = api.sysinv.host_port_list(
+                avail_port_list = sysinv.host_port_list(
                     self.request, host_uuid)
-                current_interface = api.sysinv.host_interface_get(
+                current_interface = sysinv.host_interface_get(
                     self.request, interface_id)
                 if data['iftype'] != 'ae' or data['iftype'] != 'vlan':
                     for p in avail_port_list:
@@ -826,7 +828,7 @@ class UpdateInterface(AddInterface):
                 flatten(list(nt) for nt in self.fields['networktype'].choices)
             if 'pci-passthrough' in network_type or \
                ('pci-sriov' in network_type and data['sriov_numvfs']):
-                current_interface = api.sysinv.host_interface_get(
+                current_interface = sysinv.host_interface_get(
                     self.request, interface_id)
                 if current_interface.iftype != 'ethernet':
                     # Only ethernet interfaces can be pci-sriov
@@ -847,7 +849,7 @@ class UpdateInterface(AddInterface):
             if data['networktype']:
                 data['networktype'] = ",".join(data['networktype'])
 
-            interface = api.sysinv.host_interface_update(request, interface_id,
+            interface = sysinv.host_interface_update(request, interface_id,
                                                          **data)
 
             # FIXME: this should be done under
