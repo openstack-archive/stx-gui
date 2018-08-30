@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+
+import cgcs_patch.constants as patch_constants
 import logging
 
 from django.core.urlresolvers import reverse  # noqa
@@ -17,11 +19,11 @@ from horizon import exceptions
 from horizon import messages
 from horizon import tables
 from horizon.utils import functions
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
     import utils as cpufunctions_utils
 
-import cgcs_patch.constants as patch_constants
 
 LOG = logging.getLogger(__name__)
 

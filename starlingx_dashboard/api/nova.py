@@ -7,6 +7,7 @@
 from novaclient.v2 import wrs_pci
 from novaclient.v2 import wrs_providernets
 
+from openstack_dashboard.api import base
 from openstack_dashboard.api.nova import *
 
 
@@ -66,8 +67,3 @@ def get_detail_usage(request, device_id):
     usages = wrs_pci.PciDevicesManager(novaclient(request)).get(
         device_id)
     return [DetailUsage(n) for n in usages]
-
-
-def can_set_quotas():
-    features = getattr(settings, 'OPENSTACK_HYPERVISOR_FEATURES', {})
-    return features.get('enable_quotas', True)

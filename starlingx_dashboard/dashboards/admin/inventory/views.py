@@ -16,6 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 from horizon import workflows
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory.tabs import HostDetailTabs
 from starlingx_dashboard.dashboards.admin.inventory.tabs import InventoryTabs

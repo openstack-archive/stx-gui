@@ -16,7 +16,7 @@ from horizon import forms
 from horizon import tables
 from horizon.utils import memoized
 from horizon import views
-from openstack_dashboard import api
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory.devices.forms import \
     UpdateDevice
@@ -155,7 +155,7 @@ class UsageView(tables.MultiTableView):
         if not hasattr(self, "_usage_object"):
             dev_id = self.kwargs['device_id']
             try:
-                _object = api.nova.get_device_usage(self.request, dev_id)
+                _object = stx_api.nova.get_device_usage(self.request, dev_id)
                 self._usage_object = _object
             except Exception:
                 self._handle_exception(dev_id)
