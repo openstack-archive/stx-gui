@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tabs
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory.cpu_functions import \
     tables as cpufunctions_tables

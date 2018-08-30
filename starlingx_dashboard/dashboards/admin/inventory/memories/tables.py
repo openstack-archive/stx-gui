@@ -11,7 +11,8 @@ from django import template
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ class CreateMemoryProfile(tables.LinkAction):
         if host.subfunctions and 'compute' not in host.subfunctions:
             return False
         return (host.invprovision == 'provisioned' and
-                not api.sysinv.is_system_mode_simplex(request))
+                not stx_api.sysinv.is_system_mode_simplex(request))
 
 
 def get_processor_memory(memory):

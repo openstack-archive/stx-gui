@@ -20,10 +20,12 @@ import logging
 from django.core.urlresolvers import reverse
 from django import shortcuts
 from django.utils.translation import ugettext_lazy as _
+
 import netaddr
 
 from horizon import forms
 from horizon import messages
+
 from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)

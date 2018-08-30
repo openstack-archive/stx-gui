@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
 
-from openstack_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class EditDevice(tables.LinkAction):
     def allowed(self, request, datum):
         host = self.table.kwargs['host']
         return (host._administrative == 'locked' and
-                api.sysinv.SUBFUNCTIONS_COMPUTE in host.subfunctions)
+                stx_api.sysinv.SUBFUNCTIONS_COMPUTE in host.subfunctions)
 
 
 def get_viewdevice_link_url(device):
