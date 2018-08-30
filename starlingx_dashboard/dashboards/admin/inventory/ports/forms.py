@@ -14,7 +14,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -109,7 +110,7 @@ class UpdatePort(forms.SelfHandlingForm):
         del data['id']
 
         try:
-            port = api.sysinv.host_port_update(request, port_id, **data)
+            port = stx_api.sysinv.host_port_update(request, port_id, **data)
             msg = _('Port "%s" was successfully updated.') % deviceName
             LOG.debug(msg)
             messages.success(request, msg)

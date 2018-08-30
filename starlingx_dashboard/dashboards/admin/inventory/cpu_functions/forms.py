@@ -16,7 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard.api import sysinv
 
 LOG = logging.getLogger(__name__)
 
@@ -304,7 +305,7 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
         del data['host']
 
         try:
-            host = api.sysinv.host_get(self.request, host_id)
+            host = sysinv.host_get(self.request, host_id)
             cpudata = {}
             sharedcpudata = {}
             platformcpudata = {}
@@ -333,7 +334,7 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
             sharedcpudata['function'] = 'shared'
             platformcpudata['function'] = 'platform'
 
-            api.sysinv.host_cpus_modify(request, host.uuid,
+            sysinv.host_cpus_modify(request, host.uuid,
                                         platformcpudata,
                                         cpudata,
                                         sharedcpudata)
@@ -376,7 +377,7 @@ class AddCpuProfile(forms.SelfHandlingForm):
 
         cpuProfileName = data['profilename']
         try:
-            cpuProfile = api.sysinv.host_cpuprofile_create(request, **data)
+            cpuProfile = sysinv.host_cpuprofile_create(request, **data)
             msg = _(
                 'Cpu Profile "%s" was successfully created.') % cpuProfileName
             LOG.debug(msg)

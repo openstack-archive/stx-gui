@@ -14,7 +14,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard import api
 
 LOG = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class UpdateDevice(forms.SelfHandlingForm):
             p = {}
             p['name'] = name
             p['enabled'] = str(data['enabled'])
-            device = api.sysinv.host_device_update(request, uuid, **p)
+            device = stx_api.sysinv.host_device_update(request, uuid, **p)
             msg = _('device "%s" was successfully updated.') % name
             LOG.debug(msg)
             messages.success(request, msg)

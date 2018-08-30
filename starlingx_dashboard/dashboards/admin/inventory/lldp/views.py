@@ -14,7 +14,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon.utils import memoized
 from horizon import views
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class DetailNeighbourView(views.HorizonTemplateView):
             neighbour_uuid = self.kwargs['neighbour_uuid']
             try:
                 self._object = \
-                    api.sysinv.host_lldpneighbour_get(self.request,
+                    stx_api.sysinv.host_lldpneighbour_get(self.request,
                                                       neighbour_uuid)
 
             except Exception:
@@ -91,7 +92,7 @@ class DetailNeighbourView(views.HorizonTemplateView):
     @memoized.memoized_method
     def get_hostname(self, host_uuid):
         try:
-            host = api.sysinv.host_get(self.request, host_uuid)
+            host = stx_api.sysinv.host_get(self.request, host_uuid)
         except Exception:
             host = {}
             msg = _('Unable to retrieve hostname details.')

@@ -16,7 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -287,7 +288,7 @@ class UpdateMemory(forms.SelfHandlingForm):
                         new_data['vm_hugepages_nr_1G_pending'] = pages_1G[nd]
 
                     if new_data:
-                        api.sysinv.host_memory_update(request, m.uuid,
+                        stx_api.sysinv.host_memory_update(request, m.uuid,
                                                       **new_data)
 
                 else:
@@ -338,7 +339,7 @@ class AddMemoryProfile(forms.SelfHandlingForm):
 
         memoryProfileName = data['profilename']
         try:
-            memoryProfile = api.sysinv.host_memprofile_create(request, **data)
+            memoryProfile = stx_api.sysinv.host_memprofile_create(request, **data)
             msg = _('Memory Profile "%s" was successfully created.') % \
                 memoryProfileName
             LOG.debug(msg)

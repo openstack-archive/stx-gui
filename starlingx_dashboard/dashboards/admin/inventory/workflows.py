@@ -12,6 +12,7 @@ import cpu_functions.utils as icpu_utils
 
 from cgtsclient.common import constants
 from cgtsclient import exc
+
 from django.utils.translation import ugettext_lazy as _  # noqa
 from django.views.decorators.debug import sensitive_variables  # noqa
 
@@ -19,6 +20,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon.utils import validators
 from horizon import workflows
+
 from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)

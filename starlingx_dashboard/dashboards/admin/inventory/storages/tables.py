@@ -16,7 +16,8 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from starlingx_dashboard import api as stx_api
+
+from starlingx_dashboard.api import sysinv
 
 LOG = logging.getLogger(__name__)
 
@@ -109,11 +110,11 @@ class DeletePartition(tables.DeleteAction):
 
     def allowed(self, request, partition=None):
         host = self.table.kwargs['host']
-        PARTITION_IN_USE_STATUS = stx_api.sysinv.PARTITION_IN_USE_STATUS
-        PARTITION_STATUS_MSG = stx_api.sysinv.PARTITION_STATUS_MSG
+        PARTITION_IN_USE_STATUS = sysinv.PARTITION_IN_USE_STATUS
+        PARTITION_STATUS_MSG = sysinv.PARTITION_STATUS_MSG
 
         if partition:
-            if partition.type_guid != stx_api.sysinv.USER_PARTITION_PHYS_VOL:
+            if partition.type_guid != sysinv.USER_PARTITION_PHYS_VOL:
                 return False
 
             if (partition.status ==
@@ -125,7 +126,7 @@ class DeletePartition(tables.DeleteAction):
 
             # Get all the partitions from the same disk.
             disk_partitions = \
-                stx_api.sysinv.host_disk_partition_list(request, host.uuid,
+                sysinv.host_disk_partition_list(request, host.uuid,
                                                         partition.idisk_uuid)
 
             if partition.device_path:
@@ -142,7 +143,7 @@ class DeletePartition(tables.DeleteAction):
     def delete(self, request, partition_id):
         host_id = self.table.kwargs['host_id']
         try:
-            stx_api.sysinv.host_disk_partition_delete(request, partition_id)
+            sysinv.host_disk_partition_delete(request, partition_id)
         except Exception as e:
             msg = _('Failed to delete host %(hid)s partition %(pv)s. '
                     '%(e_msg)s') % {'hid': host_id,
@@ -167,19 +168,19 @@ class EditPartition(tables.LinkAction):
 
     def allowed(self, request, partition=None):
         host = self.table.kwargs['host']
-        PARTITION_IN_USE_STATUS = stx_api.sysinv.PARTITION_IN_USE_STATUS
-        PARTITION_STATUS_MSG = stx_api.sysinv.PARTITION_STATUS_MSG
+        PARTITION_IN_USE_STATUS = sysinv.PARTITION_IN_USE_STATUS
+        PARTITION_STATUS_MSG = sysinv.PARTITION_STATUS_MSG
 
         if partition:
             pv = None
 
-            if partition.type_guid != stx_api.sysinv.USER_PARTITION_PHYS_VOL:
+            if partition.type_guid != sysinv.USER_PARTITION_PHYS_VOL:
                 return False
 
             if partition.ipv_uuid:
-                pv = stx_api.sysinv.host_pv_get(
+                pv = sysinv.host_pv_get(
                     request, partition.ipv_uuid)
-                if pv.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES:
+                if pv.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
                     if (host.personality == "Controller-Active" and
                             host._administrative == 'unlocked'):
                         return False
@@ -189,12 +190,12 @@ class EditPartition(tables.LinkAction):
             if (partition.status ==
                     PARTITION_STATUS_MSG[PARTITION_IN_USE_STATUS]):
                 if not (pv and
-                        pv.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES):
+                        pv.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES):
                     return False
 
             # Get all the partitions from the same disk.
             disk_partitions = \
-                stx_api.sysinv.host_disk_partition_list(request,
+                sysinv.host_disk_partition_list(request,
                                                         host.uuid,
                                                         partition.idisk_uuid)
 
@@ -286,7 +287,7 @@ class EditStor(tables.LinkAction):
         if stor and stor.function == 'osd':
             forihostuuid = self.table.kwargs['host'].uuid
             journal_stors = \
-                stx_api.sysinv.host_stor_get_by_function(request, forihostuuid,
+                sysinv.host_stor_get_by_function(request, forihostuuid,
                                                          'journal')
 
             if not journal_stors:
@@ -327,7 +328,7 @@ class DeleteStor(tables.DeleteAction):
             return stor.function == 'journal'
 
     def delete(self, request, obj_id):
-        stx_api.sysinv.host_stor_delete(request, obj_id)
+        sysinv.host_stor_delete(request, obj_id)
 
 
 class StorageVolumesTable(tables.DataTable):
@@ -386,17 +387,17 @@ class AddLocalVolumeGroup(tables.LinkAction):
 
         # LVGs that are considered as "present" in the system are those
         # in an adding or provisioned state.
-        current_lvg_states = [stx_api.sysinv.LVG_ADD, stx_api.sysinv.LVG_PROV]
-        ilvg_list = stx_api.sysinv.host_lvg_list(request, host.uuid)
+        current_lvg_states = [sysinv.LVG_ADD, sysinv.LVG_PROV]
+        ilvg_list = sysinv.host_lvg_list(request, host.uuid)
         current_lvgs = [lvg.lvm_vg_name for lvg in ilvg_list
                         if lvg.vg_state in current_lvg_states]
         compatible_lvgs = []
 
         if host._personality == 'controller':
-            compatible_lvgs += [stx_api.sysinv.LVG_CINDER_VOLUMES]
+            compatible_lvgs += [sysinv.LVG_CINDER_VOLUMES]
 
         if 'compute' in host._subfunctions:
-            compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
+            compatible_lvgs += [sysinv.LVG_NOVA_LOCAL]
 
         allowed_lvgs = set(compatible_lvgs) - set(current_lvgs)
         if not any(allowed_lvgs):
@@ -427,22 +428,22 @@ class RemoveLocalVolumeGroup(tables.DeleteAction):
 
     def allowed(self, request, lvg=None):
         host = self.table.kwargs['host']
-        cinder_backend = stx_api.sysinv.get_cinder_backend(request)
+        cinder_backend = sysinv.get_cinder_backend(request)
 
-        if lvg.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL:
+        if lvg.lvm_vg_name == sysinv.LVG_NOVA_LOCAL:
             return ((host._administrative == 'locked') or
                     (('compute' in host._subfunctions) and
                      (host.compute_config_required is True)))
-        elif lvg.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES:
-            return (stx_api.sysinv.CINDER_BACKEND_LVM not in cinder_backend and
-                    stx_api.sysinv.LVG_ADD in lvg.vg_state)
+        elif lvg.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
+            return (sysinv.CINDER_BACKEND_LVM not in cinder_backend and
+                    sysinv.LVG_ADD in lvg.vg_state)
 
         return False
 
     def delete(self, request, lvg_id):
         host_id = self.table.kwargs['host_id']
         try:
-            stx_api.sysinv.host_lvg_delete(request, lvg_id)
+            sysinv.host_lvg_delete(request, lvg_id)
         except Exception as e:
             msg = _('Failed to delete host %(hid)s local '
                     'volume group %(lvg)s '
@@ -506,7 +507,7 @@ class AddPhysicalVolume(tables.LinkAction):
         self.classes = classes
 
         # cgts-vg, cinder-volumes: Allow adding to any controller
-        if host._personality == stx_api.sysinv.PERSONALITY_CONTROLLER:
+        if host._personality == sysinv.PERSONALITY_CONTROLLER:
             return True
 
         # nova-local: Allow adding to any locked host with a compute
@@ -520,7 +521,7 @@ class AddPhysicalVolume(tables.LinkAction):
                                                       _("(Node Unlocked)"))
         elif "nova-local" not in [
                 lvg.lvm_vg_name for lvg in
-                stx_api.sysinv.host_lvg_list(request, host.uuid)]:
+                sysinv.host_lvg_list(request, host.uuid)]:
             if "disabled" not in self.classes:
                 self.classes = [c for c in self.classes] + ['disabled']
                 self.verbose_name = string_concat(self.verbose_name, ' ',
@@ -548,22 +549,22 @@ class RemovePhysicalVolume(tables.DeleteAction):
 
     def allowed(self, request, pv=None):
         host = self.table.kwargs['host']
-        cinder_backend = stx_api.sysinv.get_cinder_backend(request)
+        cinder_backend = sysinv.get_cinder_backend(request)
 
-        if pv.lvm_vg_name == stx_api.sysinv.LVG_NOVA_LOCAL:
+        if pv.lvm_vg_name == sysinv.LVG_NOVA_LOCAL:
             return ((host._administrative == 'locked') or
                     (('compute' in host._subfunctions) and
                      (host.compute_config_required is True)))
-        elif pv.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES:
-            return (stx_api.sysinv.CINDER_BACKEND_LVM not in cinder_backend and
-                    stx_api.sysinv.PV_ADD in pv.pv_state)
+        elif pv.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
+            return (sysinv.CINDER_BACKEND_LVM not in cinder_backend and
+                    sysinv.PV_ADD in pv.pv_state)
 
         return False
 
     def delete(self, request, pv_id):
         host_id = self.table.kwargs['host_id']
         try:
-            stx_api.sysinv.host_pv_delete(request, pv_id)
+            sysinv.host_pv_delete(request, pv_id)
         except Exception as e:
             msg = _('Failed to delete host %(hid)s physical volume %(pv)s. '
                     '%(e_msg)s') % {'hid': host_id, 'pv': pv_id, 'e_msg': e}
