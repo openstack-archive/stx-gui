@@ -7,7 +7,6 @@
 import logging
 
 from django.core.urlresolvers import reverse  # noqa
-# from django.template import defaultfilters as filters
 from django import template
 from django.utils.translation import string_concat  # noqa
 from django.utils.translation import ugettext_lazy as _
@@ -15,6 +14,7 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
+
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.inventory import tables as itables
 

@@ -13,7 +13,8 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import tables
-from openstack_dashboard import api
+
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ class DeleteInterface(tables.DeleteAction):
     def delete(self, request, interface_id):
         host_id = self.table.kwargs['host_id']
         try:
-            api.sysinv.host_interface_delete(request, interface_id)
+            stx_api.sysinv.host_interface_delete(request, interface_id)
         except Exception:
             msg = _('Failed to delete host %(hid)s interface %(iid)s') % {
                 'hid': host_id, 'iid': interface_id}
@@ -66,7 +67,7 @@ class CreateInterfaceProfile(tables.LinkAction):
         return reverse(self.url, args=(host_id,))
 
     def allowed(self, request, datum):
-        return not api.sysinv.is_system_mode_simplex(request)
+        return not stx_api.sysinv.is_system_mode_simplex(request)
 
 
 class CreateInterface(tables.LinkAction):
