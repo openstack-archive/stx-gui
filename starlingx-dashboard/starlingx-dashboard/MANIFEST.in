@@ -1,0 +1,1 @@
+recursive-include starlingx_dashboard *.js *.html *.keep
