@@ -229,7 +229,7 @@
         "management-start-ip": "",
         "management-end-ip": "",
         "management-gateway-ip": "",
-        "central-gateway-ip": ""};
+        "systemcontroller-gateway-ip": ""};
       var config = {
         title: gettext('Add Subcloud'),
         schema: subcloudSchema,
