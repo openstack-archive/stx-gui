@@ -28,13 +28,13 @@
             </tr>
             {% for disk in host.disks %}
                 <tr>
-                  <td>{{ disk.device_path }} {{"( "}} {{ disk.device_node }}{{", "}} {{disk.serial_id}} {{" )"}} {{": "}} {{ disk.size_mib }} {{ "MiB" }}</td>
+                  <td>{{ disk.device_path }} {{"( "}} {{ disk.device_node }}{{", "}} {{disk.serial_id}} {{" )"}} {{": "}} {{ disk.size_gib }} {{ "GiB" }}</td>
                   {% for stor in host.stors %}
                       {% if stor.uuid == disk.istor_uuid %}
                           <td>
                               {% if stor.function == 'osd' %}
                                   {{ stor.function }} {{"stor"}}
-                                  {{"- ceph journal size: "}} {{stor.journal_size_mib}}{{","}}
+                                  {{"- ceph journal size: "}} {{stor.journal_size_gib}}{{" GiB,"}}
                                   {% if stor.journal_location == stor.uuid %}
                                       {{ "collocated on osd stor" }}
                                   {% else %}
@@ -76,7 +76,7 @@
                         <td>{{ "devices"}} {{": "}} {{ lvg.dev_paths }}</td>
                     {% endfor %}
                     <td>{% for part in host.partitions %}
-                        {{ part.device_path}} {{": "}} {{ part.size_mib }} {{" MiB"}}
+                        {{ part.device_path}} {{": "}} {{ part.size_gib }} {{" GiB"}}
                         {{ "<br>" }}
                         {% endfor %}
                     </td>

@@ -1,8 +1,8 @@
 {% for partition in diskprofile.partitions %}
     <li>
         <strong>{{ partition.device_path }}</strong>
-        {% if partition.size_mib %}
-            {{": "}} {{ partition.size_mib }}
+        {% if partition.size_gib %}
+            {{": "}} {{ partition.size_gib }} {{" GiB"}}
         {% endif %}
     </li>
 {% endfor %}

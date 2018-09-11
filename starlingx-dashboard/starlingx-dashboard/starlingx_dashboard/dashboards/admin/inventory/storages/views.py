@@ -451,4 +451,4 @@ class EditPartitionView(forms.ModalFormView):
         return {'id': partition.uuid,
                 'uuid': partition.uuid,
                 'host_uuid': partition.ihost_uuid,
-                'size_mib': partition.size_mib}
+                'size_gib': partition.size_gib}

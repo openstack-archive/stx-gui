@@ -268,7 +268,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
                 (d.uuid, "%s (path: %s size:%s model:%s type: %s)" % (
                     d.device_node,
                     d.device_path,
-                    str(d.size_mib),
+                    str(d.size_gib),
                     disk_model,
                     d.device_type)))
 
@@ -615,7 +615,7 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
                 (d.uuid, "%s (path:%s size:%s model:%s)" % (
                     d.device_node,
                     d.device_path,
-                    str(d.size_mib),
+                    str(d.size_gib),
                     disk_model)))
 
         for p in partitions:
@@ -699,23 +699,25 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
 class EditPartition(forms.SelfHandlingForm):
     id = forms.CharField(widget=forms.widgets.HiddenInput)
 
-    size_mib = forms.CharField(label=_("Partition Size MiB"),
-                               required=False,
-                               initial='size_mib',
-                               widget=forms.TextInput(attrs={
-                                   'data-slug': 'size_mib'}),
-                               help_text=_(
-                                   "New partition size. Has to be "
-                                   "larger than current size."))
+    size_gib = forms.IntegerField(label=_("Partition Size GiB"),
+                                  required=False,
+                                  initial='size_gib',
+                                  widget=forms.TextInput(attrs={
+                                      'data-slug': 'size_gib'}),
+                                  help_text=_(
+                                      "New partition size. Has to be "
+                                      "larger than current size."))
 
     def __init__(self, request, *args, **kwargs):
         super(EditPartition, self).__init__(request, *args, **kwargs)
 
     def handle(self, request, data):
         partition_id = data['id']
+        data['size_mib'] = data['size_gib'] * 1024
 
         try:
             del data['id']
+            del data['size_gib']
             # The REST API takes care of updating the partition information.
             partition = stx_api.sysinv.host_disk_partition_update(
                 request, partition_id, **data)
@@ -769,12 +771,12 @@ class CreatePartition(forms.SelfHandlingForm):
                                   'data-slug': 'disk'}),
                               help_text=_("Disk to create partition on."))
 
-    size_mib = forms.IntegerField(label=_("Partition Size MiB"),
+    size_gib = forms.IntegerField(label=_("Partition Size GiB"),
                                   required=True,
-                                  initial=1024,
+                                  initial=1,
                                   widget=forms.TextInput(attrs={
-                                      'data-slug': 'size_mib'}),
-                                  help_text=_("Size in MiB for the new "
+                                      'data-slug': 'size_gib'}),
+                                  help_text=_("Size in GiB for the new "
                                               "partition."))
 
     type_guid = forms.CharField(label=_("Partition Type"),
@@ -798,11 +800,11 @@ class CreatePartition(forms.SelfHandlingForm):
             if d.available_mib == 0:
                 continue
             disk_tuple_list.append(
-                (d.uuid, "%s (path: %s size:%s available_mib:%s type: %s)" % (
+                (d.uuid, "%s (path: %s size:%s available_gib:%s type: %s)" % (
                     d.device_node,
                     d.device_path,
-                    str(d.size_mib),
-                    str(d.available_mib),
+                    str(d.size_gib),
+                    str(d.available_gib),
                     d.device_type)))
 
         self.fields['disks'].choices = disk_tuple_list
@@ -815,11 +817,13 @@ class CreatePartition(forms.SelfHandlingForm):
         host_id = data['host_id']
         disks = data['disks'][:]
         data['idisk_uuid'] = disks
+        data['size_mib'] = data['size_gib'] * 1024
 
         try:
             del data['host_id']
             del data['disks']
             del data['hostname']
+            del data['size_gib']
             data['type_guid'] = stx_api.sysinv.USER_PARTITION_PHYS_VOL
             # The REST API takes care of creating the partition.
             partition = stx_api.sysinv.host_disk_partition_create(request, **data)

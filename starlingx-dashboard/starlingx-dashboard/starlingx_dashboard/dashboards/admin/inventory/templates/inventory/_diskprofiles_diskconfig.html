@@ -4,8 +4,8 @@
         {% if disk.serial_id %}
             {{"("}} {{ disk.serial_id }} {{")"}}
         {% endif %}
-        {% if disk.size_mib %}
-            {{": "}} {{ disk.size_mib }}
+        {% if disk.size_gib %}
+            {{": "}} {{ disk.size_gib }} {{" GiB"}}
         {% endif %}
     </li>
 {% endfor %}

@@ -237,10 +237,10 @@ class DisksTable(tables.DataTable):
                               attrs={'data-type': 'disk_info'})
     type = tables.Column('device_type',
                          verbose_name=('Type'))
-    size = tables.Column('size_mib',
-                         verbose_name=('Size (MiB)'))
-    available_size = tables.Column('available_mib',
-                                   verbose_name=('Available Size (MiB)'))
+    size = tables.Column('size_gib',
+                         verbose_name=('Size (GiB)'))
+    available_size = tables.Column('available_gib',
+                                   verbose_name=('Available Size (GiB)'))
     rpm = tables.Column('rpm',
                         verbose_name=('RPM'))
 
@@ -342,8 +342,8 @@ class StorageVolumesTable(tables.DataTable):
                                verbose_name=('Disk UUID'))
     journal_path = tables.Column('journal_path',
                                  verbose_name=('Journal Path'))
-    journal_size_mib = tables.Column('journal_size_mib',
-                                     verbose_name=('Journal MiB'))
+    journal_size_mib = tables.Column('journal_size_gib',
+                                     verbose_name=('Journal GiB'))
     journal_location = tables.Column('journal_location',
                                      verbose_name=('Journal Location'))
 
@@ -613,8 +613,8 @@ class PhysicalVolumesTable(tables.DataTable):
 class PartitionsTable(tables.DataTable):
     uuid = tables.Column('uuid',
                          verbose_name=('UUID'))
-    size_mib = tables.Column('size_mib',
-                             verbose_name=('Size (MiB)'))
+    size_mib = tables.Column('size_gib',
+                             verbose_name=('Size (GiB)'))
     device_path = tables.Column('device_path',
                                 verbose_name=('Partition Device Path'))
     type_name = tables.Column('type_name',

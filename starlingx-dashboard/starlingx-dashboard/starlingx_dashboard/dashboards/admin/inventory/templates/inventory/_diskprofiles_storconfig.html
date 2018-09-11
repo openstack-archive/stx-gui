@@ -10,7 +10,7 @@
         {% if stor.function %}
             {% if stor.function == 'osd' %}
                 {{ stor.function }} {{"stor"}}
-                {{"- ceph journal size: "}} {{stor.journal_size_mib}}{{","}}
+                {{"- ceph journal size: "}} {{stor.journal_size_gib}}{{" GiB,"}}
                 {% if stor.journal_location == stor.uuid %}
                    {{ "collocated on osd stor" }}
                 {% else %}

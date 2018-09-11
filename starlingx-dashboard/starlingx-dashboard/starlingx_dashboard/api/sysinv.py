@@ -17,6 +17,7 @@ from __future__ import absolute_import
 
 import datetime
 import logging
+import math
 
 from cgtsclient.v1 import client as cgts_client
 from cgtsclient.v1 import icpu as icpu_utils
@@ -255,6 +256,14 @@ class Disk(base.APIResourceWrapper):
         if 'model_num' in self.capabilities:
             return self.capabilities['model_num']
 
+    @property
+    def size_gib(self):
+        return math.floor(float(self.size_mib) / 1024 * 1000) / 1000.0
+
+    @property
+    def available_gib(self):
+        return math.floor(float(self.available_mib) / 1024 * 1000) / 1000.0
+
 
 class StorageVolume(base.APIResourceWrapper):
     """Wrapper for Inventory Volumes"""
@@ -273,6 +282,10 @@ class StorageVolume(base.APIResourceWrapper):
 
     def __init__(self, apiresource):
         super(StorageVolume, self).__init__(apiresource)
+
+    @property
+    def journal_size_gib(self):
+        return self.journal_size_mib / 1024
 
 
 class PhysicalVolume(base.APIResourceWrapper):
@@ -336,6 +349,10 @@ class Partition(base.APIResourceWrapper):
 
     def __init__(self, apiresource):
         super(Partition, self).__init__(apiresource)
+
+    @property
+    def size_gib(self):
+        return math.floor(float(self.size_mib) / 1024 * 1000) / 1000.0
 
 
 def host_disk_partition_list(request, host_id, disk_id=None):
