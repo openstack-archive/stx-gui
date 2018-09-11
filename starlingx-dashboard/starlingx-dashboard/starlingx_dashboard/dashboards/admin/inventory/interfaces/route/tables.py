@@ -72,7 +72,7 @@ class CreateRoute(tables.LinkAction):
         interface = self.table.get_interface()
         if not interface:
             return False
-        if interface.networktype not in ['data', 'control']:
+        if interface.ifclass != 'data':
             return False
         if interface.ipv4_mode in ['static']:
             return True
