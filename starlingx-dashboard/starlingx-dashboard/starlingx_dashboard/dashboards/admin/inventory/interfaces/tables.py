@@ -18,7 +18,7 @@ from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
-NETWORK_TYPES = ["oam", "infra", "mgmt", "pxeboot"]
+INTERFACE_CLASS_TYPES = ["platform", "data", "pci-sriov", "pci-passthrough"]
 
 
 class DeleteInterface(tables.DeleteAction):
@@ -88,11 +88,11 @@ class CreateInterface(tables.LinkAction):
 
         count = 0
         for i in host.interfaces:
-            if i.networktype:
+            if i.ifclass:
                 count = count + 1
 
         if host.subfunctions and 'compute' not in host.subfunctions and \
-                count >= len(NETWORK_TYPES):
+                count >= len(INTERFACE_CLASS_TYPES):
             return False
 
         return True
@@ -120,9 +120,7 @@ def get_attributes(interface):
         if interface.aemode in ['balanced', '802.3ad']:
             attr_str = "%s, AE_XMIT_HASH_POLICY=%s" % (
                 attr_str, interface.txhashpolicy)
-    if (interface.networktype and
-            any(network in ['data', 'data-external'] for network in
-                interface.networktype.split(","))):
+    if interface.ifclass and interface.ifclass == 'data':
         attrs = [attr.strip() for attr in attr_str.split(",")]
         for a in attrs:
             if 'accelerated' in a:
@@ -155,6 +153,11 @@ def get_used_by(interface):
     return used_by_list
 
 
+def get_platform_networks(interface):
+    platform_networks = ", ".join(interface.platform_network_names)
+    return platform_networks
+
+
 def get_link_url(interface):
     return reverse("horizon:admin:inventory:viewinterface",
                    args=(interface.host_id, interface.uuid))
@@ -165,8 +168,8 @@ class InterfacesTable(tables.DataTable):
                            verbose_name=_('Name'),
                            link=get_link_url)
 
-    networktype = tables.Column('networktype',
-                                verbose_name=_('Network Type'))
+    ifclass = tables.Column('ifclass',
+                            verbose_name=_('Interface Class'))
 
     iftype = tables.Column('iftype',
                            verbose_name=_('Type'))
@@ -187,6 +190,9 @@ class InterfacesTable(tables.DataTable):
 
     used_by = tables.Column(get_used_by,
                             verbose_name=_('Used By'))
+
+    platform_networks = tables.Column(get_platform_networks,
+                                      verbose_name=_('Platform Network(s)'))
 
     providernetworks = tables.Column('providernetworks',
                                      verbose_name=_('Provider Network(s)'))

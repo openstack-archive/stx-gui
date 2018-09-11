@@ -27,8 +27,8 @@
     <strong><u>{{ "<br><br>Interface Configuration:" }}</u></strong>
         {% for interfaces in host.interfaces %}
             <li>
-                <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.networktype }}
-                {% if interfaces.networktype == 'data' or interface.networktype == 'data-external' %}
+                <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.ifclass }}
+                {% if interfaces.ifclass == 'data' %}
                     {{"("}} {{ interfaces.providernetworks }} {{")"}}
                 {% endif %}
                 {{ " | " }} {{ interfaces.iftype }}

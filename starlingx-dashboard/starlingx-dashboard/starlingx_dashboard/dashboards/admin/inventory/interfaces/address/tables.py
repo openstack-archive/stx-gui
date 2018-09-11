@@ -25,7 +25,7 @@ from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
-ALLOWED_INTERFACE_TYPES = ['infra', 'data', 'control']
+ALLOWED_INTERFACE_TYPES = ['infra', 'data']
 
 
 class DeleteAddress(tables.DeleteAction):
@@ -75,10 +75,14 @@ class CreateAddress(tables.LinkAction):
         if not interface:
             return False
 
-        if interface.networktype:
-            supported = interface.networktype.split(',')
-            if any(t in supported for t in ALLOWED_INTERFACE_TYPES):
-                return True
+        if interface.ifclass == 'platform':
+            interface_networks = stx_api.sysinv.interface_network_list_by_interface(request,
+                                                                                    interface.uuid)
+            for interface_network in interface_networks:
+                if interface_network.network_type in ALLOWED_INTERFACE_TYPES:
+                    return True
+        elif interface.ifclass == 'data':
+            return True
         if getattr(interface, 'ipv4_mode', '') == 'static':
             return True
         if getattr(interface, 'ipv6_mode', '') == 'static':

@@ -1,7 +1,7 @@
 {% for interfaces in ifProfile.interfaces %}
     <li>
-        <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.networktype }}
-        {% if interfaces.networktype == 'data' or interfaces.networktype == 'data-external' %}
+        <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.ifclass }}
+        {% if interfaces.ifclass == 'data' %}
             {{"("}} {{ interfaces.providernetworks }} {{")"}}
         {% endif %}
         {{ " | " }} {{ interfaces.iftype }}

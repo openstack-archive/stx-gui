@@ -258,10 +258,6 @@ class UpdateView(forms.ModalFormView):
 
     def get_initial(self):
         interface = self._get_object()
-        networktype = []
-        if interface.networktype:
-            for network in interface.networktype.split(","):
-                networktype.append(str(network))
         providernetworks = []
         if interface.providernetworks:
             for pn in interface.providernetworks.split(","):
@@ -290,7 +286,8 @@ class UpdateView(forms.ModalFormView):
                 'txhashpolicy': interface.txhashpolicy,
                 # 'ports': interface.ports,
                 # 'uses': interface.uses,
-                'networktype': networktype,
+                'ifclass': interface.ifclass,
+                'networktype': interface.networktype,
                 'providernetworks_data': providernetworks,
                 'providernetworks_data-external': providernetworks,
                 'providernetworks_pci': providernetworks,
