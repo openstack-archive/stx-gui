@@ -23,8 +23,8 @@ LOG = logging.getLogger(__name__)
 NOVA_PARAMS_FIELD_MAP = {
     sysinv.LVG_NOVA_PARAM_BACKING:
     sysinv.LVG_NOVA_PARAM_BACKING,
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
+    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB:
+    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB,
     sysinv.LVG_NOVA_PARAM_DISK_OPS:
     sysinv.LVG_NOVA_PARAM_DISK_OPS,
 }
@@ -37,8 +37,8 @@ CINDER_PARAMS_FIELD_MAP = {
 NOVA_PARAMS_KEY_MAP = (
     (sysinv.LVG_NOVA_PARAM_BACKING,
      _("Instance Backing")),
-    (sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB,
-     _("Instances LV Size [in MiB]")),
+    (sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB,
+     _("Instances LV Size [in GiB]")),
     (sysinv.LVG_NOVA_PARAM_DISK_OPS,
      _("Concurrent Disk Operations")),
 )
@@ -56,10 +56,10 @@ PARAMS_HELP = {
     sysinv.LVG_NOVA_PARAM_DISK_OPS:
     'Number of parallel disk I/O intensive operations (glance image downloads, \
     image format conversions, etc.).',
-    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
-    'An integer specifying the size (in MiB) of the instances logical volume. \
-    (.e.g. 10 GiB = 10240). Volume is created from nova-local and will be \
-    mounted at /etc/nova/instances.',
+    sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB:
+    'An integer specifying the size (in GiB) of the instances logical volume. \
+    (.e.g. 10 GiB). Volume is created from nova-local and will be mounted at \
+    /etc/nova/instances.',
     sysinv.LVG_CINDER_PARAM_LVM_TYPE:
     'Cinder configuration setting which determines how the volume group is \
     provisioned. Thick provisioning will be used if the value is set to: \
@@ -170,10 +170,15 @@ class ParamMixin(object):
         # min_mib value is set to provide a reasonable minimum amount of space
         # for /etc/nova/instances
         if info['total'] < (80 * 1024):
-            info['allowed_min'] = 2 * 1024
+            info['allowed_min_gib'] = 2.0
         else:
-            info['allowed_min'] = 5 * 1024
-        info['allowed_max'] = info['total'] >> 1
+            info['allowed_min_gib'] = 5.0
+
+        info['total_gib'] = float(info['total']) / 1024
+        info['used_gib'] = float(info['used']) / 1024
+        info['free_gib'] = info['total_gib'] - info['used_gib']
+        info['allowed_max_gib'] = info['total_gib'] / 2
+
         return info
 
 
@@ -222,17 +227,19 @@ class ParamForm(ParamMixin, forms.SelfHandlingForm):
             if caps.get(sysinv.LVG_NOVA_PARAM_BACKING) == \
                sysinv.LVG_NOVA_BACKING_LVM:
                 inst_size_mib = sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB
-                self.fields[inst_size_mib] = \
+                inst_size_gib = sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB
+                size_gib = float(caps.get(inst_size_mib)) / 1024
+                self.fields[inst_size_gib] = \
                     forms.IntegerField(
                         label=_("Instances Logical Volume Size"),
-                        initial=caps.get(inst_size_mib),
+                        initial=size_gib,
                         required=True,
                         help_text=(_("%s") %
-                                   PARAMS_HELP.get(inst_size_mib, None)),
+                                   PARAMS_HELP.get(inst_size_gib, None)),
                         widget=forms.TextInput(attrs={
                             'class': 'switched',
                             'data-switch-on': 'type',
-                            'data-type-instances_lv_size_mib': ''}))
+                            'data-type-instances_lv_size_gib': ''}))
 
         elif self._lvg['lvg'].lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
             self.fields[sysinv.LVG_CINDER_PARAM_LVM_TYPE] = forms.ChoiceField(
@@ -273,13 +280,13 @@ class ParamForm(ParamMixin, forms.SelfHandlingForm):
                 raise forms.ValidationError(_('This field is required.'))
             return value
 
-    def clean_instances_lv_size_mib(self):
-        data = self.cleaned_data[sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB]
-        if self.cleaned_data[sysinv.LVG_NOVA_PARAM_BACKING] == sysinv.LVG_NOVA_BACKING_LVM \
-           and 'allowed_min' in self._lvg:
-            validators.MinValueValidator(self._lvg['allowed_min'])(
+    def clean_instances_lv_size_gib(self):
+        data = self.cleaned_data[sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB]
+        if self.cleaned_data[sysinv.LVG_NOVA_PARAM_BACKING] == \
+                sysinv.LVG_NOVA_BACKING_LVM and 'allowed_min_gib' in self._lvg:
+            validators.MinValueValidator(self._lvg['allowed_min_gib'])(
                 data)
-            validators.MaxValueValidator(self._lvg['allowed_max'])(
+            validators.MaxValueValidator(self._lvg['allowed_max_gib'])(
                 data)
         return data
 
@@ -323,13 +330,17 @@ class EditParam(ParamForm):
            == sysinv.LVG_NOVA_BACKING_IMAGE:
             self.fields['type'].choices = \
                 [(k, v) for k, v in param_choices
-                 if k != sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB]
+                 if k != sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB]
         else:
             self.fields['type'].choices = [(k, v) for k, v in param_choices]
 
     def handle(self, request, data):
         lvg_id = data['lvg_id']
         try:
+            msg = _('Updated parameter "%s".') % data['key']
+            if data['key'] == sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB:
+                data['key'] = sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB
+                data['value'] = data['value'] * 1024
             if isinstance(data['value'], bool):
                 value = str(data['value'])
                 data['value'] = value
@@ -341,7 +352,6 @@ class EditParam(ParamForm):
                           'op': 'replace'})
 
             sysinv.host_lvg_update(request, lvg_id, patch)
-            msg = _('Updated parameter "%s".') % data['key']
             messages.success(request, msg)
             return True
         except Exception as e:

@@ -82,6 +82,7 @@ PV_DEL = 'removing'
 # Storage: Volume Group Parameter Types
 LVG_NOVA_PARAM_BACKING = 'instance_backing'
 LVG_NOVA_PARAM_INSTANCES_SIZE_MIB = 'instances_lv_size_mib'
+LVG_NOVA_PARAM_INSTANCES_SIZE_GIB = 'instances_lv_size_gib'
 LVG_NOVA_PARAM_DISK_OPS = 'concurrent_disk_operations'
 LVG_NOVA_BACKING_LVM = 'lvm'
 LVG_NOVA_BACKING_IMAGE = 'image'
@@ -433,6 +434,12 @@ def host_lvg_get_params(request, lvg_id, raw=False, lvg=None):
     if lvg is None:
         lvg = cgtsclient(request).ilvg.get(lvg_id)
     params = lvg.capabilities
+
+    lv_size_mib = params.pop(LVG_NOVA_PARAM_INSTANCES_SIZE_MIB, None)
+    if lv_size_mib:
+        lv_size_gib = float(lv_size_mib) / 1024
+        params.update({LVG_NOVA_PARAM_INSTANCES_SIZE_GIB: lv_size_gib})
+
     if raw:
         return params
     return [LocalVolumeGroupParam(lvg_id, key, value) for

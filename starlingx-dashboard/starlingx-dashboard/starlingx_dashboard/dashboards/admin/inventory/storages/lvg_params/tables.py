@@ -34,7 +34,7 @@ def get_parameters_name(datum):
 def get_parameters_value(datum):
     if datum is None or datum.value is None:
         return None
-    if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB:
+    if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB:
         value = datum.value
     if datum.key == stx_api.sysinv.LVG_NOVA_PARAM_BACKING:
         value = datum.value

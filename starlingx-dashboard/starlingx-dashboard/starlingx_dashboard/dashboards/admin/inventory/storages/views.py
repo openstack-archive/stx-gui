@@ -179,8 +179,8 @@ class AddDiskProfileView(forms.ModalFormView):
                         sysinv.LVG_NOVA_PARAM_DISK_OPS)
                     if (l.instance_backing and
                        l.instance_backing == sysinv.LVG_NOVA_BACKING_LVM):
-                        l.instances_lv_size_mib = l.capabilities.get(
-                            sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB)
+                        l.instances_lv_size_gib = float(l.capabilities.get(
+                            sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB)) / 1024
 
                     l.lvm_type = l.capabilities.get(
                         sysinv.LVG_CINDER_PARAM_LVM_TYPE)

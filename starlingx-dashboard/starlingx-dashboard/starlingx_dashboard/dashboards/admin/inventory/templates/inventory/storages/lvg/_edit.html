@@ -10,19 +10,19 @@
 
 {% block modal-body %}
 <h4>{% trans "Local Volume Group" %}: {{ lvg.lvm_vg_name }}</h4>
-{% if free %}
+{% if free_gib %}
 <div class="quota-dynamic">
   <div class="quota_title clearfix">
     <strong>{% trans "Instances logical volume allocation" %}
-    {% blocktrans with a=used|intcomma b=total|intcomma %}<p>{{ a }} MiB of {{ b }} MiB Used</p>{% endblocktrans %}</strong>
+    {% blocktrans with a=used_gib|intcomma b=total_gib|intcomma %}<p>{{ a }} GiB of {{ b }} GiB Used</p>{% endblocktrans %}</strong>
   </div>
   <div class="quota_title clearfix">
     <strong>{% trans "Volume group space available for instance disks" %}
-    {% blocktrans with a=free|intcomma b=total|intcomma %}<p>{{ a }} MiB of {{ b }} MiB Free</p>{% endblocktrans %}</strong>
+    {% blocktrans with a=free_gib|intcomma b=total_gib|intcomma %}<p>{{ a }} GiB of {{ b }} GiB Free</p>{% endblocktrans %}</strong>
   </div>
   <div class="quota_title clearfix">
     <strong>{% trans "Acceptable instances logical volume size" %}
-    {% blocktrans with a=allowed_min|intcomma b=allowed_max|intcomma %}<p>{{ a }} MiB to {{ b }} MiB</p>{% endblocktrans %}</strong>
+    {% blocktrans with a=allowed_min_gib|intcomma b=allowed_max_gib|intcomma %}<p>{{ a }} GiB to {{ b }} GiB</p>{% endblocktrans %}</strong>
   </div>
 <hr>
 {% endif %}
