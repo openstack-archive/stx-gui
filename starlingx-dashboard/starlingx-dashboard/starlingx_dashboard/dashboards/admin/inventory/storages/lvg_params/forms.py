@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2017 Wind River Systems, Inc.
+# Copyright (c) 2015-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -63,7 +63,7 @@ PARAMS_HELP = {
     sysinv.LVG_CINDER_PARAM_LVM_TYPE:
     'Cinder configuration setting which determines how the volume group is \
     provisioned. Thick provisioning will be used if the value is set to: \
-    default. Thin provisioning will be used in the value is set to: thin',
+    thick. Thin provisioning will be used in the value is set to: thin',
 }
 
 NOVA_PARAMS_KEY_NAMES = dict(NOVA_PARAMS_KEY_MAP)
@@ -81,7 +81,7 @@ BACKING_CHOICES = (
 )
 
 LVM_TYPE_CHOICES = (
-    (sysinv.LVG_CINDER_LVM_TYPE_THICK, _("Thick Provisioning (default)")),
+    (sysinv.LVG_CINDER_LVM_TYPE_THICK, _("Thick Provisioning (thick)")),
     (sysinv.LVG_CINDER_LVM_TYPE_THIN, _("Thin Provisioning (thin)")),
 )
 

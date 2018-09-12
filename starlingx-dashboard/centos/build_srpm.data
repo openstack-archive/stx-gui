@@ -1,3 +1,2 @@
 SRC_DIR="starlingx-dashboard"
-TIS_PATCH_VER=4
-
+TIS_PATCH_VER=5
