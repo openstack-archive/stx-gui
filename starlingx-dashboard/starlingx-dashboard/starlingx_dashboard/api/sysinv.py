@@ -344,6 +344,7 @@ class Partition(base.APIResourceWrapper):
               'type_name',
               'idisk_uuid',
               'ipv_uuid',
+              'capabilities',
               'ihost_uuid',
               'status']
 

@@ -117,11 +117,16 @@ class ParamMixin(object):
         try:
             return sysinv.host_disk_get(self.request, pv.disk_or_part_uuid)
         except Exception:
-            exceptions.handle(
-                self.request,
-                _("Unable to retrieve disk %(disk)s for PV %(pv)s.") % {
-                    'disk': pv.disk_or_part_uuid,
-                    'pv': pv.uuid})
+            # Did not the find the disk so try to get the partition disk
+            try:
+                return sysinv.host_disk_partition_get(self.request,
+                                                          pv.disk_or_part_uuid)
+            except Exception:
+                exceptions.handle(
+                    self.request,
+                    _("Unable to retrieve disk %(disk)s for PV %(pv)s.") % {
+                        'disk': pv.disk_or_part_uuid,
+                        'pv': pv.uuid})
 
     def get_lvg_lvm_info(self, lvg_id):
         lvg = self._host_lvg_get(lvg_id)
