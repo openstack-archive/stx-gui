@@ -285,7 +285,8 @@ class StorageVolume(base.APIResourceWrapper):
 
     @property
     def journal_size_gib(self):
-        return self.journal_size_mib / 1024
+        if self.journal_size_mib:
+            return self.journal_size_mib / 1024
 
 
 class PhysicalVolume(base.APIResourceWrapper):
