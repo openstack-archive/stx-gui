@@ -1,0 +1,9 @@
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Workflow+1: Tyler Smith <tyler.smith@windriver.com>
+Code-Review+1: Bob Church <robert.church@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 12 Sep 2018 21:29:17 +0000
+Reviewed-on: https://review.openstack.org/602167
+Project: openstack/stx-gui
+Branch: refs/heads/master
