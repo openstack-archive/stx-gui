@@ -1937,9 +1937,9 @@ def host_stor_get_by_function(request, host_id, function=None):
 class Interface(base.APIResourceWrapper):
     """Wrapper for Inventory Interfaces"""
 
-    _attrs = ['id', 'uuid', 'ifname', 'iftype', 'imtu', 'imac', 'networktype',
-              'aemode', 'txhashpolicy', 'vlan_id', 'uses', 'used_by',
-              'ihost_uuid', 'providernetworks',
+    _attrs = ['id', 'uuid', 'ifname', 'ifclass', 'iftype', 'imtu', 'imac',
+              'networktype', 'networks', 'aemode', 'txhashpolicy', 'vlan_id',
+              'uses', 'used_by', 'ihost_uuid', 'providernetworks',
               'ipv4_mode', 'ipv6_mode', 'ipv4_pool', 'ipv6_pool',
               'sriov_numvfs']
 
@@ -1976,6 +1976,76 @@ def host_interface_update(request, interface_id, **kwargs):
 
 def host_interface_delete(request, interface_id):
     return cgtsclient(request).iinterface.delete(interface_id)
+
+
+class Network(base.APIResourceWrapper):
+    """Wrapper for Inventory Networks"""
+    _attrs = ['id', 'uuid', 'type', 'name', 'mtu', 'link_capacity',
+              'vlan_id', 'dynamic', 'pool_uuid']
+
+    def __init__(self, apiresource):
+        super(Network, self).__init__(apiresource)
+
+
+def network_list(request):
+    networks = cgtsclient(request).network.list()
+    return [Network(n) for n in networks]
+
+
+def network_get(request, network_uuid):
+    network = cgtsclient(request).network.get(network_uuid)
+    if not network:
+        raise ValueError(
+            'No match found for network_uuid "%s".' % network_uuid)
+    return Network(network)
+
+
+def network_create(request, **kwargs):
+    network = cgtsclient(request).network.create(**kwargs)
+    return Network(network)
+
+
+def network_delete(request, network_uuid):
+    return cgtsclient(request).network.delete(network_uuid)
+
+
+class InterfaceNetwork(base.APIResourceWrapper):
+    """Wrapper for Inventory Interface Networks"""
+    _attrs = ['forihostid', 'id', 'uuid', 'interface_id',
+              'interface_uuid', 'ifname', 'network_id',
+              'network_uuid', 'network_name', 'network_type']
+
+    def __init__(self, apiresource):
+        super(InterfaceNetwork, self).__init__(apiresource)
+
+
+def interface_network_list_by_host(request, host_uuid):
+    interface_networks = cgtsclient(request).interface_network.list_by_host(host_uuid)
+    return [InterfaceNetwork(n) for n in interface_networks]
+
+
+def interface_network_list_by_interface(request, interface_uuid):
+    interface_networks = cgtsclient(request).interface_network.list_by_interface(interface_uuid)
+    return [InterfaceNetwork(n) for n in interface_networks]
+
+
+def interface_network_get(request, interface_network_uuid):
+    interface_network = cgtsclient(request).interface_network.get(
+        interface_network_uuid)
+    if not interface_network:
+        raise ValueError(
+            'No match found for interface_network_uuid "%s".'
+            % interface_network_uuid)
+    return InterfaceNetwork(interface_network)
+
+
+def interface_network_assign(request, **kwargs):
+    interface_network = cgtsclient(request).interface_network.assign(**kwargs)
+    return InterfaceNetwork(interface_network)
+
+
+def interface_network_remove(request, interface_network_uuid):
+    return cgtsclient(request).interface_network.remove(interface_network_uuid)
 
 
 class Address(base.APIResourceWrapper):

@@ -46,6 +46,18 @@ def _get_ipv6_pool_choices(pools):
     return choices
 
 
+def _get_network_choices(networks):
+    PLATFORM_NETWORK_TYPES = ['pxeboot',
+                              'mgmt',
+                              'infra',
+                              'oam']
+    choices = []
+    for n in networks:
+        if n.type in PLATFORM_NETWORK_TYPES:
+            choices.append((n.uuid, "{} (type={})".format(n.name, n.type)))
+    return choices
+
+
 class CheckboxSelectMultiple(forms.widgets.CheckboxSelectMultiple):
     """Custom checkbox select widget that will render a text string
 
@@ -128,15 +140,12 @@ class AddInterfaceProfile(forms.SelfHandlingForm):
 
 
 class AddInterface(forms.SelfHandlingForm):
-    NETWORK_TYPE_CHOICES = (
+    INTERFACE_CLASS_CHOICES = (
         ('none', _("none")),
-        ('mgmt', _("mgmt")),
-        ('oam', _("oam")),
+        ('platform', _("platform")),
         ('data', _("data")),
-        ('data-external', _("data-external")),
-        ('control', _("control")),
-        ('infra', _("infra")),
-        ('pxeboot', _("pxeboot")),
+        ('pci-sriov', _("pci-sriov")),
+        ('pci-passthrough', _("pci-passthrough")),
     )
 
     INTERFACE_TYPE_CHOICES = (
@@ -196,14 +205,14 @@ class AddInterface(forms.SelfHandlingForm):
             _('Name may only contain letters, numbers, underscores, '
               'periods and hyphens.')})
 
-    networktype = forms.MultipleChoiceField(
-        label=_("Network Type"),
+    ifclass = forms.ChoiceField(
+        label=_("Interface Class"),
         required=True,
-        choices=NETWORK_TYPE_CHOICES,
-        widget=forms.CheckboxSelectMultiple(
+        choices=INTERFACE_CLASS_CHOICES,
+        widget=forms.Select(
             attrs={
                 'class': 'switchable',
-                'data-slug': 'network_type'}))
+                'data-slug': 'ifclass'}))
 
     iftype = forms.ChoiceField(
         label=_("Interface Type"),
@@ -211,16 +220,7 @@ class AddInterface(forms.SelfHandlingForm):
         choices=INTERFACE_TYPE_CHOICES,
         widget=forms.Select(
             attrs={
-                'class': 'switchable switched',
-                'data-switch-on': 'network_type',
-                'data-network_type-none': 'Interface Type',
-                'data-network_type-infra': 'Interface Type',
-                'data-network_type-data': 'Interface Type',
-                'data-network_type-data-external': 'Interface Type',
-                'data-network_type-control': 'Interface Type',
-                'data-network_type-mgmt': 'Interface Type',
-                'data-network_type-oam': 'Interface Type',
-                'data-network_type-pxeboot': 'Interface Type',
+                'class': 'switchable',
                 'data-slug': 'interface_type'}))
 
     aemode = forms.ChoiceField(
@@ -272,25 +272,25 @@ class AddInterface(forms.SelfHandlingForm):
         required=False,
         widget=forms.widgets.HiddenInput)
 
+    networks = forms.MultipleChoiceField(
+        label=_("Platform Network(s)"),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                'class': 'switched',
+                'data-switch-on': 'ifclass',
+                'data-ifclass-platform': 'Platform Network(s)'}))
+
     providernetworks_data = MultipleChoiceField(
         label=_("Provider Network(s)"),
         required=False,
         widget=CheckboxSelectMultiple(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'network_type',
-                'data-network_type-data': ''},
-            empty_value=_("No provider networks available for network type.")))
-
-    providernetworks_data_external = MultipleChoiceField(
-        label=_("Provider Network(s)"),
-        required=False,
-        widget=CheckboxSelectMultiple(
-            attrs={
-                'class': 'switched',
-                'data-switch-on': 'network_type',
-                'data-network_type-data-external': ''},
-            empty_value=_("No provider networks available for network type.")))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-data': ''},
+            empty_value=_("No provider networks available "
+                          "for this interface class.")))
 
     providernetworks_pci = MultipleChoiceField(
         label=_("Provider Network(s)"),
@@ -298,9 +298,10 @@ class AddInterface(forms.SelfHandlingForm):
         widget=CheckboxSelectMultiple(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'network_type',
-                'data-network_type-pci-passthrough': ''},
-            empty_value=_("No provider networks available for network type.")))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-pci-passthrough': ''},
+            empty_value=_("No provider networks available "
+                          "for this interface class.")))
 
     providernetworks_sriov = MultipleChoiceField(
         label=_("Provider Network(s)"),
@@ -308,9 +309,10 @@ class AddInterface(forms.SelfHandlingForm):
         widget=CheckboxSelectMultiple(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'network_type',
-                'data-network_type-pci-sriov': ''},
-            empty_value=_("No provider networks available for network type.")))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-pci-sriov': ''},
+            empty_value=_("No provider networks available "
+                          "for this interface class.")))
 
     imtu = forms.IntegerField(
         label=_("MTU"),
@@ -321,19 +323,7 @@ class AddInterface(forms.SelfHandlingForm):
         help_text=_("Maximum Transmit Unit."),
         error_messages={'invalid': _('MTU must be '
                                      'between 576 and 9216 bytes.')},
-        widget=forms.TextInput(attrs={
-            'class': 'switched',
-            'data-switch-on': 'network_type',
-            'data-network_type-none': _('MTU'),
-            'data-network_type-data': _('MTU'),
-            'data-network_type-data-external': _('MTU'),
-            'data-network_type-control': _('MTU'),
-            'data-network_type-mgmt': _('MTU'),
-            'data-network_type-infra': _('MTU'),
-            'data-network_type-pci-passthrough': _('MTU'),
-            'data-network_type-pci-sriov': _('MTU'),
-            'data-network_type-oam': _('MTU'),
-            'data-network_type-pxeboot': _('MTU')}))
+        widget=forms.TextInput())
 
     ipv4_mode = forms.ChoiceField(
         label=_("IPv4 Addressing Mode"),
@@ -344,9 +334,8 @@ class AddInterface(forms.SelfHandlingForm):
             attrs={
                 'class': 'switchable switched',
                 'data-slug': 'ipv4_mode',
-                'data-switch-on': 'network_type',
-                'data-network_type-data': 'IPv4 Addressing Mode',
-                'data-network_type-control': 'IPv4 Addressing Mode'}))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-data': 'IPv4 Addressing Mode'}))
 
     ipv4_pool = forms.ChoiceField(
         label=_("IPv4 Address Pool"),
@@ -367,9 +356,9 @@ class AddInterface(forms.SelfHandlingForm):
             attrs={
                 'class': 'switchable switched',
                 'data-slug': 'ipv6_mode',
-                'data-switch-on': 'network_type',
-                'data-network_type-data': 'IPv6 Addressing Mode',
-                'data-network_type-control': 'IPv6 Addressing Mode'}))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-data': 'IPv6 Addressing Mode',
+                'data-ifclass-control': 'IPv6 Addressing Mode'}))
 
     ipv6_pool = forms.ChoiceField(
         label=_("IPv6 Address Pool"),
@@ -385,7 +374,6 @@ class AddInterface(forms.SelfHandlingForm):
 
     def __init__(self, *args, **kwargs):
         super(AddInterface, self).__init__(*args, **kwargs)
-
         # Populate Available Port Choices
         # Only include ports that are not already part of other interfaces
         this_interface_id = 0
@@ -412,18 +400,20 @@ class AddInterface(forms.SelfHandlingForm):
         self.fields['ipv4_pool'].choices = _get_ipv4_pool_choices(pools)
         self.fields['ipv6_pool'].choices = _get_ipv6_pool_choices(pools)
 
+        # Populate Network Choices
+        networks = sysinv.network_list(self.request)
+        network_choices = _get_network_choices(networks)
+        self.fields['networks'].choices = network_choices
+
         # Populate Provider Network Choices by querying Neutron
         self.extras = {}
         interfaces = sysinv.host_interface_list(self.request, host_uuid)
 
         used_providernets = []
         for i in interfaces:
-            networktypelist = []
-            if i.networktype:
-                networktypelist = [i.networktype.split(",")]
-            if 'data' in networktypelist and \
+            if i.ifclass == 'data' and \
                     i.providernetworks and \
-                    i.uuid != this_interface_id:
+                            i.uuid != this_interface_id:
                 used_providernets = used_providernets + \
                     i.providernetworks.split(",")
 
@@ -445,18 +435,6 @@ class AddInterface(forms.SelfHandlingForm):
             self.fields['providernetworks_pci'].choices = providernet_choices
             self.fields['providernetworks_sriov'].choices = providernet_choices
 
-        if not (sdn_enabled and sdn_l3_mode):
-            self.fields['providernetworks_data_external'].widget = \
-                forms.widgets.HiddenInput()
-            nt_choices = self.fields['networktype'].choices
-            self.fields['networktype'].choices = [i for i in nt_choices
-                                                  if i[0] != 'data-external']
-        else:
-            # Support a 'data-external' network type and allow
-            # its Provider Network configuration (FLAT only)
-            self.fields['providernetworks_data_external'].choices = \
-                [providernet_flat]
-
         if current_interface:
             # update operation
             if not current_interface.uses:
@@ -476,7 +454,7 @@ class AddInterface(forms.SelfHandlingForm):
                     if i.uuid != current_interface.uuid:
                         interface_tuple_list.append(
                             (i.uuid, "%s (%s, %s)" %
-                             (i.ifname, i.imac, i.networktype)))
+                             (i.ifname, i.imac, i.ifclass)))
 
                 uses_initial = [i.uuid for i in avail_interface_list if
                                 i.ifname in current_interface.uses]
@@ -495,17 +473,24 @@ class AddInterface(forms.SelfHandlingForm):
             for i in avail_interface_list:
                 interface_tuple_list.append(
                     (i.uuid, "%s (%s, %s)" %
-                     (i.ifname, i.imac, i.networktype)))
+                     (i.ifname, i.imac, i.ifclass)))
             self.fields['uses'].choices = interface_tuple_list
-            self.fields['networktype'].initial = ('none', 'none')
+            self.fields['ifclass'].initial = ('none', 'none')
 
     def clean(self):
         cleaned_data = super(AddInterface, self).clean()
+        ifclass = cleaned_data.get('ifclass', 'none')
+        networks = cleaned_data.get('networks', [])
 
-        networktype = cleaned_data.get('networktype', 'none')
+        if ifclass != 'platform':
+            cleaned_data['networks'] = []
 
-        if ('data' not in networktype and
-           'control' not in networktype):
+        if ifclass == 'platform' and not networks:
+            raise forms.ValidationError(_(
+                "You must assign a network when "
+                "creating a platform interface."))
+
+        if ifclass != 'data':
             cleaned_data.pop('ipv4_mode', None)
             cleaned_data.pop('ipv6_mode', None)
 
@@ -515,18 +500,13 @@ class AddInterface(forms.SelfHandlingForm):
         if cleaned_data.get('ipv6_mode') != 'pool':
             cleaned_data.pop('ipv6_pool', None)
 
-        if 'data' in networktype:
+        if ifclass == 'data':
             providernetworks = filter(
                 None, cleaned_data.get('providernetworks_data', []))
-        elif 'data-external' in networktype:
-            # 'data' and 'data-external' nts cannot be consolidated
-            # on same interface
-            providernetworks = filter(
-                None, cleaned_data.get('providernetworks_data_external', []))
-        elif 'pci-passthrough' in networktype:
+        elif ifclass == 'pci-passthrough':
             providernetworks = filter(None, cleaned_data.get(
                 'providernetworks_pci', []))
-        elif 'pci-sriov' in networktype:
+        elif ifclass == 'pci-sriov':
             providernetworks = filter(
                 None,
                 cleaned_data.get('providernetworks_sriov', []))
@@ -534,22 +514,19 @@ class AddInterface(forms.SelfHandlingForm):
             providernetworks = []
 
         # providernetwork selection is required for 'data', 'pci-passthrough'
-        # and 'pci-sriov'. It is NOT required for any other network type
+        # and 'pci-sriov'. It is NOT required for any other interface class
         if not providernetworks:
 
             # Note that 1 of 3 different controls may be used to select
             # provider network, make sure to set the error on the appropriate
             # control
-            if any(network in ['data', 'pci-passthrough', 'pci-sriov']
-                    for network in networktype):
+            if ifclass in ['data', 'pci-passthrough', 'pci-sriov']:
                 raise forms.ValidationError(_(
                     "You must specify a Provider Network"))
 
         cleaned_data['providernetworks'] = ",".join(providernetworks)
         if 'providernetworks_data' in cleaned_data:
             del cleaned_data['providernetworks_data']
-        if 'providernetworks_data_external' in cleaned_data:
-            del cleaned_data['providernetworks_data_external']
         if 'providernetworks_pci' in cleaned_data:
             del cleaned_data['providernetworks_pci']
         if 'providernetworks_sriov' in cleaned_data:
@@ -578,14 +555,21 @@ class AddInterface(forms.SelfHandlingForm):
             else:
                 data['vlan_id'] = unicode(data['vlan_id'])
 
-            if any(network in data['networktype'] for network in
-                   ['mgmt', 'infra', 'oam']):
+            network_ids = []
+            network_types = []
+            if data['networks']:
+                for n in data['networks']:
+                    network = sysinv.network_get(request, n)
+                    network_ids.append(str(network.id))
+                    network_types.append(network.type)
+                data['networks'] = network_ids
+            data['networktype'] = data['ifclass']
+
+            if any(network_type in ['mgmt', 'infra', 'oam']
+                   for network_type in network_types):
                 del data['imtu']
             else:
                 data['imtu'] = unicode(data['imtu'])
-
-            if data['networktype']:
-                data['networktype'] = ",".join(data['networktype'])
 
             if data['iftype'] != 'ae':
                 del data['txhashpolicy']
@@ -630,16 +614,6 @@ class UpdateInterface(AddInterface):
 
     id = forms.CharField(widget=forms.widgets.HiddenInput)
 
-    networktype = forms.MultipleChoiceField(
-        label=_("Network Type"),
-        help_text=_("Note: The network type of an interface cannot be changed "
-                    "without first being reset back to 'none'"),
-        required=True,
-        widget=forms.CheckboxSelectMultiple(
-            attrs={
-                'class': 'switchable',
-                'data-slug': 'network_type'}))
-
     sriov_numvfs = forms.IntegerField(
         label=_("Virtual Functions"),
         required=False,
@@ -648,9 +622,9 @@ class UpdateInterface(AddInterface):
         widget=forms.TextInput(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'network_type',
+                'data-switch-on': 'ifclass',
                 'data-slug': 'num_vfs',
-                'data-network_type-pci-sriov': 'Num VFs'}))
+                'data-ifclass-pci-sriov': 'Num VFs'}))
 
     sriov_totalvfs = forms.IntegerField(
         label=_("Maximum Virtual Functions"),
@@ -659,8 +633,8 @@ class UpdateInterface(AddInterface):
             attrs={
                 'class': 'switched',
                 'readonly': 'readonly',
-                'data-switch-on': 'network_type',
-                'data-network_type-pci-sriov': 'Max VFs'}))
+                'data-switch-on': 'ifclass',
+                'data-ifclass-pci-sriov': 'Max VFs'}))
 
     iftypedata = forms.ChoiceField(
         label=_("Interface Type"),
@@ -669,8 +643,7 @@ class UpdateInterface(AddInterface):
 
     def __init__(self, *args, **kwargs):
         super(UpdateInterface, self).__init__(*args, **kwargs)
-
-        networktype_val = kwargs['initial']['networktype']
+        ifclass_val = kwargs['initial']['ifclass']
         host_uuid = kwargs['initial']['ihost_uuid']
 
         # Get the SDN configuration
@@ -680,9 +653,24 @@ class UpdateInterface(AddInterface):
         this_interface_id = kwargs['initial']['id']
 
         iftype_val = kwargs['initial']['iftype']
-        if 'mgmt' in networktype_val:
-            self.fields['aemode'].choices = self.MGMT_AE_MODE_CHOICES
 
+        interface_networks = sysinv.interface_network_list_by_interface(self.request,
+                                                                        this_interface_id)
+        if ifclass_val == 'platform':
+            # Load the networks associated with this interface
+            network_choices = self.fields['networks'].choices
+            network_choice_dict = dict(network_choices)
+            initial_networks = []
+            for i in interface_networks:
+                for uuid, name in network_choice_dict.iteritems():
+                    if i.network_uuid == uuid:
+                        initial_networks.append(uuid)
+
+            self.fields['networks'].initial = initial_networks
+        for i in interface_networks:
+            if i.network_type == 'mgmt':
+                self.fields['aemode'].choices = self.MGMT_AE_MODE_CHOICES
+                break
         else:
             self.fields['aemode'].choices = self.AE_MODE_CHOICES
 
@@ -703,50 +691,42 @@ class UpdateInterface(AddInterface):
         self.fields['iftypedata'].initial = kwargs['initial'].get('iftype')
         self.fields['iftype'].initial = kwargs['initial'].get('iftype')
 
-        # Load the networktype choices
-        networktype_choices = []
+        # Load the ifclass choices
+        ifclass_choices = []
         used_choices = []
-        if networktype_val:
-            for network in networktype_val:
-                label = "{}".format(network)
-                net_type = (str(network), label)
-                used_choices.append(str(network))
-                networktype_choices.append(net_type)
+        if ifclass_val:
+            label = "{}".format(ifclass_val)
+            choice = (str(ifclass_val), label)
+            used_choices.append(str(ifclass_val))
+            ifclass_choices.append(choice)
         else:
             label = "{}".format("none")
-            net_type = ("none", label)
-            networktype_choices.append(net_type)
+            val = ("none", label)
             used_choices.append("none")
-
-        # if SDN L3 mode is enabled, then we may allow
-        # updating an interface network type to 'data-external'
-        data_choices = ['data', 'control']
-        if (sdn_enabled and sdn_l3_mode):
-            data_choices.append('data-external')
+            ifclass_choices.append(val)
 
         if iftype_val == 'ethernet':
-            choices_list = ['none', 'infra', 'oam', 'mgmt', 'pci-passthrough',
-                            data_choices, 'pci-sriov', 'pxeboot']
+            choices_list = ['none', 'platform', 'data', 'pci-sriov',
+                            'pci-passthrough']
         elif iftype_val == 'ae':
-            choices_list = ['none', 'infra', 'oam', 'mgmt',
-                            data_choices, 'pxeboot']
+            choices_list = ['none', 'platform', 'data']
         else:
-            choices_list = ['infra', 'oam', 'mgmt', data_choices]
+            choices_list = ['platform', 'data']
 
         choices_list = flatten(choices_list)
 
         for choice in choices_list:
             if choice not in used_choices:
                 label = "{}".format(choice)
-                net_type = (str(choice), label)
-                networktype_choices.append(net_type)
+                val = (str(choice), label)
+                ifclass_choices.append(val)
 
-        self.fields['networktype'].choices = networktype_choices
-        if not networktype_val:
-            del kwargs['initial']['networktype']
-            self.fields['networktype'].initial = ('none', 'none')
+        self.fields['ifclass'].choices = ifclass_choices
+        if not ifclass_val:
+            del kwargs['initial']['ifclass']
+            self.fields['ifclass'].initial = ('none', 'none')
 
-        # Get the total possible number of VFs for SRIOV network type
+        # Get the total possible number of VFs for SRIOV interface class
         port_list = sysinv.host_port_list(self.request,
                                           host_uuid)
         for p in port_list:
@@ -765,10 +745,37 @@ class UpdateInterface(AddInterface):
 
     def clean(self):
         cleaned_data = super(UpdateInterface, self).clean()
-
         cleaned_data['iftype'] = cleaned_data.get('iftypedata')
         cleaned_data.pop('iftypedata', None)
 
+        ifclass = cleaned_data.get('ifclass')
+        interface_id = cleaned_data.get('id')
+        networks = cleaned_data.pop('networks', [])
+        interface_networks = sysinv.interface_network_list_by_interface(self.request, interface_id)
+        network_ids = []
+        networks_to_add = []
+        networks_to_remove = []
+        interface_networks_to_remove = []
+        if ifclass == 'platform' and networks:
+            for i in interface_networks:
+                networks_to_remove.append(i.network_id)
+            for n in networks:
+                network = sysinv.network_get(self.request, n)
+                network_ids.append(str(network.id))
+                if network.id in networks_to_remove:
+                    networks_to_remove.remove(network.id)
+                else:
+                    networks_to_add.append(str(network.id))
+            for i in interface_networks:
+                if i.network_id in networks_to_remove:
+                    interface_networks_to_remove.append(i.uuid)
+        else:
+            for i in interface_networks:
+                interface_networks_to_remove.append(i.uuid)
+        cleaned_data['networktype'] = ifclass
+        cleaned_data['networks'] = network_ids
+        cleaned_data['networks_to_add'] = networks_to_add
+        cleaned_data['interface_networks_to_remove'] = interface_networks_to_remove
         return cleaned_data
 
     def handle(self, request, data):
@@ -802,7 +809,7 @@ class UpdateInterface(AddInterface):
             elif data['aemode'] == 'active_standby':
                 del data['txhashpolicy']
 
-            if 'none' in data['networktype']:
+            if not data['ifclass'] or data['ifclass'] == 'none':
                 avail_port_list = sysinv.host_port_list(
                     self.request, host_uuid)
                 current_interface = sysinv.host_interface_get(
@@ -813,8 +820,7 @@ class UpdateInterface(AddInterface):
                             data['ifname'] = p.get_port_display_name()
                             break
 
-                if any(nt in ['data', 'data-external'] for nt in
-                        [str(current_interface.networktype).split(",")]):
+                if current_interface.ifclass == 'data':
                     data['providernetworks'] = 'none'
 
             if not data['providernetworks']:
@@ -824,10 +830,10 @@ class UpdateInterface(AddInterface):
                 data['sriov_numvfs'] = unicode(data['sriov_numvfs'])
 
             # Explicitly set iftype when user selects pci-pt or pci-sriov
-            network_type = \
-                flatten(list(nt) for nt in self.fields['networktype'].choices)
-            if 'pci-passthrough' in network_type or \
-               ('pci-sriov' in network_type and data['sriov_numvfs']):
+            ifclass = \
+                flatten(list(nt) for nt in self.fields['ifclass'].choices)
+            if 'pci-passthrough' in ifclass or \
+                    ('pci-sriov' in ifclass and data['sriov_numvfs']):
                 current_interface = sysinv.host_interface_get(
                     self.request, interface_id)
                 if current_interface.iftype != 'ethernet':
@@ -843,26 +849,28 @@ class UpdateInterface(AddInterface):
                     data['iftype'] = current_interface.iftype
 
             del data['sriov_totalvfs']
-            if 'pci-sriov' not in data['networktype']:
+            if data['ifclass'] != 'pci-sriov':
                 del data['sriov_numvfs']
 
-            if data['networktype']:
-                data['networktype'] = ",".join(data['networktype'])
+            if data['networks']:
+                data['networks'] = unicode(",".join(data['networks']))
+            else:
+                del data['networks']
+            if data['networks_to_add']:
+                data['networks_to_add'] = unicode(",".join(data['networks_to_add']))
+            else:
+                del data['networks_to_add']
+            interface_networks_to_remove = data['interface_networks_to_remove']
+            del data['interface_networks_to_remove']
 
-            interface = sysinv.host_interface_update(request, interface_id,
+            interface = sysinv.host_interface_update(request,
+                                                     interface_id,
                                                      **data)
 
-            # FIXME: this should be done under
-            #  the interface update API of sysinv
-            # Update Ports' iinterface_uuid attribute
-            # port_list = api.sysinv.host_port_list(request, host_uuid)
-            # for p in port_list:
-            # if p.uuid in ports:
-            #        pdata = { 'interface_uuid' : interface.uuid }
-            #        api.sysinv.host_port_update(request, p.uuid, **pdata)
-            #    elif p.interface_uuid == interface.uuid:
-            #        pdata = { 'interface_uuid' : '0' }
-            #        api.sysinv.host_port_update(request, p.uuid, **pdata)
+            # Remove old networks from the interface
+            if interface_networks_to_remove:
+                for n in interface_networks_to_remove:
+                    sysinv.interface_network_remove(self.request, n)
 
             msg = _('Interface "%s" was'
                     ' successfully updated.') % data['ifname']

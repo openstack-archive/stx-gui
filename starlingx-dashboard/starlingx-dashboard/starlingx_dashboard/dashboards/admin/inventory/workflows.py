@@ -53,13 +53,16 @@ BM_TYPES_CHOICES = (
 )
 
 
-def ifprofile_applicable(host, profile):
+def ifprofile_applicable(request, host, profile):
     for interface in profile.interfaces:
+        interface_networks = stx_api.sysinv.interface_network_list_by_interface(request,
+                                                                                interface.uuid)
         if (stx_api.sysinv.PERSONALITY_COMPUTE == host._personality and
-                interface.networktype == 'oam'):
+                any(interface_network.network_type == 'oam'
+                    for interface_network in interface_networks)):
             return False
         if (stx_api.sysinv.PERSONALITY_COMPUTE not in host._subfunctions and
-                interface.networktype == 'data'):
+                interface.ifclass == 'data'):
             return False
     return True
 
@@ -381,7 +384,7 @@ class UpdateHostInfoAction(workflows.Action):
                     interface_profile_tuple_list = [
                         ('', _("Copy from an available interface profile."))]
                     for ip in avail_interface_profile_list:
-                        if ifprofile_applicable(host, ip):
+                        if ifprofile_applicable(request, host, ip):
                             interface_profile_tuple_list.append(
                                 (ip.profilename, ip.profilename))
 
