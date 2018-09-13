@@ -109,12 +109,21 @@ def _format_providernet_ranges(data):
                       for r in sorted(ranges, key=itemgetter('minimum'))])
 
 
+PROVIDERNET_STATUS_CHOICES = (
+    ('active', True),
+    ('down', False),
+    ('error', False),
+    ('unmanaged', True)
+)
+
+
 class ProviderNetworksTable(tables.DataTable):
     name = tables.Column("name", verbose_name=_("Network Name"),
                          link='horizon:admin:providernets:providernets:detail')
     status = tables.Column("status",
                            verbose_name=_("Status"),
-                           status=True)
+                           status=True,
+                           status_choices=PROVIDERNET_STATUS_CHOICES)
     type = tables.Column("type", verbose_name=_("Type"))
     mtu = tables.Column("mtu", verbose_name=_("MTU"))
     ranges = tables.Column(transform=_format_providernet_ranges,
