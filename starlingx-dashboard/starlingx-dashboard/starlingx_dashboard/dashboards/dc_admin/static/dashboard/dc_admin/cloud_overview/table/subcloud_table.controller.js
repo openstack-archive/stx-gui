@@ -287,6 +287,12 @@
     var generateConfigSchema  = {
       type: "object",
       properties: {
+        "pxe-subnet": {
+          type: "string",
+          title: "PXE Subnet",},
+        "management-vlan": {
+          type: "number",
+          title: "Management VLAN",},
         "management-interface-port": {
           type: "string",
           title: "Management Interface Port",},
