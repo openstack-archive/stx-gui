@@ -13,6 +13,7 @@ from compiler.ast import flatten
 import netaddr
 
 from cgtsclient import exc
+from django.conf import settings
 from django.core.urlresolvers import reverse  # noqa
 from django import shortcuts
 from django.utils.safestring import mark_safe
@@ -419,16 +420,19 @@ class AddInterface(forms.SelfHandlingForm):
 
         providernet_choices = []
         providernet_filtered = []
-        providernet_flat = None
-        providernets = neutron.provider_network_list(self.request)
-        for provider in providernets:
-            label = "{} (mtu={})".format(provider.name, provider.mtu)
-            providernet = (str(provider.name), label)
-            providernet_choices.append(providernet)
-            if provider.name not in used_providernets:
-                providernet_filtered.append(providernet)
-            if provider.type == 'flat':
-                providernet_flat = providernet
+        if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
+                and getattr(settings, 'DC_MODE', False):
+            nt_choices = self.fields['ifclass'].choices
+            self.fields['ifclass'].choices = [i for i in nt_choices if
+                                              i[0] != 'data']
+        else:
+            providernets = neutron.provider_network_list(self.request)
+            for provider in providernets:
+                label = "{} (mtu={})".format(provider.name, provider.mtu)
+                providernet = (str(provider.name), label)
+                providernet_choices.append(providernet)
+                if provider.name not in used_providernets:
+                    providernet_filtered.append(providernet)
 
         self.fields['providernetworks_data'].choices = providernet_filtered
         if (type(self) is UpdateInterface):
@@ -714,6 +718,11 @@ class UpdateInterface(AddInterface):
             choices_list = ['platform', 'data']
 
         choices_list = flatten(choices_list)
+
+        if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
+                and getattr(settings, 'DC_MODE', False):
+            # Data is not available when in RegionOne of SystemController
+            choices_list.remove('data')
 
         for choice in choices_list:
             if choice not in used_choices:
