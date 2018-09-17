@@ -13,6 +13,7 @@ import cpu_functions.utils as icpu_utils
 from cgtsclient.common import constants
 from cgtsclient import exc
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _  # noqa
 from django.views.decorators.debug import sensitive_variables  # noqa
 
@@ -209,6 +210,13 @@ class AddHostInfoAction(workflows.Action):
                 PERSONALITY_CHOICE_CONTROLLER
             self.fields['personality'].widget.attrs['disabled'] = 'disabled'
 
+        # Remove compute personality if in DC mode and region
+        if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
+                and getattr(settings, 'DC_MODE', False):
+            self.fields['personality'].choices = \
+                [choice for choice in self.fields['personality'].choices
+                 if choice[0] != stx_api.sysinv.PERSONALITY_COMPUTE]
+
     def clean(self):
         cleaned_data = super(AddHostInfoAction, self).clean()
         return cleaned_data
@@ -309,6 +317,13 @@ class UpdateHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICE_CONTROLLER
             self.fields['personality'].widget.attrs['disabled'] = 'disabled'
+
+        # Remove compute personality if in DC mode and region
+        if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
+                and getattr(settings, 'DC_MODE', False):
+            self.fields['personality'].choices = \
+                [choice for choice in self.fields['personality'].choices
+                 if choice[0] != stx_api.sysinv.PERSONALITY_COMPUTE]
 
         # hostname cannot be modified once it is set
         if self.initial['hostname']:
