@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014-2015 Wind River Systems, Inc.
+# Copyright (c) 2014-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -15,7 +15,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
-from starlingx_dashboard import api
+from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
 
