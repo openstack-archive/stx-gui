@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Wind River Systems, Inc.
+# Copyright (c) 2017-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -8,6 +8,9 @@
 from django.utils.translation import ugettext_lazy as _
 
 import horizon
+
+# Load the api rest services into Horizon
+import starlingx_dashboard.api.rest  # noqa
 
 
 class DCAdmin(horizon.Dashboard):
