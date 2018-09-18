@@ -21,8 +21,6 @@ from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.system_config.forms \
     import CreateSDNController
 from starlingx_dashboard.dashboards.admin.system_config.forms \
-    import EditPipeline
-from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdatecDNS
 from starlingx_dashboard.dashboards.admin.system_config.forms \
     import UpdatecEXT_OAM
@@ -450,41 +448,3 @@ class UpdateSDNControllerView(forms.ModalFormView):
                 'transport': controller.transport,
                 'state': controller.state}
         return data
-
-
-######################################################
-#           Pipeline/PM Views                        #
-######################################################
-class UpdatePipelineView(forms.ModalFormView):
-    form_class = EditPipeline
-    template_name = 'admin/system_config/edit.html'
-    success_url = reverse_lazy('horizon:admin:system_config:index')
-
-    def get_context_data(self, **kwargs):
-        context = super(UpdatePipelineView, self).get_context_data(**kwargs)
-        context['pipeline_name'] = self.kwargs['pipeline_name']
-        return context
-
-    def get_initial(self):
-        pipeline = None
-        try:
-            target_pipeline = self.kwargs['pipeline_name']
-            pipelines = api.ceilometer.pipeline_list(self.request)
-            for p in pipelines:
-                if p.name == target_pipeline:
-                    pipeline = p
-                    break
-        except Exception:
-            exceptions.handle(self.request,
-                              _("Unable to retrieve host data."))
-
-        if pipeline is None:
-            exceptions.handle(self.request,
-                              _("Unable to retrieve host data."))
-
-        return {'pipeline_name': pipeline.name,
-                'compress': pipeline.compress,
-                'max_bytes': pipeline.max_bytes,
-                'backup_count': pipeline.backup_count,
-                'location': pipeline.location,
-                'enabled': pipeline.enabled}

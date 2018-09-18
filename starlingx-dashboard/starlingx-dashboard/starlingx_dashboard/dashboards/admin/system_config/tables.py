@@ -458,38 +458,3 @@ class SDNControllerTable(tables.DataTable):
         table_actions = (CreateSDNController, DeleteSDNController,
                          SDNControllerFilterAction)
         row_actions = (EditSDNController, DeleteSDNController)
-
-
-###########################################################
-#                   Pipeline                              #
-###########################################################
-class ChangeCeilometerPipeline(tables.LinkAction):
-    name = "update_defaults"
-    verbose_name = _("Update Settings")
-    url = "horizon:admin:system_config:update"
-    classes = ("ajax-modal", "btn-edit")
-
-    # def get_link_url(self, pipeline):
-    # step = 'update_group_members'
-    # #base_url = reverse(self.url, args=[name])
-    # param = urlencode({"step": step})
-    # return "?".join([base_url, param])
-
-
-class CeilometerPipelinesTable(tables.DataTable):
-    name = tables.Column("name", verbose_name=_('Name'))
-    location = tables.Column("location", verbose_name=_('Location'))
-    max_bytes = tables.Column('max_bytes', verbose_name=_('Max Bytes'))
-    backup_count = tables.Column('backup_count',
-                                 verbose_name=_('Backup Count'))
-    compress = tables.Column('compress', verbose_name=_('Compress'))
-    enabled = tables.Column("enabled", verbose_name=_('Enabled'))
-
-    def get_object_id(self, obj):
-        return "%s" % (obj.name,)
-
-    class Meta(object):
-        name = "ceilometer_pipelines"
-        verbose_name = _("Pipelines")
-        row_actions = (ChangeCeilometerPipeline, )
-        multi_select = False
