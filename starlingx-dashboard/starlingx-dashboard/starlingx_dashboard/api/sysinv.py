@@ -97,10 +97,6 @@ USER_PARTITION_PHYS_VOL = constants.USER_PARTITION_PHYSICAL_VOLUME
 PARTITION_STATUS_MSG = constants.PARTITION_STATUS_MSG
 PARTITION_IN_USE_STATUS = constants.PARTITION_IN_USE_STATUS
 
-# Host Personality Sub-Types
-PERSONALITY_SUBTYPE_CEPH_BACKING = 'ceph-backing'
-PERSONALITY_SUBTYPE_CEPH_CACHING = 'ceph-caching'
-
 # The default size of a stor's journal. This should be the same value as
 # journal_default_size from sysinv.conf.
 JOURNAL_DEFAULT_SIZE = 1024
@@ -802,7 +798,7 @@ def host_sensorgroup_unsuppress(request, sensorgroup_id):
 class Host(base.APIResourceWrapper):
     """Wrapper for Inventory Hosts"""
 
-    _attrs = ['id', 'uuid', 'hostname', 'personality', 'pers_subtype',
+    _attrs = ['id', 'uuid', 'hostname', 'personality',
               'subfunctions', 'subfunction_oper', 'subfunction_avail',
               'location', 'serialid', 'operational', 'administrative',
               'invprovision', 'peers',
@@ -864,11 +860,6 @@ class Host(base.APIResourceWrapper):
         (constants.INSTALL_STATE_COMPLETED, _("Completed")),
     )
 
-    SUBTYPE_CHOICES = (
-        (PERSONALITY_SUBTYPE_CEPH_BACKING, _("CEPH backing")),
-        (PERSONALITY_SUBTYPE_CEPH_CACHING, _("CEPH caching")),
-    )
-
     def __init__(self, apiresource):
         super(Host, self).__init__(apiresource)
         self._personality = self.personality
@@ -884,7 +875,6 @@ class Host(base.APIResourceWrapper):
         self._availability = self.availability
         self._capabilities = self.capabilities
         self._ttys_dcd = self.ttys_dcd
-        self._pers_subtype = self.capabilities.get('pers_subtype', "")
         self.patch_current = "N/A"
         self.requires_reboot = "N/A"
         self.allow_insvc_patching = True
@@ -994,11 +984,6 @@ class Host(base.APIResourceWrapper):
     def patch_state(self):
         return self._get_display_value(self.PATCH_STATE_DISPLAY_CHOICES,
                                        self._patch_state)
-
-    @property
-    def pers_subtype(self):
-        return self._get_display_value(self.SUBTYPE_CHOICES,
-                                       self._pers_subtype)
 
     @property
     def install_state(self):

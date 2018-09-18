@@ -12,10 +12,6 @@
     <dt>{% trans "Subfunctions" %}</dt>
     <dd>{{ host.subfunctions|join:", " |title }}</dd>
     {% endif %}
-    {% if host.pers_subtype and host.personality != 'Compute' %}
-    <dt>{% trans "Personality Sub-Type" %}</dt>
-    <dd>{{ host.pers_subtype }}</dd>
-    {% endif %}
     {% if host.peers %}
     <dt>{% trans "Replication Group" %}</dt>
     <dd>{{ host.peers }}</dd>
