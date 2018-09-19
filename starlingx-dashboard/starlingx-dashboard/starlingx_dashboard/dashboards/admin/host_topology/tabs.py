@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import tabs
+from openstack_dashboard import api as api
 
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.host_topology import \
