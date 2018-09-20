@@ -869,17 +869,15 @@ class UpdateInterface(AddInterface):
                 data['networks_to_add'] = unicode(",".join(data['networks_to_add']))
             else:
                 del data['networks_to_add']
-            interface_networks_to_remove = data['interface_networks_to_remove']
-            del data['interface_networks_to_remove']
+            if data['interface_networks_to_remove']:
+                data['interface_networks_to_remove'] = unicode(
+                        ",".join(data['interface_networks_to_remove']))
+            else:
+                del data['interface_networks_to_remove']
 
             interface = sysinv.host_interface_update(request,
                                                      interface_id,
                                                      **data)
-
-            # Remove old networks from the interface
-            if interface_networks_to_remove:
-                for n in interface_networks_to_remove:
-                    sysinv.interface_network_remove(self.request, n)
 
             msg = _('Interface "%s" was'
                     ' successfully updated.') % data['ifname']
