@@ -16,7 +16,6 @@
 
 from starlingx_dashboard.api import base
 from starlingx_dashboard.api import dc_manager
-from starlingx_dashboard.api import iservice
 from starlingx_dashboard.api import neutron
 from starlingx_dashboard.api import nova
 from starlingx_dashboard.api import fm
@@ -28,7 +27,6 @@ from starlingx_dashboard.api import patch
 __all__ = [
     "base",
     "dc_manager",
-    "iservice",
     "neutron",
     "nova",
     "patch",
