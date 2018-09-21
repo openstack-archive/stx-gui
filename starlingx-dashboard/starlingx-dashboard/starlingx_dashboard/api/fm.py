@@ -257,7 +257,7 @@ def event_suppression_list(request):
 
 def event_suppression_update(request, event_suppression_uuid, **kwargs):
     patch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         patch.append(dict(path='/' + key, value=value, op='replace'))
     return fmclient(request)\
         .event_suppression.update(event_suppression_uuid, patch)

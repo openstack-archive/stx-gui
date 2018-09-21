@@ -666,7 +666,7 @@ class UpdateInterface(AddInterface):
             network_choice_dict = dict(network_choices)
             initial_networks = []
             for i in interface_networks:
-                for uuid, name in network_choice_dict.iteritems():
+                for uuid, name in network_choice_dict.items():
                     if i.network_uuid == uuid:
                         initial_networks.append(uuid)
 

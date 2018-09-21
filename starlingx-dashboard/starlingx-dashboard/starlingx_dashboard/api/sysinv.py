@@ -373,7 +373,7 @@ def host_disk_partition_create(request, **kwargs):
 
 def host_disk_partition_update(request, partition_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
 
     partition = cgtsclient(request).partition.update(partition_id, mypatch)
@@ -509,7 +509,7 @@ def host_sensor_create(request, **kwargs):
 def host_sensor_update(request, sensor_id, **kwargs):
     LOG.debug("sensor_update(): sensor_id=%s, kwargs=%s", sensor_id, kwargs)
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).isensor.update(sensor_id, mypatch)
 
@@ -769,7 +769,7 @@ def host_sensorgroup_update(request, sensorgroup_id, **kwargs):
     LOG.debug("sensorgroup_update(): sensorgroup_id=%s, kwargs=%s",
               sensorgroup_id, kwargs)
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).isensorgroup.update(sensorgroup_id, mypatch)
 
@@ -1015,7 +1015,7 @@ def system_get(request):
 def system_update(request, system_id, **kwargs):
     LOG.debug("system_update(): system_id=%s, kwargs=%s", system_id, kwargs)
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).isystem.update(system_id, mypatch)
 
@@ -1029,7 +1029,7 @@ def host_create(request, **kwargs):
 def host_update(request, host_id, **kwargs):
     LOG.debug("host_update(): host_id=%s, kwargs=%s", host_id, kwargs)
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).ihost.update(host_id, mypatch)
 
@@ -1136,7 +1136,7 @@ def dns_update(request, dns_id, **kwargs):
     LOG.debug("dns_update(): dns_id=%s, kwargs=%s", dns_id, kwargs)
     mypatch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         if key == 'nameservers' and not value:
             value = 'NC'
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
@@ -1174,7 +1174,7 @@ def ntp_update(request, ntp_id, **kwargs):
     LOG.debug("ntp_update(): ntp_id=%s, kwargs=%s", ntp_id, kwargs)
     mypatch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         if key == 'ntpservers' and not value:
             value = 'NC'
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
@@ -1213,7 +1213,7 @@ def ptp_update(request, ptp_id, **kwargs):
     LOG.debug("ptp_update(): ptp_id=%s, kwargs=%s", ptp_id, kwargs)
     mypatch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
 
     return cgtsclient(request).ptp.update(ptp_id, mypatch)
@@ -1307,7 +1307,7 @@ def extoam_update(request, extoam_id, **kwargs):
     mypatch = []
     # print "\nThis is the dns_id: ", dns_id, "\n"
     # print "\nThese are the values in sysinv dns_update: ", kwargs, "\n"
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).iextoam.update(extoam_id, mypatch)
 
@@ -1629,7 +1629,7 @@ def storfs_update(request, controller_fs_id, **kwargs):
 
     my_patch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         my_patch.append(dict(path='/' + key, value=value,
                              op='replace'))
 
@@ -1641,7 +1641,7 @@ def storfs_update_many(request, system_uuid, **kwargs):
 
     patch_list = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         patch = []
         patch.append({'op': 'replace', 'path': '/name', 'value': key})
         patch.append({'op': 'replace', 'path': '/size', 'value': value})
@@ -1656,7 +1656,7 @@ def ceph_mon_update(request, ceph_mon_id, **kwargs):
 
     my_patch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         my_patch.append(dict(path='/' + key, value=value,
                              op='replace'))
 
@@ -1668,7 +1668,7 @@ def storpool_update(request, storage_ceph_id, **kwargs):
 
     my_patch = []
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         my_patch.append(dict(path='/' + key, value=value,
                              op='replace'))
 
@@ -1825,7 +1825,7 @@ def host_cpus_modify(request, host_uuid,
 
 def host_cpu_update(request, cpu_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).icpu.update(cpu_id, mypatch)
 
@@ -1844,7 +1844,7 @@ def host_memory_get(request, memory_id):
 
 def host_memory_update(request, memory_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).imemory.update(memory_id, mypatch)
 
@@ -1863,7 +1863,7 @@ def host_port_get(request, port_id):
 
 def host_port_update(request, port_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).ethernet_port.update(port_id, mypatch)
 
@@ -1903,7 +1903,7 @@ def host_stor_delete(request, stor_id):
 
 def host_stor_update(request, stor_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
 
     stor = cgtsclient(request).istor.update(stor_id, mypatch)
@@ -1954,7 +1954,7 @@ def host_interface_create(request, **kwargs):
 
 def host_interface_update(request, interface_id, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).iinterface.update(interface_id, mypatch)
 
@@ -2097,7 +2097,7 @@ def address_pool_delete(request, address_pool_uuid):
 
 def address_pool_update(request, address_pool_uuid, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).address_pool.update(address_pool_uuid, mypatch)
 
@@ -2375,7 +2375,7 @@ def host_device_get(request, device_uuid):
 
 def host_device_update(request, device_uuid, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).pci_device.update(device_uuid, mypatch)
 
@@ -2484,7 +2484,7 @@ def sdn_controller_create(request, **kwargs):
 
 def sdn_controller_update(request, uuid, **kwargs):
     mypatch = []
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         mypatch.append(dict(path='/' + key, value=value, op='replace'))
     return cgtsclient(request).sdn_controller.update(uuid, mypatch)
 

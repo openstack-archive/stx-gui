@@ -309,7 +309,7 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
             cpudata = {}
             sharedcpudata = {}
             platformcpudata = {}
-            for key, val in data.iteritems():
+            for key, val in data.items():
                 if 'num_cores_on_processor' in key or 'function' in key:
                     if key not in self.fields:
                         cpudata[key] = val
