@@ -61,7 +61,7 @@ class UpdateView(forms.ModalFormView):
     def get_initial(self):
         device = self._get_object()
         enabled = device.enabled
-        if isinstance(enabled, basestring):
+        if isinstance(enabled, str):
             if enabled.lower() == 'false':
                 enabled = False
             elif enabled.lower() == 'true':
