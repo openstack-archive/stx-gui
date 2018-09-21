@@ -484,15 +484,9 @@ class AddInterface(forms.SelfHandlingForm):
     def clean(self):
         cleaned_data = super(AddInterface, self).clean()
         ifclass = cleaned_data.get('ifclass', 'none')
-        networks = cleaned_data.get('networks', [])
 
         if ifclass != 'platform':
             cleaned_data['networks'] = []
-
-        if ifclass == 'platform' and not networks:
-            raise forms.ValidationError(_(
-                "You must assign a network when "
-                "creating a platform interface."))
 
         if ifclass != 'data':
             cleaned_data.pop('ipv4_mode', None)
