@@ -590,7 +590,7 @@ class HostsStorageFilterAction(tables.FilterAction):
                 return True
             return False
 
-        return filter(comp, hosts)
+        return list(filter(comp, hosts))
 
 
 class HostsComputeFilterAction(tables.FilterAction):
@@ -603,7 +603,7 @@ class HostsComputeFilterAction(tables.FilterAction):
                 return True
             return False
 
-        return filter(comp, hosts)
+        return list(filter(comp, hosts))
 
 
 def get_install_percent(cell):
@@ -675,10 +675,10 @@ def get_task_or_status(host):
         patch_state = ""
 
     return _("%s") % "<br />".join(
-        filter(None, [task_or_status,
+        [_f for _f in [task_or_status,
                       patch_current,
                       reboot_required,
-                      patch_state]))
+                      patch_state] if _f])
 
 
 TASK_STATE_CHOICES = (

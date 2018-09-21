@@ -505,15 +505,12 @@ class AddInterface(forms.SelfHandlingForm):
             cleaned_data.pop('ipv6_pool', None)
 
         if ifclass == 'data':
-            providernetworks = filter(
-                None, cleaned_data.get('providernetworks_data', []))
+            providernetworks = [_f for _f in cleaned_data.get('providernetworks_data', []) if _f]
         elif ifclass == 'pci-passthrough':
-            providernetworks = filter(None, cleaned_data.get(
-                'providernetworks_pci', []))
+            providernetworks = [_f for _f in cleaned_data.get(
+                'providernetworks_pci', []) if _f]
         elif ifclass == 'pci-sriov':
-            providernetworks = filter(
-                None,
-                cleaned_data.get('providernetworks_sriov', []))
+            providernetworks = [_f for _f in cleaned_data.get('providernetworks_sriov', []) if _f]
         else:
             providernetworks = []
 

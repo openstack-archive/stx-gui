@@ -55,9 +55,9 @@ class DetailPatchView(views.HorizonTemplateView):
             try:
                 patch = stx_api.patch.get_patch(self.request, patch_id)
                 patch.contents_display = "%s" % "\n".join(
-                    filter(None, patch.contents))
+                    [_f for _f in patch.contents if _f])
                 patch.requires_display = "%s" % "\n".join(
-                    filter(None, patch.requires))
+                    [_f for _f in patch.requires if _f])
             except Exception:
                 redirect = reverse('horizon:admin:software_management:index')
                 exceptions.handle(self.request,

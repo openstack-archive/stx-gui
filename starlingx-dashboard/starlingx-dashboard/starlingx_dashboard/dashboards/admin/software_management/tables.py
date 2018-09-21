@@ -152,7 +152,7 @@ class PatchFilterAction(tables.FilterAction):
                 return True
             return False
 
-        return filter(comp, patches)
+        return list(filter(comp, patches))
 
 
 class PatchesTable(tables.DataTable):
