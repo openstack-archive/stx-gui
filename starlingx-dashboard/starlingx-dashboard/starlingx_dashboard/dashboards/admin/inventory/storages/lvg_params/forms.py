@@ -313,9 +313,9 @@ class EditParam(ParamForm):
 
         # ensure checkboxes receive a boolean value as the initial value
         # so that they don't get an override value attribute
-        if isinstance(value, basestring) and value.lower() == 'false':
+        if isinstance(value, str) and value.lower() == 'false':
             value = False
-        elif isinstance(value, basestring) and value.lower() == 'true':
+        elif isinstance(value, str) and value.lower() == 'true':
             value = True
 
         # setup initial values for the fields based on the defined key/value
