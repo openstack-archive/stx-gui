@@ -1,0 +1,8 @@
+Code-Review+2: Kristine Bujold <Kristine.Bujold@windriver.com>
+Workflow+1: Kristine Bujold <Kristine.Bujold@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 24 Sep 2018 22:08:12 +0000
+Reviewed-on: https://review.openstack.org/604856
+Project: openstack/stx-gui
+Branch: refs/heads/master
