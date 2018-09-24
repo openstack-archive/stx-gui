@@ -46,7 +46,7 @@ class CreateMemoryProfile(tables.LinkAction):
 
     def allowed(self, request, datum):
         host = self.table.kwargs['host']
-        if host.subfunctions and 'compute' not in host.subfunctions:
+        if host.subfunctions and 'storage' in host.subfunctions:
             return False
         return (host.invprovision == 'provisioned' and
                 not stx_api.sysinv.is_system_mode_simplex(request))
