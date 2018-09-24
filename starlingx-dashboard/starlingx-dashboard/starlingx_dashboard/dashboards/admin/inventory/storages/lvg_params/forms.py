@@ -233,7 +233,7 @@ class ParamForm(ParamMixin, forms.SelfHandlingForm):
                sysinv.LVG_NOVA_BACKING_LVM:
                 inst_size_mib = sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_MIB
                 inst_size_gib = sysinv.LVG_NOVA_PARAM_INSTANCES_SIZE_GIB
-                size_gib = float(caps.get(inst_size_mib)) / 1024
+                size_gib = int(caps.get(inst_size_mib)) / 1024
                 self.fields[inst_size_gib] = \
                     forms.IntegerField(
                         label=_("Instances Logical Volume Size"),
