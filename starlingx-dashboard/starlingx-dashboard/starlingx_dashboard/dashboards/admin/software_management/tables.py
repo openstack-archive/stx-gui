@@ -68,7 +68,7 @@ class RemovePatch(tables.BatchAction):
     def action_present(count):
         return ungettext_lazy(
             u"Remove Patch",
-            u"Remove Patchs",
+            u"Remove Patches",
             count
         )
 
