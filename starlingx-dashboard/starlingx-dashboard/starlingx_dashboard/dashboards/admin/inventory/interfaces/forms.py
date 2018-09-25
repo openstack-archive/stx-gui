@@ -561,7 +561,6 @@ class AddInterface(forms.SelfHandlingForm):
                     network_ids.append(str(network.id))
                     network_types.append(network.type)
                 data['networks'] = network_ids
-            data['networktype'] = data['ifclass']
 
             if any(network_type in ['mgmt', 'infra', 'oam']
                    for network_type in network_types):
@@ -775,7 +774,6 @@ class UpdateInterface(AddInterface):
         else:
             for i in interface_networks:
                 interface_networks_to_remove.append(i.uuid)
-        cleaned_data['networktype'] = ifclass
         cleaned_data['networks'] = network_ids
         cleaned_data['networks_to_add'] = networks_to_add
         cleaned_data['interface_networks_to_remove'] = interface_networks_to_remove
