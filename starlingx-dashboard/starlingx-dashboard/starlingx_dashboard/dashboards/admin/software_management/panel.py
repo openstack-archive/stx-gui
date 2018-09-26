@@ -19,11 +19,15 @@ class SoftwareManagement(horizon.Panel):
     def allowed(self, context):
         if not base.is_service_enabled(context['request'], 'platform'):
             return False
+        elif context['request'].user.services_region == 'SystemController':
+            return False
         else:
             return super(SoftwareManagement, self).allowed(context)
 
     def nav(self, context):
         if not base.is_service_enabled(context['request'], 'platform'):
+            return False
+        elif context['request'].user.services_region == 'SystemController':
             return False
         else:
             return True

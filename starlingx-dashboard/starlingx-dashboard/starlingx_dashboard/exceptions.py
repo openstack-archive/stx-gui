@@ -12,6 +12,7 @@
 #    under the License.
 
 from cgtsclient import exc as cgtsclient
+from dcmanagerclient import exceptions as dcmanagerclient
 
 
 UNAUTHORIZED = (
@@ -28,4 +29,5 @@ RECOVERABLE = (
     cgtsclient.HTTPBadRequest,
     cgtsclient.HTTPConflict,
     cgtsclient.CommunicationError,
+    dcmanagerclient.APIException
 )
