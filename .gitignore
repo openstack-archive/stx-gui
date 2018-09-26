@@ -29,3 +29,6 @@ tags
 ghostdriver.log
 .testrepository
 .idea
+
+# Sphinx documentation
+doc/build
