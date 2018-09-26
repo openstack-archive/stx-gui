@@ -1,0 +1,29 @@
+{% load i18n sizeformat %}
+
+{% block main %}
+
+  <div class="info row-fluid detail">
+    <h3>{% trans "Cloud Patch Strategy" %}</h3>
+    <hr class="header_rule">
+    <div id="cloud-patch-strategy-detail">
+
+      {% if strategy %}
+        <dl class="dl-horizontal-wide">
+          <dt>{% trans "Subcloud Apply Type" %}</dt>
+          <dd>{{ strategy.subcloud_apply_type }}</dd>
+          <dt>{% trans "Max Parallel Subclouds" %}</dt>
+          <dd>{{ strategy.max_parallel_subclouds }}</dd>
+          <dt>{% trans "Stop On Failure" %}</dt>
+          <dd>{{ strategy.stop_on_failure }}</dd>
+          <dt>{% trans "State" %}</dt>
+          <dd>{{ strategy.state }}</dd>
+        </dl>
+      {% else %}
+        {% trans "No Strategy has been created" %}
+      {% endif %}
+    </div>
+  </div>
+  <br/>
+  {{ cloudpatchsteps_table.render }}
+
+{% endblock %}

@@ -42,6 +42,7 @@ class IndexView(tabs.TabbedTableView):
 
 class DetailPatchView(views.HorizonTemplateView):
     template_name = 'admin/software_management/_detail_patches.html'
+    failure_url = 'horizon:admin:software_management:index'
     page_title = 'Patch Detail'
 
     def get_context_data(self, **kwargs):
@@ -59,7 +60,7 @@ class DetailPatchView(views.HorizonTemplateView):
                 patch.requires_display = "%s" % "\n".join(
                     filter(None, patch.requires))
             except Exception:
-                redirect = reverse('horizon:admin:software_management:index')
+                redirect = reverse(self.failure_url)
                 exceptions.handle(self.request,
                                   _('Unable to retrieve details for '
                                     'patch "%s".') % patch_id,

@@ -1,0 +1,25 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_action %}{% url 'horizon:dc_admin:dc_software_management:createcloudpatchstrategy' %}{% endblock %}
+
+{% block modal-header %}{% trans "Create Patch Strategy" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>
+        {% trans "Create a strategy to specify how the clouds should be patched." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Patch Strategy" %}" />
+{% endblock %}
