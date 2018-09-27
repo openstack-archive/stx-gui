@@ -36,7 +36,7 @@ def provider_network_get(request, providernet_id):
 class DeviceUsage(base.APIResourceWrapper):
     """Wrapper for Inventory Device Usage
     """
-    _attrs = ['device_id', 'device_name', 'vendor_id',
+    _attrs = ['device_id', 'device_name', 'vendor_id', 'class_id',
               'pci_vfs_configured', 'pci_vfs_used',
               'pci_pfs_configured', 'pci_pfs_used']
 
@@ -51,7 +51,7 @@ def get_device_usage(request, device_id):
         raise nova_exceptions.ResourceNotFound
 
     usage = wrs_pci.PciDevicesManager(novaclient(request)).list(
-        device_id=device_id)
+        device=device_id)
     return DeviceUsage(usage[0])
 
 
