@@ -10,18 +10,22 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 #
-# Copyright (c) 2017 Wind River Systems, Inc.
+# Copyright (c) 2017-2018 Wind River Systems, Inc.
 #
 
 import logging
 
 from dcmanagerclient.api.v1 import client
+from dcmanagerclient.exceptions import APIException
 
 from horizon.utils.memoized import memoized  # noqa
 
 from openstack_dashboard.api import base
 
 LOG = logging.getLogger(__name__)
+
+
+DEFAULT_CONFIG_NAME = "all clouds default"
 
 
 @memoized
@@ -77,3 +81,83 @@ def subcloud_delete(request, subcloud_id):
 def subcloud_generate_config(request, subcloud_id, data):
     return dcmanagerclient(request).subcloud_manager.generate_config_subcloud(
         subcloud_id, **data)
+
+
+class Strategy(base.APIResourceWrapper):
+    _attrs = ['subcloud_apply_type', 'max_parallel_subclouds',
+              'stop_on_failure', 'state', 'created_at', 'updated_at']
+
+
+def get_strategy(request):
+    try:
+        response = dcmanagerclient(request).sw_update_manager.\
+            patch_strategy_detail()
+    except APIException as e:
+        if e.error_code == 404:
+            return None
+        else:
+            raise e
+
+    if response and len(response):
+        return Strategy(response[0])
+
+
+def strategy_create(request, data):
+    response = dcmanagerclient(request).sw_update_manager.\
+        create_patch_strategy(**data)
+    return Strategy(response)
+
+
+def strategy_apply(request):
+    return dcmanagerclient(request).sw_update_manager.apply_patch_strategy()
+
+
+def strategy_abort(request):
+    return dcmanagerclient(request).sw_update_manager.abort_patch_strategy()
+
+
+def strategy_delete(request):
+    return dcmanagerclient(request).sw_update_manager.delete_patch_strategy()
+
+
+class Step(base.APIResourceWrapper):
+    _attrs = ['cloud', 'stage', 'state', 'details', 'started_at',
+              'finished_at']
+
+
+def step_list(request):
+    response = dcmanagerclient(request).strategy_step_manager.\
+        list_strategy_steps()
+    return [Step(step) for step in response]
+
+
+class Config(base.APIResourceWrapper):
+    _attrs = ['cloud', 'storage_apply_type', 'compute_apply_type',
+              'max_parallel_computes', 'alarm_restriction_type',
+              'default_instance_action']
+
+
+def config_list(request):
+    response = dcmanagerclient(request).sw_update_options_manager.\
+        sw_update_options_list()
+    return [Config(config) for config in response]
+
+
+def config_update(request, subcloud, data):
+    response = dcmanagerclient(request).sw_update_options_manager.\
+        sw_update_options_update(subcloud, **data)
+    return Config(response)
+
+
+def config_delete(request, subcloud):
+    return dcmanagerclient(request).sw_update_options_manager.\
+        sw_update_options_delete(subcloud)
+
+
+def config_get(request, subcloud):
+    if subcloud == DEFAULT_CONFIG_NAME:
+        subcloud = None
+    response = dcmanagerclient(request).sw_update_options_manager.\
+        sw_update_options_detail(subcloud)
+    if response and len(response):
+        return Config(response[0])

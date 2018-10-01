@@ -1,0 +1,28 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_action %}{% url 'horizon:dc_admin:dc_software_management:editcloudpatchconfig' subcloud %}{% endblock %}
+
+{% block modal-header %}{% trans "Edit Cloud Patch Configuration" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>
+        {% trans "Edit a configuration for a specific subcloud to use the specified patch strategy settings instead of the defaults values." %}
+    </p>
+    <p>
+        {% trans "Note: for Simplex systems, the default instance action must be set to stop-start (since migration is not possible on a single-node system)." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">Cancel</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Edit Cloud Patching Configuration" %}" />
+{% endblock %}
