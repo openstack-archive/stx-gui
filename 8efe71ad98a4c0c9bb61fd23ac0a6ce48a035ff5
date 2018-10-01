@@ -1,0 +1,9 @@
+Code-Review+2: Saul Wold <sgw@linux.intel.com>
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Workflow+1: Tyler Smith <tyler.smith@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 01 Oct 2018 14:10:11 +0000
+Reviewed-on: https://review.openstack.org/606169
+Project: openstack/stx-gui
+Branch: refs/heads/r/2018.10
