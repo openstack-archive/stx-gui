@@ -97,9 +97,9 @@ USER_PARTITION_PHYS_VOL = constants.USER_PARTITION_PHYSICAL_VOLUME
 PARTITION_STATUS_MSG = constants.PARTITION_STATUS_MSG
 PARTITION_IN_USE_STATUS = constants.PARTITION_IN_USE_STATUS
 
-# The default size of a stor's journal. This should be the same value as
-# journal_default_size from sysinv.conf.
-JOURNAL_DEFAULT_SIZE = 1024
+# The default size of a stor's journal in GB. This should be the
+# same value as journal_default_size from sysinv.conf.
+JOURNAL_DEFAULT_SIZE = 1
 
 # Platform configuration
 PLATFORM_CONFIGURATION = '/etc/platform/platform.conf'

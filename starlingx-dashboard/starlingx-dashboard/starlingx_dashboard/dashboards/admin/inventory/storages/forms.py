@@ -72,11 +72,11 @@ class EditStorageVolume(forms.SelfHandlingForm):
                                           help_text=_("Assign disk to journal "
                                                       "storage volume."))
 
-    journal_size_mib = forms.CharField(label=_("Journal Size MiB"),
+    journal_size_gib = forms.CharField(label=_("Journal Size GiB"),
                                        required=False,
                                        initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
                                        widget=forms.TextInput(attrs={
-                                           'data-slug': 'journal_size_mib'}),
+                                           'data-slug': 'journal_size_gib'}),
                                        help_text=_("Journal's size for the "
                                                    "current OSD."))
 
@@ -127,10 +127,11 @@ class EditStorageVolume(forms.SelfHandlingForm):
                 data['journal_location'] = journal
             else:
                 data['journal_location'] = None
-                data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE
+                data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
 
             del data['journal_locations']
             del data['id']
+            del data['journal_size_gib']
 
             # The REST API takes care of updating the stor journal information.
             stor = stx_api.sysinv.host_stor_update(request, stor_id, **data)
@@ -215,14 +216,14 @@ class AddStorageVolume(forms.SelfHandlingForm):
                                                       "journal storage "
                                                       "volume."))
 
-    journal_size_mib = forms.CharField(label=_("Journal Size MiB"),
+    journal_size_gib = forms.CharField(label=_("Journal Size GiB"),
                                        required=False,
                                        initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
                                        widget=forms.TextInput(attrs={
                                            'class': 'switched',
                                            'data-switch-on': 'function',
                                            'data-function-osd':
-                                               _("Journal Size MiB")}),
+                                               _("Journal Size GiB")}),
                                        help_text=_("Journal's size for the"
                                                    "current OSD."))
 
@@ -285,7 +286,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
                 journal_tuple_list.append((j.uuid, "%s " % j.uuid))
         else:
             journal_tuple_list.append((None, "Collocated with OSD"))
-            self.fields['journal_size_mib'].widget.attrs['disabled'] = \
+            self.fields['journal_size_gib'].widget.attrs['disabled'] = \
                 'disabled'
 
         self.fields['disks'].choices = disk_tuple_list
@@ -320,7 +321,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
             data['journal_location'] = journal
         else:
             data['journal_location'] = None
-            data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE
+            data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
 
         try:
             del data['host_id']
@@ -328,6 +329,7 @@ class AddStorageVolume(forms.SelfHandlingForm):
             del data['tiers']
             del data['hostname']
             del data['journal_locations']
+            del data['journal_size_gib']
 
             # The REST API takes care of creating the stor
             # and updating disk.foristorid
