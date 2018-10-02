@@ -13,14 +13,14 @@
     </fieldset>
     <script>
     /* Obtain the journal elements. */
-    var journal_size_box = document.getElementById("id_journal_size_mib");
+    var journal_size_box = document.getElementById("id_journal_size_gib");
     var journal_locations_dropdown = document.getElementById("id_journal_locations");
 
     function select_journal_size() {
         /* If the chosen journal location is collocated, make the journal
         size textbox readonly. */
         if (journal_locations_dropdown[journal_locations_dropdown.selectedIndex].text === "Collocated with OSD") {
-            journal_size_box.value = "1024"
+            journal_size_box.value = "1"
             journal_size_box.readOnly = true
         }
         else
