@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2016 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -144,9 +144,7 @@ class AddInterface(forms.SelfHandlingForm):
     INTERFACE_CLASS_CHOICES = (
         ('none', _("none")),
         ('platform', _("platform")),
-        ('data', _("data")),
-        ('pci-sriov', _("pci-sriov")),
-        ('pci-passthrough', _("pci-passthrough")),
+        ('data', _("data"))
     )
 
     INTERFACE_TYPE_CHOICES = (
