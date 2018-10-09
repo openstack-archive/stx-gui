@@ -197,13 +197,12 @@ class AddHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # All-in-one system, personality can only be controller.
+        # All-in-one system, personality can be controller or compute.
         systems = stx_api.sysinv.system_list(request)
         system_type = systems[0].to_dict().get('system_type')
         if system_type == constants.TS_AIO:
             self.fields['personality'].choices = \
-                PERSONALITY_CHOICE_CONTROLLER
-            self.fields['personality'].widget.attrs['disabled'] = 'disabled'
+                PERSONALITY_CHOICES_WITHOUT_STORAGE
 
         # Remove compute personality if in DC mode and region
         if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
@@ -294,14 +293,13 @@ class UpdateHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # All-in-one system, personality can only be controller.
+        # All-in-one system, personality can only be controller or compute.
         systems = stx_api.sysinv.system_list(request)
         self.system_mode = systems[0].to_dict().get('system_mode')
         self.system_type = systems[0].to_dict().get('system_type')
         if self.system_type == constants.TS_AIO:
             self.fields['personality'].choices = \
-                PERSONALITY_CHOICE_CONTROLLER
-            self.fields['personality'].widget.attrs['disabled'] = 'disabled'
+                PERSONALITY_CHOICES_WITHOUT_STORAGE
 
         # Remove compute personality if in DC mode and region
         if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
