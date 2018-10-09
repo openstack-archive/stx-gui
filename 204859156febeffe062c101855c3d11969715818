@@ -1,0 +1,10 @@
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Code-Review+1: Vieri <15050873171@163.com>
+Code-Review+2: Lachlan Plant <lachlan.plant@windriver.com>
+Workflow+1: Tyler Smith <tyler.smith@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 09 Oct 2018 14:16:24 +0000
+Reviewed-on: https://review.openstack.org/608219
+Project: openstack/stx-gui
+Branch: refs/heads/master
