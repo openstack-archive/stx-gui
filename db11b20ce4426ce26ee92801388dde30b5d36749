@@ -1,0 +1,9 @@
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Workflow+1: Dean Troyer <dtroyer@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 10 Oct 2018 21:51:38 +0000
+Reviewed-on: https://review.openstack.org/609482
+Project: openstack/stx-gui
+Branch: refs/heads/r/2018.10
