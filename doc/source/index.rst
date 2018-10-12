@@ -7,6 +7,14 @@ StarlingX Horizon plugins for new StarlingX services
    :maxdepth: 2
    :caption: Contents:
 
+Release Notes
+-------------
+
+.. toctree::
+   :maxdepth: 1
+
+   Release Notes <https://docs.starlingx.io/releasenotes/stx-gui>
+
 Links
 =====
 
