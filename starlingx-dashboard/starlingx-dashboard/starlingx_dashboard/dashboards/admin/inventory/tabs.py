@@ -528,9 +528,9 @@ class InterfacesTab(tabs.TableTab):
                 i.host_id = host.id
 
                 port_data = \
-                    map(list, list(zip(*[(p.get_port_display_name(),
-                        p.neighbours) for p in host.ports if
-                        i.uuid == p.interface_uuid])))
+                    list(map(list, zip(*[(p.get_port_display_name(),
+                                          p.neighbours) for p in host.ports if
+                             i.uuid == p.interface_uuid])))
 
                 if port_data:
                     # Default interface
