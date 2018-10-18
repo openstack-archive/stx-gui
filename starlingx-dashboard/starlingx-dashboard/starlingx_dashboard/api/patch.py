@@ -14,7 +14,10 @@
 #
 
 import logging
-import urlparse
+try:
+    from urlparse import urlparse
+except ModuleNotFoundError:
+    from urllib.parse import urlparse
 
 import requests
 
@@ -93,7 +96,7 @@ class Client(object):
 
 
 def _patching_client(request):
-    o = urlparse.urlparse(base.url_for(request, 'patching'))
+    o = urlparse(base.url_for(request, 'patching'))
     url = "://".join((o.scheme, o.netloc))
     return Client("v1", url, token_id=request.user.token.id)
 

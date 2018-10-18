@@ -14,7 +14,10 @@
 #
 
 import logging
-import urlparse
+try:
+    from urlparse import urlparse
+except ModuleNotFoundError:
+    from urllib.parse import urlparse
 
 from openstack_dashboard.api import base
 
@@ -59,7 +62,7 @@ class Client(object):
 
 
 def _sw_update_client(request):
-    o = urlparse.urlparse(base.url_for(request, 'nfv'))
+    o = urlparse(base.url_for(request, 'nfv'))
     url = "://".join((o.scheme, o.netloc))
     return Client(url, token_id=request.user.token.id)
 
