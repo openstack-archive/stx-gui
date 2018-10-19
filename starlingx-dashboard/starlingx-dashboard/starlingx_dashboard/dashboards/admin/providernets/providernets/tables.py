@@ -37,16 +37,16 @@ class DeleteProviderNetwork(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Provider Network",
-            u"Delete Provider Networks",
+            "Delete Provider Network",
+            "Delete Provider Networks",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Provider Network",
-            u"Deleted Provider Networks",
+            "Deleted Provider Network",
+            "Deleted Provider Networks",
             count
         )
 

@@ -188,9 +188,9 @@ class UpdateSensorGroup(forms.SelfHandlingForm):
         # host_uuid = data['host_uuid']
         if data['audit_interval_group']:
             data['audit_interval_group'] = \
-                unicode(data['audit_interval_group'])
+                str(data['audit_interval_group'])
         else:
-            data['audit_interval_group'] = unicode("0")
+            data['audit_interval_group'] = str("0")
 
         del data['id']
 

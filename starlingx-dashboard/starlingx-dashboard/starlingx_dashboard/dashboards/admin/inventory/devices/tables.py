@@ -58,7 +58,7 @@ class DevicesTable(tables.DataTable):
                             verbose_name=_('Enabled'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.name
@@ -85,7 +85,7 @@ class UsageTable(tables.DataTable):
                                  verbose_name=_('VFs used'))
 
     def get_object_id(self, datum):
-        return unicode(datum.id)
+        return str(datum.id)
 
     def get_object_display(self, datum):
         return datum.host
@@ -132,7 +132,7 @@ class DeviceUsageTable(tables.DataTable):
                                  verbose_name=_("VFs used"))
 
     def get_object_id(self, datum):
-        return unicode(datum.device_id)
+        return str(datum.device_id)
 
     def get_object_display(self, datum):
         return datum.device_name

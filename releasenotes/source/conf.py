@@ -191,8 +191,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'stx-guireleasenotes.tex', u'stx-gui Release Notes',
-     u'StarlingX', 'manual'),
+    ('index', 'stx-guireleasenotes.tex', 'stx-gui Release Notes',
+     'StarlingX', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -221,8 +221,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'stx-guireleasenotes', u'stx-gui Release Notes',
-     [u'StarlingX'], 1)
+    ('index', 'stx-guireleasenotes', 'stx-gui Release Notes',
+     ['StarlingX'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -235,8 +235,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'stx-guiReleaseNotes', u'stx-gui Release Notes',
-     u'StarlingX', 'stx-guireleasenotes',
+    ('index', 'stx-guiReleaseNotes', 'stx-gui Release Notes',
+     'StarlingX', 'stx-guireleasenotes',
      'StarlingX Horizon plugins for new StarlingX services',
      'Miscellaneous'),
 ]

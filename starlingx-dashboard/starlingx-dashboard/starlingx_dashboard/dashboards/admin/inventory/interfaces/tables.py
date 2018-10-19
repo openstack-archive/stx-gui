@@ -25,16 +25,16 @@ class DeleteInterface(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Interface",
-            u"Delete Interfaces",
+            "Delete Interface",
+            "Delete Interfaces",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Interface",
-            u"Deleted Interfaces",
+            "Deleted Interface",
+            "Deleted Interfaces",
             count
         )
 
@@ -203,7 +203,7 @@ class InterfacesTable(tables.DataTable):
         super(InterfacesTable, self).__init__(*args, **kwargs)
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.ifname

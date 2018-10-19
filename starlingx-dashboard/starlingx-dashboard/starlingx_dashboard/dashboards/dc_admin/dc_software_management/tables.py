@@ -271,16 +271,16 @@ class DeleteCloudPatchConfig(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Cloud Patching Configuration",
-            u"Delete Cloud Patching Configurations",
+            "Delete Cloud Patching Configuration",
+            "Delete Cloud Patching Configurations",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Cloud Patching Configuration",
-            u"Deleted Cloud Patching Configurations",
+            "Deleted Cloud Patching Configuration",
+            "Deleted Cloud Patching Configurations",
             count
         )
 

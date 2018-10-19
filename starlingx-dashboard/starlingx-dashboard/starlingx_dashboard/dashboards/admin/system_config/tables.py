@@ -63,7 +63,7 @@ class SystemsTable(tables.DataTable):
                                    verbose_name=_("Version"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.name
@@ -141,7 +141,7 @@ class cDNSTable(tables.DataTable):
         verbose_name=_('DNS Server 3 IP'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.uuid
@@ -183,7 +183,7 @@ class cNTPTable(tables.DataTable):
         verbose_name=_('NTP Server 3 Address'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.uuid
@@ -221,7 +221,7 @@ class cPTPTable(tables.DataTable):
         verbose_name=_('PTP Delay Mechanism'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.uuid
@@ -285,7 +285,7 @@ class cOAMTable(tables.DataTable):
         verbose_name=_('OAM End IP'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.uuid
@@ -323,7 +323,7 @@ class iStorageTable(tables.DataTable):
         verbose_name=_('Size (GiB)'))
 
     def get_object_id(self, datum):
-        return unicode(datum.name)
+        return str(datum.name)
 
     def get_object_display(self, datum):
         return
@@ -365,7 +365,7 @@ class iStoragePoolsTable(tables.DataTable):
         verbose_name=_('Ceph total space (GiB)'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return ("%s" % datum.tier_name)
@@ -385,16 +385,16 @@ class DeleteSDNController(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete SDN Controller",
-            u"Delete SDN Controllers",
+            "Delete SDN Controller",
+            "Delete SDN Controllers",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted SDN Controller",
-            u"Deleted SDN Controllers",
+            "Deleted SDN Controller",
+            "Deleted SDN Controllers",
             count
         )
 
@@ -447,7 +447,7 @@ class SDNControllerTable(tables.DataTable):
                          verbose_name=_("Remote Port"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.uuid

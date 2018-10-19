@@ -42,16 +42,16 @@ class DeleteServerGroup(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Server Group",
-            u"Delete Server Groups",
+            "Delete Server Group",
+            "Delete Server Groups",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Server Group",
-            u"Deleted Server Groups",
+            "Deleted Server Group",
+            "Deleted Server Groups",
             count
         )
 
@@ -241,16 +241,16 @@ class DetachServerGroup(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Detach Server Group",
-            u"Detached Server Groups",
+            "Detach Server Group",
+            "Detached Server Groups",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Detaching Server Group",
-            u"Detaching Server Groups",
+            "Detaching Server Group",
+            "Detaching Server Groups",
             count
         )
 

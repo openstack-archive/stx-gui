@@ -105,16 +105,16 @@ class SuppressSensorGroup(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Suppress SensorGroup",
-            u"Suppress SensorGroups",
+            "Suppress SensorGroup",
+            "Suppress SensorGroups",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Suppressed SensorGroup",
-            u"Suppressed SensorGroups",
+            "Suppressed SensorGroup",
+            "Suppressed SensorGroups",
             count
         )
 
@@ -140,16 +140,16 @@ class UnSuppressSensorGroup(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"UnSuppress SensorGroup",
-            u"UnSuppress SensorGroups",
+            "UnSuppress SensorGroup",
+            "UnSuppress SensorGroups",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"UnSuppressed SensorGroup",
-            u"UnSuppressed SensorGroups",
+            "UnSuppressed SensorGroup",
+            "UnSuppressed SensorGroups",
             count
         )
 
@@ -233,7 +233,7 @@ class SensorGroupsTable(tables.DataTable):
                                            "are suppressed."))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.sensorgroupname
@@ -291,16 +291,16 @@ class SuppressSensor(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Suppress Sensor",
-            u"Suppress Sensors",
+            "Suppress Sensor",
+            "Suppress Sensors",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Suppressed Sensor",
-            u"Suppressed Sensors",
+            "Suppressed Sensor",
+            "Suppressed Sensors",
             count
         )
 
@@ -325,16 +325,16 @@ class UnSuppressSensor(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"UnSuppress Sensor",
-            u"UnSuppress Sensors",
+            "UnSuppress Sensor",
+            "UnSuppress Sensors",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"UnSuppressed Sensor",
-            u"UnSuppressed Sensors",
+            "UnSuppressed Sensor",
+            "UnSuppressed Sensors",
             count
         )
 
@@ -383,7 +383,7 @@ class SensorsTable(tables.DataTable):
                                     verbose_name=('Sensor Group Name'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.sensorname

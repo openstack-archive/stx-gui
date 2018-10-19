@@ -80,7 +80,7 @@ class MemorysTable(tables.DataTable):
                             verbose_name=_('VM Pages'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     class Meta(object):
         name = "memorys"

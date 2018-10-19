@@ -864,19 +864,19 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
                     STORAGE_VALUES = {}
                     if hasattr(storage_config, 'cinder_pool_gib'):
                         STORAGE_VALUES['cinder_pool_gib'] = \
-                            unicode(storage_config._cinder_pool_gib)
+                            str(storage_config._cinder_pool_gib)
                     if hasattr(storage_config, 'glance_pool_gib'):
                         STORAGE_VALUES['glance_pool_gib'] = \
-                            unicode(storage_config._glance_pool_gib)
+                            str(storage_config._glance_pool_gib)
                     if hasattr(storage_config, 'ephemeral_pool_gib'):
                         STORAGE_VALUES['ephemeral_pool_gib'] = \
-                            unicode(storage_config._ephemeral_pool_gib)
+                            str(storage_config._ephemeral_pool_gib)
                     if hasattr(storage_config, 'object_pool_gib'):
                         STORAGE_VALUES['object_pool_gib'] = \
-                            unicode(storage_config._object_pool_gib)
+                            str(storage_config._object_pool_gib)
 
                     for key in data.keys():
-                        data[key] = unicode(data[key])
+                        data[key] = str(data[key])
 
                     LOG.info("initial send_to_sysinv=%s", send_to_sysinv)
                     if len(STORAGE_VALUES) != len(data):

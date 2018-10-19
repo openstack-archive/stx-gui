@@ -69,7 +69,7 @@ class CpuFunctionsTable(tables.DataTable):
                                  verbose_name=_('Processor Logical Cores'))
 
     def get_object_id(self, datum):
-        return unicode(datum.allocated_function)
+        return str(datum.allocated_function)
 
     class Meta(object):
         name = "cpufunctions"

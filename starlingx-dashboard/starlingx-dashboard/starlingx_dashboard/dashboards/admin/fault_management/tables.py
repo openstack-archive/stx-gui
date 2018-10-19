@@ -40,10 +40,10 @@ SUPPRESSION_STATUS_CHOICES = (
 )
 SUPPRESSION_STATUS_DISPLAY_CHOICES = (
     ("suppressed", pgettext_lazy("Indicates this type of alarm \
-    is suppressed", u"suppressed")),
+    is suppressed", "suppressed")),
     ("unsuppressed", pgettext_lazy("Indicates this type of alarm \
-    is unsuppressed", u"unsuppressed")),
-    ("None", pgettext_lazy("Indicates an event type", u"None")),
+    is unsuppressed", "unsuppressed")),
+    ("None", pgettext_lazy("Indicates an event type", "None")),
 )
 
 
@@ -172,16 +172,16 @@ class SuppressEvent(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Suppress Event",
-            u"Suppress Event",
+            "Suppress Event",
+            "Suppress Event",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Events suppressed for Alarm ID",
-            u"Events suppressed for Alarm ID",
+            "Events suppressed for Alarm ID",
+            "Events suppressed for Alarm ID",
             count
         )
 
@@ -212,16 +212,16 @@ class UnsuppressEvent(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Unsuppress Event",
-            u"Unsuppress Event",
+            "Unsuppress Event",
+            "Unsuppress Event",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Events unsuppressed for Alarm ID",
-            u"Events unsuppressed for Alarm ID",
+            "Events unsuppressed for Alarm ID",
+            "Events unsuppressed for Alarm ID",
             count
         )
 
