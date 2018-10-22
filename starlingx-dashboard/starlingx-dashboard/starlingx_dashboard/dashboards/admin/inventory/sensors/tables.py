@@ -362,7 +362,7 @@ class SensorsFilterAction(tables.FilterAction):
                 return True
             return False
 
-        return filter(comp, sensors)
+        return list(filter(comp, sensors))
 
 
 class SensorsTable(tables.DataTable):
