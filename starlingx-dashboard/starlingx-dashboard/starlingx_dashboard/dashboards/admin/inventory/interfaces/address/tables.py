@@ -32,16 +32,16 @@ class DeleteAddress(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Address",
-            u"Delete Addresses",
+            "Delete Address",
+            "Delete Addresses",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Address",
-            u"Deleted Addresses",
+            "Deleted Address",
+            "Deleted Addresses",
             count
         )
 
@@ -103,7 +103,7 @@ class AddressTable(tables.DataTable):
                                verbose_name=_("DAD"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return ("%(address)s/%(prefix)s" %

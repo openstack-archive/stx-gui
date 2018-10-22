@@ -39,16 +39,16 @@ class DeleteProviderNetworkRange(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Range",
-            u"Delete Ranges",
+            "Delete Range",
+            "Delete Ranges",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Range",
-            u"Deleted Ranges",
+            "Deleted Range",
+            "Deleted Ranges",
             count
         )
 

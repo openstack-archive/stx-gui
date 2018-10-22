@@ -23,14 +23,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'stx-gui'
-copyright = u'2018, StarlingX'
-author = u'StarlingX'
+project = 'stx-gui'
+copyright = '2018, StarlingX'
+author = 'StarlingX'
 
 # The short X.Y version
-version = u''
+version = ''
 # The full version, including alpha/beta/rc tags
-release = u'0.1'
+release = '0.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -136,8 +136,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'stx-gui.tex', u'stx-gui Documentation',
-     u'StarlingX', 'manual'),
+    (master_doc, 'stx-gui.tex', 'stx-gui Documentation',
+     'StarlingX', 'manual'),
 ]
 
 
@@ -146,7 +146,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'stx-gui', u'stx-gui Documentation',
+    (master_doc, 'stx-gui', 'stx-gui Documentation',
      [author], 1)
 ]
 
@@ -157,7 +157,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'stx-gui', u'stx-gui Documentation',
+    (master_doc, 'stx-gui', 'stx-gui Documentation',
      author, 'stx-gui', 'StarlingX Horizon plugins for new StarlingX services.',
      'Miscellaneous'),
 ]

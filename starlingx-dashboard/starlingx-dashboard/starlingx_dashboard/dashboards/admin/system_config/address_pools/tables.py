@@ -30,16 +30,16 @@ class DeleteAddressPool(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Address Pool",
-            u"Delete Address Pools",
+            "Delete Address Pool",
+            "Delete Address Pools",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Address Pool",
-            u"Deleted Address Pools",
+            "Deleted Address Pool",
+            "Deleted Address Pools",
             count
         )
 
@@ -89,7 +89,7 @@ class AddressPoolsTable(tables.DataTable):
     ranges = tables.Column(get_ranges_column, verbose_name=_("Address Ranges"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return ("%(network)s/%(prefix)s" %

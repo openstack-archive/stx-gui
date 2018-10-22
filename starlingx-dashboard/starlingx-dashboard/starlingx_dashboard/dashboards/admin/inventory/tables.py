@@ -134,16 +134,16 @@ class DeleteHost(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Host",
-            u"Delete Hosts",
+            "Delete Host",
+            "Delete Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Host",
-            u"Deleted Hosts",
+            "Deleted Host",
+            "Deleted Hosts",
             count
         )
 
@@ -164,16 +164,16 @@ class LockHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Lock Host",
-            u"Lock Hosts",
+            "Lock Host",
+            "Lock Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Locking Host",
-            u"Locking Hosts",
+            "Locking Host",
+            "Locking Hosts",
             count
         )
 
@@ -197,16 +197,16 @@ class ForceLockHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Force Lock Host",
-            u"Force Lock Hosts",
+            "Force Lock Host",
+            "Force Lock Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Forced Lock Host",
-            u"Forced Lock Hosts",
+            "Forced Lock Host",
+            "Forced Lock Hosts",
             count
         )
 
@@ -264,16 +264,16 @@ class UnlockHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Unlock Host",
-            u"Unlock Hosts",
+            "Unlock Host",
+            "Unlock Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Unlocked Host",
-            u"Unlocked Hosts",
+            "Unlocked Host",
+            "Unlocked Hosts",
             count
         )
 
@@ -298,16 +298,16 @@ class ForceUnlockHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Force Unlock Host",
-            u"Force Unlock Hosts",
+            "Force Unlock Host",
+            "Force Unlock Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Forced Unlock Host",
-            u"Forced Unlock Hosts",
+            "Forced Unlock Host",
+            "Forced Unlock Hosts",
             count
         )
 
@@ -337,16 +337,16 @@ class PowerOnHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Power On Host",
-            u"Power On Hosts",
+            "Power On Host",
+            "Power On Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Powered On Host",
-            u"Powered On Hosts",
+            "Powered On Host",
+            "Powered On Hosts",
             count
         )
 
@@ -368,16 +368,16 @@ class PowerOffHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Power Off Host",
-            u"Power Off Hosts",
+            "Power Off Host",
+            "Power Off Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Powered Off Host",
-            u"Powered Off Hosts",
+            "Powered Off Host",
+            "Powered Off Hosts",
             count
         )
 
@@ -400,16 +400,16 @@ class ResetHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Reset Host",
-            u"Reset Hosts",
+            "Reset Host",
+            "Reset Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Reset Host",
-            u"Reset Hosts",
+            "Reset Host",
+            "Reset Hosts",
             count
         )
 
@@ -431,16 +431,16 @@ class RebootHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Reboot Host",
-            u"Reboot Hosts",
+            "Reboot Host",
+            "Reboot Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Rebooted Host",
-            u"Rebooted Hosts",
+            "Rebooted Host",
+            "Rebooted Hosts",
             count
         )
 
@@ -461,16 +461,16 @@ class ReinstallHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Reinstall Host",
-            u"Reinstall Hosts",
+            "Reinstall Host",
+            "Reinstall Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Reinstalled Host",
-            u"Reinstalled Hosts",
+            "Reinstalled Host",
+            "Reinstalled Hosts",
             count
         )
 
@@ -491,16 +491,16 @@ class SwactHost(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Swact Host",
-            u"Swact Hosts",
+            "Swact Host",
+            "Swact Hosts",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Swact Initiated Host",
-            u"Swact Initiated Hosts",
+            "Swact Initiated Host",
+            "Swact Initiated Hosts",
             count
         )
 
@@ -521,16 +521,16 @@ class PatchInstallAsync(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Install Patch",
-            u"Install Patches",
+            "Install Patch",
+            "Install Patches",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Installed Patch",
-            u"Installed Patches",
+            "Installed Patch",
+            "Installed Patches",
             count
         )
 
@@ -664,7 +664,7 @@ def get_task_or_status(host):
         patch_current = "Not Patch Current"
 
     if host._patch_state != patch_constants.PATCH_AGENT_STATE_IDLE:
-        patch_state = unicode(host.patch_state)
+        patch_state = str(host.patch_state)
         if host._patch_state == patch_constants.PATCH_AGENT_STATE_INSTALLING:
             # Clear the other patch status fields
             patch_current = ""
@@ -740,7 +740,7 @@ class Hosts(tables.DataTable):
                          status_choices=TASK_STATE_CHOICES)
 
     def get_object_id(self, datum):
-        return unicode(datum.id)
+        return str(datum.id)
 
     def get_object_display(self, datum):
         return datum.hostname
@@ -823,16 +823,16 @@ class DeleteInterfaceProfile(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Interface Profile",
-            u"Delete Interface Profiles",
+            "Delete Interface Profile",
+            "Delete Interface Profiles",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Interface Profile",
-            u"Deleted Interface Profiles",
+            "Deleted Interface Profile",
+            "Deleted Interface Profiles",
             count
         )
 
@@ -871,7 +871,7 @@ class InterfaceProfilesTable(tables.DataTable):
                                verbose_name=_("Interface Configuration"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.profilename
@@ -888,16 +888,16 @@ class DeleteCpuProfile(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Cpu Profile",
-            u"Delete Cpu Profiles",
+            "Delete Cpu Profile",
+            "Delete Cpu Profiles",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Cpu Profile",
-            u"Deleted Cpu Profiles",
+            "Deleted Cpu Profile",
+            "Deleted Cpu Profiles",
             count
         )
 
@@ -926,7 +926,7 @@ class CpuProfilesTable(tables.DataTable):
                                    verbose_name=_("CPU Assignments"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.profilename
@@ -944,16 +944,16 @@ class DeleteDiskProfile(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Storage Profile",
-            u"Delete Storage Profiles",
+            "Delete Storage Profile",
+            "Delete Storage Profiles",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Storage Profile",
-            u"Deleted Storage Profiles",
+            "Deleted Storage Profile",
+            "Deleted Storage Profiles",
             count
         )
 
@@ -1022,7 +1022,7 @@ class DiskProfilesTable(tables.DataTable):
                         verbose_name=_('Observations'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.profilename
@@ -1040,16 +1040,16 @@ class DeleteMemoryProfile(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Memory Profile",
-            u"Delete Memory Profiles",
+            "Delete Memory Profile",
+            "Delete Memory Profiles",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Memory Profile",
-            u"Deleted Memory Profiles",
+            "Deleted Memory Profile",
+            "Deleted Memory Profiles",
             count
         )
 
@@ -1089,7 +1089,7 @@ class MemoryProfilesTable(tables.DataTable):
                            verbose_name=_("Memory Assignments"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.profilename

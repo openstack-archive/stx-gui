@@ -549,7 +549,7 @@ class AddInterface(forms.SelfHandlingForm):
             if not data['vlan_id'] or data['iftype'] != 'vlan':
                 del data['vlan_id']
             else:
-                data['vlan_id'] = unicode(data['vlan_id'])
+                data['vlan_id'] = str(data['vlan_id'])
 
             network_ids = []
             network_types = []
@@ -564,7 +564,7 @@ class AddInterface(forms.SelfHandlingForm):
                    for network_type in network_types):
                 del data['imtu']
             else:
-                data['imtu'] = unicode(data['imtu'])
+                data['imtu'] = str(data['imtu'])
 
             if data['iftype'] != 'ae':
                 del data['txhashpolicy']
@@ -798,9 +798,9 @@ class UpdateInterface(AddInterface):
             if not data['vlan_id'] or data['iftype'] != 'vlan':
                 del data['vlan_id']
             else:
-                data['vlan_id'] = unicode(data['vlan_id'])
+                data['vlan_id'] = str(data['vlan_id'])
 
-            data['imtu'] = unicode(data['imtu'])
+            data['imtu'] = str(data['imtu'])
 
             if data['iftype'] != 'ae':
                 del data['txhashpolicy']
@@ -826,7 +826,7 @@ class UpdateInterface(AddInterface):
                 del data['providernetworks']
 
             if 'sriov_numvfs' in data:
-                data['sriov_numvfs'] = unicode(data['sriov_numvfs'])
+                data['sriov_numvfs'] = str(data['sriov_numvfs'])
 
             # Explicitly set iftype when user selects pci-pt or pci-sriov
             ifclass = \
@@ -852,15 +852,15 @@ class UpdateInterface(AddInterface):
                 del data['sriov_numvfs']
 
             if data['networks']:
-                data['networks'] = unicode(",".join(data['networks']))
+                data['networks'] = str(",".join(data['networks']))
             else:
                 del data['networks']
             if data['networks_to_add']:
-                data['networks_to_add'] = unicode(",".join(data['networks_to_add']))
+                data['networks_to_add'] = str(",".join(data['networks_to_add']))
             else:
                 del data['networks_to_add']
             if data['interface_networks_to_remove']:
-                data['interface_networks_to_remove'] = unicode(
+                data['interface_networks_to_remove'] = str(
                     ",".join(data['interface_networks_to_remove']))
             else:
                 del data['interface_networks_to_remove']

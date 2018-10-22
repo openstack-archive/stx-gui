@@ -34,16 +34,16 @@ class ApplyPatch(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Apply Patch",
-            u"Apply Patches",
+            "Apply Patch",
+            "Apply Patches",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Applied Patch",
-            u"Applied Patches",
+            "Applied Patch",
+            "Applied Patches",
             count
         )
 
@@ -67,16 +67,16 @@ class RemovePatch(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Remove Patch",
-            u"Remove Patches",
+            "Remove Patch",
+            "Remove Patches",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Removed Patch",
-            u"Removed Patches",
+            "Removed Patch",
+            "Removed Patches",
             count
         )
 
@@ -108,16 +108,16 @@ class DeletePatch(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Patch",
-            u"Delete Patches",
+            "Delete Patch",
+            "Delete Patches",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Patch",
-            u"Deleted Patches",
+            "Deleted Patch",
+            "Deleted Patches",
             count
         )
 
@@ -404,16 +404,16 @@ class ApplyStage(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Apply Stage",
-            u"Apply Stages",
+            "Apply Stage",
+            "Apply Stages",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Applied Stage",
-            u"Applied Stages",
+            "Applied Stage",
+            "Applied Stages",
             count
         )
 
@@ -473,16 +473,16 @@ class AbortStage(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Abort Stage",
-            u"Abort Stages",
+            "Abort Stage",
+            "Abort Stages",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Aborted Stage",
-            u"Aborted Stages",
+            "Aborted Stage",
+            "Aborted Stages",
             count
         )
 

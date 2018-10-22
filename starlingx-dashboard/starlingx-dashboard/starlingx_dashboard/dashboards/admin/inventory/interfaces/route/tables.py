@@ -30,16 +30,16 @@ class DeleteRoute(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Route",
-            u"Delete Routes",
+            "Delete Route",
+            "Delete Routes",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Route",
-            u"Deleted Routes",
+            "Deleted Route",
+            "Deleted Routes",
             count
         )
 
@@ -96,7 +96,7 @@ class RouteTable(tables.DataTable):
                            verbose_name=_("Metric"))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return ("%(network)s/%(prefix)s via %(gateway)s" %

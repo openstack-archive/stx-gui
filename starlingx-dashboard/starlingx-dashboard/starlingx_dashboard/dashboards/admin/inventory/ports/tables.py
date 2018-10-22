@@ -75,7 +75,7 @@ class PortsTable(tables.DataTable):
                                verbose_name=_('Device Type'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         return datum.get_port_display_name()

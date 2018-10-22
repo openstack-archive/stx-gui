@@ -95,16 +95,16 @@ class DeletePartition(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Partition",
-            u"Delete Partitions",
+            "Delete Partition",
+            "Delete Partitions",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Partition",
-            u"Deleted Partitions",
+            "Deleted Partition",
+            "Deleted Partitions",
             count
         )
 
@@ -251,7 +251,7 @@ class DisksTable(tables.DataTable):
                               verbose_name=('Model'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     class Meta(object):
         name = "disks"
@@ -300,16 +300,16 @@ class DeleteStor(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Journal",
-            u"Delete Journals",
+            "Delete Journal",
+            "Delete Journals",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Journal",
-            u"Deleted Journals",
+            "Deleted Journal",
+            "Deleted Journals",
             count
         )
 
@@ -348,7 +348,7 @@ class StorageVolumesTable(tables.DataTable):
                                      verbose_name=('Journal Location'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     class Meta(object):
         name = "storagevolumes"
@@ -413,16 +413,16 @@ class RemoveLocalVolumeGroup(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Local Volume Group",
-            u"Delete Local Volume Groups",
+            "Delete Local Volume Group",
+            "Delete Local Volume Groups",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Local Volume Group",
-            u"Deleted Local Volume Groups",
+            "Deleted Local Volume Group",
+            "Deleted Local Volume Groups",
             count
         )
 
@@ -472,13 +472,13 @@ class LocalVolumeGroupsTable(tables.DataTable):
                         verbose_name=('Current Logical Volumes'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         msg = datum.uuid
         if datum.lvm_vg_name:
             msg += " (%s)" % datum.lvm_vg_name
-        return unicode(msg)
+        return str(msg)
 
     class Meta(object):
         name = "localvolumegroups"
@@ -534,16 +534,16 @@ class RemovePhysicalVolume(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Physical Volume",
-            u"Delete Physical Volumes",
+            "Delete Physical Volume",
+            "Delete Physical Volumes",
             count
         )
 
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Deleted Physical Volume",
-            u"Deleted Physical Volumes",
+            "Deleted Physical Volume",
+            "Deleted Physical Volumes",
             count
         )
 
@@ -591,13 +591,13 @@ class PhysicalVolumesTable(tables.DataTable):
                                 verbose_name=('LVM Volume Group Name'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         msg = datum.uuid
         if datum.lvm_pv_name:
             msg += " (%s)" % datum.lvm_pv_name
-        return unicode(msg)
+        return str(msg)
 
     class Meta(object):
         name = "physicalvolumes"
@@ -627,13 +627,13 @@ class PartitionsTable(tables.DataTable):
                            verbose_name=('Status'))
 
     def get_object_id(self, datum):
-        return unicode(datum.uuid)
+        return str(datum.uuid)
 
     def get_object_display(self, datum):
         msg = datum.uuid
         if datum.device_path:
             msg += " (%s)" % datum.device_path
-        return unicode(msg)
+        return str(msg)
 
     class Meta(object):
         name = "partitions"
