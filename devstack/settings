@@ -1,0 +1,9 @@
+#!/bin/bash
+# Devstack settings
+
+# Defaults
+# --------
+
+
+######### Plugin Specific ##########
+enable_service stx-gui
