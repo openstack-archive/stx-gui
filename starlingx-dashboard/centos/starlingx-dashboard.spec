@@ -11,6 +11,8 @@ Source0: %{name}-%{version}.tar.gz
 
 BuildRequires:  python-setuptools
 BuildRequires:  python-pbr
+BuildRequires:  python2-pip
+BuildRequires:  python2-wheel
 Requires:       openstack-dashboard
 
 BuildArch:      noarch
@@ -29,10 +31,13 @@ starlingx specific horizon plugins
 %build
 export PBR_VERSION=%{version}
 %py2_build
+%py2_build_wheel
 
 %install
 export PBR_VERSION=%{version}
 %py2_install
+mkdir -p $RPM_BUILD_ROOT/wheels
+install -m 644 dist/*.whl $RPM_BUILD_ROOT/wheels/
 
 install -d -m 755 %{buildroot}%{enabled_dir}
 install -p -D -m 755 %{py_pkg_name}/enabled/* %{buildroot}%{enabled_dir}
@@ -46,3 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %{python2_sitelib}/%{py_pkg_name}-%{version}*.egg-info
 
 %{enabled_dir}
+
+%package wheels
+Summary: %{module_name} wheels
+
+%description wheels
+Contains python wheels for %{module_name}
+
+%files wheels
+/wheels/*
