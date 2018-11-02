@@ -30,13 +30,13 @@ class ServerGroups(horizon.Panel):
     permissions = ('openstack.services.platform',)
 
     def allowed(self, context):
-        if not base.is_service_enabled(context['request'], 'platform'):
+        if not base.is_service_enabled(context['request'], 'compute'):
             return False
         else:
             return super(ServerGroups, self).allowed(context)
 
     def nav(self, context):
-        if not base.is_service_enabled(context['request'], 'platform'):
+        if not base.is_service_enabled(context['request'], 'compute'):
             return False
         else:
             return True
