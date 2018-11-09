@@ -691,6 +691,12 @@ class UpdateiStorage(forms.SelfHandlingForm):
         help_text=_("Glance image storage space in gibibytes."),
         min_value=0)
 
+    gnocchi = forms.IntegerField(
+        label=_("Gnocchi Storage (GiB)"),
+        required=True,
+        help_text=_("Gnocchi storage space in gibibytes."),
+        min_value=0)
+
     backup = forms.IntegerField(
         label=_("Backup Storage (GiB)"),
         required=True,
