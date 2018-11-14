@@ -10,7 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # Copyright 2012 Nebula, Inc.
 # All rights reserved.
@@ -30,7 +30,6 @@ from horizon import messages
 
 from openstack_dashboard import api
 from openstack_dashboard.api import cinder
-from openstack_dashboard.api import nova
 from openstack_dashboard.dashboards.project.instances import tables
 
 from starlingx_dashboard.api import nova as stx_nova

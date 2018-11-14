@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -54,9 +54,9 @@ class DeleteProviderNetwork(tables.DeleteAction):
         try:
             stx_api.neutron.provider_network_delete(request, obj_id)
         except neutron_exceptions.NeutronClientException as e:
-            LOG.info(e.message)
+            LOG.info(str(e))
             redirect = reverse('horizon:admin:providernets:index')
-            exceptions.handle(request, e.message, redirect=redirect)
+            exceptions.handle(request, str(e), redirect=redirect)
         except Exception:
             msg = _('Failed to delete provider network %s') % obj_id
             LOG.info(msg)

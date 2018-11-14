@@ -1,5 +1,3 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
 # Copyright 2012 NEC Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -14,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2014,2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -61,8 +59,9 @@ class DeleteProviderNetworkRange(tables.DeleteAction):
         try:
             stx_api.neutron.provider_network_range_delete(request, obj_id)
         except neutron_exceptions.NeutronClientException as e:
-            LOG.info(e.message)
-            exceptions.handle(request, e.message,
+            LOG.info(str(e))
+            exceptions.handle(request,
+                              str(e),
                               redirect=self.get_redirect_url())
         except Exception:
             msg = _('Failed to delete provider network range %s') % obj_id

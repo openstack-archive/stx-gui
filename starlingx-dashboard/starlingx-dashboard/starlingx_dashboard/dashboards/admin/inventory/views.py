@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -64,7 +64,8 @@ class UpdateView(workflows.WorkflowView):
 
     def get_initial(self):
         try:
-            host = stx_api.sysinv.host_get(self.request, self.kwargs['host_id'])
+            host = stx_api.sysinv.host_get(self.request,
+                                           self.kwargs['host_id'])
         except Exception:
             exceptions.handle(self.request,
                               _("Unable to retrieve host data."))
@@ -109,8 +110,10 @@ class DetailView(tabs.TabbedTableView):
             try:
                 host = stx_api.sysinv.host_get(self.request, host_id)
 
-                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
-                host.cpus = stx_api.sysinv.host_cpu_list(self.request, host.uuid)
+                host.nodes = stx_api.sysinv.host_node_list(self.request,
+                                                           host.uuid)
+                host.cpus = stx_api.sysinv.host_cpu_list(self.request,
+                                                         host.uuid)
                 icpu_utils.restructure_host_cpu_data(host)
 
                 host.memorys = stx_api.sysinv.host_memory_list(self.request,
@@ -121,13 +124,16 @@ class DetailView(tabs.TabbedTableView):
                             m.numa_node = n.numa_node
                             break
 
-                host.ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
-                host.interfaces = stx_api.sysinv.host_interface_list(self.request,
-                                                                     host.uuid)
+                host.ports = stx_api.sysinv.host_port_list(self.request,
+                                                           host.uuid)
+                host.interfaces = stx_api.sysinv.host_interface_list(
+                    self.request, host.uuid)
                 host.devices = stx_api.sysinv.host_device_list(self.request,
                                                                host.uuid)
-                host.disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
-                host.stors = stx_api.sysinv.host_stor_list(self.request, host.uuid)
+                host.disks = stx_api.sysinv.host_disk_list(self.request,
+                                                           host.uuid)
+                host.stors = stx_api.sysinv.host_stor_list(self.request,
+                                                           host.uuid)
                 host.pvs = stx_api.sysinv.host_pv_list(self.request, host.uuid)
                 host.partitions = stx_api.sysinv.host_disk_partition_list(
                     self.request, host.uuid)
@@ -137,7 +143,8 @@ class DetailView(tabs.TabbedTableView):
                     p.status = stx_api.sysinv.PARTITION_STATUS_MSG[p.status]
 
                 host.lldpneighbours = \
-                    stx_api.sysinv.host_lldpneighbour_list(self.request, host.uuid)
+                    stx_api.sysinv.host_lldpneighbour_list(self.request,
+                                                           host.uuid)
 
                 # Set the value for neighbours field for each port in the host.
                 # This will be referenced in Interfaces table
@@ -151,7 +158,8 @@ class DetailView(tabs.TabbedTableView):
                     pv.pv_state = self._adjust_state_data(pv.pv_state,
                                                           pv.lvm_vg_name)
 
-                host.lvgs = stx_api.sysinv.host_lvg_list(self.request, host.uuid,
+                host.lvgs = stx_api.sysinv.host_lvg_list(self.request,
+                                                         host.uuid,
                                                          get_params=True)
 
                 # Adjust lvg state to be more "user friendly"

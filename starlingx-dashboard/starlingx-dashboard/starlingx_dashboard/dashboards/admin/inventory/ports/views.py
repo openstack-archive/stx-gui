@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -39,7 +39,8 @@ class UpdateView(forms.ModalFormView):
             port_id = self.kwargs['port_id']
             host_id = self.kwargs['host_id']
             try:
-                self._object = stx_api.sysinv.host_port_get(self.request, port_id)
+                self._object = stx_api.sysinv.host_port_get(self.request,
+                                                            port_id)
                 self._object.host_id = host_id
             except Exception:
                 redirect = reverse("horizon:project:networks:detail",

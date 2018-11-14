@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2015,2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -145,11 +145,11 @@ class CreateProviderNetworkRange(forms.SelfHandlingForm):
             messages.success(request, msg)
             return providernet_range
         except neutron_exceptions.NeutronClientException as e:
-            LOG.info(e.message)
+            LOG.info(str(e))
             redirect = reverse('horizon:admin:providernets:providernets:'
                                'detail',
                                args=(data['providernet_id'],))
-            exceptions.handle(request, e.message, redirect=redirect)
+            exceptions.handle(request, str(e), redirect=redirect)
         except Exception:
             msg = _('Failed to create a provider'
                     ' network range for network %s') \
@@ -236,11 +236,11 @@ class UpdateProviderNetworkRange(forms.SelfHandlingForm):
             messages.success(request, msg)
             return providernet_range
         except neutron_exceptions.NeutronClientException as e:
-            LOG.info(e.message)
+            LOG.info(str(e))
             redirect = reverse('horizon:admin:providernets:providernets:'
                                'detail',
                                args=(data['providernet_id'],))
-            exceptions.handle(request, e.message, redirect=redirect)
+            exceptions.handle(request, str(e), redirect=redirect)
         except Exception:
             msg = (_('Failed to update provider network range %s') %
                    data['providernet_range_id'])

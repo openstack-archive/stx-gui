@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -339,7 +339,8 @@ class AddMemoryProfile(forms.SelfHandlingForm):
 
         memoryProfileName = data['profilename']
         try:
-            memoryProfile = stx_api.sysinv.host_memprofile_create(request, **data)
+            memoryProfile = stx_api.sysinv.host_memprofile_create(
+                request, **data)
             msg = _('Memory Profile "%s" was successfully created.') % \
                 memoryProfileName
             LOG.debug(msg)

@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -89,7 +89,8 @@ class CreateProviderNetwork(forms.SelfHandlingForm):
                       'mtu': data['mtu'],
                       'vlan_transparent': data['vlan_transparent']}
 
-            network = stx_api.neutron.provider_network_create(request, **params)
+            network = stx_api.neutron.provider_network_create(request,
+                                                              **params)
             msg = (_('Provider network %s was successfully created.') %
                    data['name'])
             LOG.debug(msg)
@@ -97,7 +98,7 @@ class CreateProviderNetwork(forms.SelfHandlingForm):
             return network
         except neutron_exceptions.NeutronClientException as e:
             redirect = reverse('horizon:admin:providernets:index')
-            exceptions.handle(request, e.message, redirect=redirect)
+            exceptions.handle(request, str(e), redirect=redirect)
         except Exception:
             redirect = reverse('horizon:admin:providernets:index')
             msg = _('Failed to create provider network %s') % data['name']
@@ -148,7 +149,7 @@ class UpdateProviderNetwork(forms.SelfHandlingForm):
             msg = _('Failed to update provider network %s') % data['name']
             LOG.info(msg)
             redirect = reverse(self.failure_url)
-            exceptions.handle(request, e.message, redirect=redirect)
+            exceptions.handle(request, str(e), redirect=redirect)
         except Exception:
             msg = _('Failed to update provider network %s') % data['name']
             LOG.info(msg)

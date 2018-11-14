@@ -40,7 +40,8 @@ class AddDiskProfile(forms.SelfHandlingForm):
     def handle(self, request, data):
         diskProfileName = data['profilename']
         try:
-            diskProfile = stx_api.sysinv.host_diskprofile_create(request, **data)
+            diskProfile = stx_api.sysinv.host_diskprofile_create(request,
+                                                                 **data)
 
             msg = _('Storage Profile "%s" was successfully created.') \
                 % diskProfileName
@@ -72,13 +73,12 @@ class EditStorageVolume(forms.SelfHandlingForm):
                                           help_text=_("Assign disk to journal "
                                                       "storage volume."))
 
-    journal_size_gib = forms.CharField(label=_("Journal Size GiB"),
-                                       required=False,
-                                       initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
-                                       widget=forms.TextInput(attrs={
-                                           'data-slug': 'journal_size_gib'}),
-                                       help_text=_("Journal's size for the "
-                                                   "current OSD."))
+    journal_size_gib = forms.CharField(
+        label=_("Journal Size GiB"),
+        required=False,
+        initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
+        widget=forms.TextInput(attrs={'data-slug': 'journal_size_gib'}),
+        help_text=_("Journal's size for the current OSD."))
 
     failure_url = 'horizon:admin:inventory:detail'
 
@@ -127,7 +127,8 @@ class EditStorageVolume(forms.SelfHandlingForm):
                 data['journal_location'] = journal
             else:
                 data['journal_location'] = None
-                data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
+                data['journal_size_mib'] = \
+                    stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
 
             del data['journal_locations']
             del data['id']
@@ -216,16 +217,15 @@ class AddStorageVolume(forms.SelfHandlingForm):
                                                       "journal storage "
                                                       "volume."))
 
-    journal_size_gib = forms.CharField(label=_("Journal Size GiB"),
-                                       required=False,
-                                       initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
-                                       widget=forms.TextInput(attrs={
-                                           'class': 'switched',
-                                           'data-switch-on': 'function',
-                                           'data-function-osd':
-                                               _("Journal Size GiB")}),
-                                       help_text=_("Journal's size for the"
-                                                   "current OSD."))
+    journal_size_gib = forms.CharField(
+        label=_("Journal Size GiB"),
+        required=False,
+        initial=stx_api.sysinv.JOURNAL_DEFAULT_SIZE,
+        widget=forms.TextInput(attrs={
+            'class': 'switched',
+            'data-switch-on': 'function',
+            'data-function-osd': _("Journal Size GiB")}),
+        help_text=_("Journal's size for the current OSD."))
 
     tiers = forms.ChoiceField(label=_("Storage Tier"),
                               required=False,
@@ -245,7 +245,8 @@ class AddStorageVolume(forms.SelfHandlingForm):
         this_stor_uuid = 0
         host_uuid = kwargs['initial']['ihost_uuid']
 
-        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request,
+                                                        host_uuid)
         disk_tuple_list = []
         for d in avail_disk_list:
             if d.istor_uuid and d.istor_uuid != this_stor_uuid:
@@ -321,7 +322,8 @@ class AddStorageVolume(forms.SelfHandlingForm):
             data['journal_location'] = journal
         else:
             data['journal_location'] = None
-            data['journal_size_mib'] = stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
+            data['journal_size_mib'] = \
+                stx_api.sysinv.JOURNAL_DEFAULT_SIZE * 1024
 
         try:
             del data['host_id']
@@ -543,7 +545,8 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
         if stx_api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
             compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
 
-        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request,
+                                                        host_uuid)
         ilvg_list = stx_api.sysinv.host_lvg_list(self.request, host_uuid)
         partitions = stx_api.sysinv.host_disk_partition_list(self.request,
                                                              host_uuid)
@@ -558,7 +561,8 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
 
         for lvg in ilvg_list:
             if (lvg.lvm_vg_name in compatible_lvgs and
-                    lvg.vg_state in [stx_api.sysinv.LVG_ADD, stx_api.sysinv.LVG_PROV]):
+                    lvg.vg_state in [stx_api.sysinv.LVG_ADD,
+                                     stx_api.sysinv.LVG_PROV]):
                 if (lvg.lvm_vg_name == stx_api.sysinv.LVG_CINDER_VOLUMES and
                         pv_cinder_volumes):
                     continue
@@ -777,7 +781,8 @@ class CreatePartition(forms.SelfHandlingForm):
 
         # Populate disk choices.
         host_uuid = kwargs['initial']['ihost_uuid']
-        avail_disk_list = stx_api.sysinv.host_disk_list(self.request, host_uuid)
+        avail_disk_list = stx_api.sysinv.host_disk_list(self.request,
+                                                        host_uuid)
         disk_tuple_list = []
         for d in avail_disk_list:
             disk_model = d.get_model_num()
@@ -812,7 +817,8 @@ class CreatePartition(forms.SelfHandlingForm):
             del data['size_gib']
             data['type_guid'] = stx_api.sysinv.USER_PARTITION_PHYS_VOL
             # The REST API takes care of creating the partition.
-            partition = stx_api.sysinv.host_disk_partition_create(request, **data)
+            partition = stx_api.sysinv.host_disk_partition_create(request,
+                                                                  **data)
 
             msg = _('Partition was successfully created.')
             LOG.debug(msg)

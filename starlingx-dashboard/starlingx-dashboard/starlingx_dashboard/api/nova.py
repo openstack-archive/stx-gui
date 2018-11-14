@@ -8,7 +8,8 @@ from novaclient.v2 import wrs_pci
 from novaclient.v2 import wrs_providernets
 
 from openstack_dashboard.api import base
-from openstack_dashboard.api.nova import *
+from openstack_dashboard.api.nova import nova_exceptions
+from openstack_dashboard.api.nova import novaclient
 
 
 def server_group_list(request, all_projects=False):
@@ -34,8 +35,7 @@ def provider_network_get(request, providernet_id):
 
 
 class DeviceUsage(base.APIResourceWrapper):
-    """Wrapper for Inventory Device Usage
-    """
+    """Wrapper for Inventory Device Usage"""
     _attrs = ['device_id', 'device_name', 'vendor_id', 'class_id',
               'pci_vfs_configured', 'pci_vfs_used',
               'pci_pfs_configured', 'pci_pfs_used']
@@ -56,8 +56,7 @@ def get_device_usage(request, device_id):
 
 
 class DetailUsage(base.APIResourceWrapper):
-    """Wrapper for Inventory Device Usage
-    """
+    """Wrapper for Inventory Device Usage"""
     _attrs = ['host',
               'pci_vfs_configured', 'pci_vfs_used',
               'pci_pfs_configured', 'pci_pfs_used']

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -720,13 +720,16 @@ class Hosts(tables.DataTable):
         display_choices=stx_api.sysinv.Host.PERSONALITY_DISPLAY_CHOICES)
     admin = tables.Column("administrative",
                           verbose_name=_("Admin State"),
-                          display_choices=stx_api.sysinv.Host.ADMIN_DISPLAY_CHOICES)
+                          display_choices=stx_api.sysinv.
+                          Host.ADMIN_DISPLAY_CHOICES)
     oper = tables.Column("operational",
                          verbose_name=_("Operational State"),
-                         display_choices=stx_api.sysinv.Host.OPER_DISPLAY_CHOICES)
+                         display_choices=stx_api.sysinv.
+                         Host.OPER_DISPLAY_CHOICES)
     avail = tables.Column("availability",
                           verbose_name=_("Availability State"),
-                          display_choices=stx_api.sysinv.Host.AVAIL_DISPLAY_CHOICES)
+                          display_choices=stx_api.sysinv.
+                          Host.AVAIL_DISPLAY_CHOICES)
     uptime = tables.Column('boottime',
                            verbose_name=_('Uptime'),
                            filters=(timesince,),

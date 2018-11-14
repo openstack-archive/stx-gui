@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -12,8 +12,8 @@ from starlingx_dashboard.dashboards.admin.fault_management import \
     tables as fm_tables
 from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as if_tables
-from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges import \
-    tables as sr_tables
+from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
+    import tables as sr_tables
 
 LOG = logging.getLogger(__name__)
 
