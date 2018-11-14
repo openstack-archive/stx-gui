@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -101,7 +101,8 @@ class HostsTab(tabs.TableTab):
         return hosts
 
     def get_hostscontroller_data(self):
-        controllers = self.get_hosts_data(stx_api.sysinv.PERSONALITY_CONTROLLER)
+        controllers = self.get_hosts_data(
+            stx_api.sysinv.PERSONALITY_CONTROLLER)
 
         return controllers
 
@@ -543,10 +544,12 @@ class InterfacesTab(tabs.TableTab):
 
                 platform_network_names = []
                 if i.ifclass == 'platform':
-                    for interface_network in stx_api.sysinv.interface_network_list_by_interface(self.request,
-                                                                                                i.uuid):
+                    for interface_network in stx_api.sysinv.\
+                            interface_network_list_by_interface(
+                            self.request, i.uuid):
                         if str(interface_network.network_id) in i.networks:
-                            platform_network_names.append(interface_network.network_name)
+                            platform_network_names.append(
+                                interface_network.network_name)
                 i.platform_network_names = platform_network_names
 
                 if i.iftype == 'ethernet':

@@ -16,7 +16,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -24,7 +24,6 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard import api
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.fault_management import tables
 
@@ -115,9 +114,6 @@ class ActiveAlarmsTab(tabs.TableTab):
     def get_alarms_data(self):
         search_opts = {}
         # get retrieve parameters from request/session env
-        marker = \
-            self.request.GET.get(tables.AlarmsTable._meta.pagination_param,
-                                 None)
         limit = \
             self.request.GET.get(tables.AlarmsTable._meta.limit_param,
                                  None)

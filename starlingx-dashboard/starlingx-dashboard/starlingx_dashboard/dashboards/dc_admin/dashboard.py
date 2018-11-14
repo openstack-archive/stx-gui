@@ -30,4 +30,5 @@ class DCAdmin(horizon.Dashboard):
 
         return super(DCAdmin, self).allowed(context)
 
+
 horizon.register(DCAdmin)

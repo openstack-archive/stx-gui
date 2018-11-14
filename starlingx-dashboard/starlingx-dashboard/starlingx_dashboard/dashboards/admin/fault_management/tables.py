@@ -16,7 +16,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -30,7 +30,6 @@ from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import tables
 from horizon.utils import filters as utils_filters
-from openstack_dashboard import api
 from starlingx_dashboard import api as stx_api
 
 SUPPRESSION_STATUS_CHOICES = (

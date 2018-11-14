@@ -158,6 +158,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'stx-gui', 'stx-gui Documentation',
-     author, 'stx-gui', 'StarlingX Horizon plugins for new StarlingX services.',
+     author, 'stx-gui',
+     'StarlingX Horizon plugins for new StarlingX services.',
      'Miscellaneous'),
 ]

@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 from django.core.urlresolvers import NoReverseMatch
@@ -27,7 +27,6 @@ from horizon import exceptions
 from horizon import tables
 
 from openstack_dashboard import api
-from openstack_dashboard.api import nova
 from openstack_dashboard.dashboards.project.volumes.tables \
     import get_attachment_name
 from openstack_dashboard.usage import quotas

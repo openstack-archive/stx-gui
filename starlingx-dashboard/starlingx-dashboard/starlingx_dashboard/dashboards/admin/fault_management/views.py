@@ -16,7 +16,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -30,8 +30,8 @@ from horizon import exceptions
 from horizon import tabs
 from horizon import views
 from openstack_dashboard.api.base import is_service_enabled
-from starlingx_dashboard.api import fm
 from starlingx_dashboard.api import dc_manager
+from starlingx_dashboard.api import fm
 
 from starlingx_dashboard.dashboards.admin.fault_management import \
     tabs as project_tabs

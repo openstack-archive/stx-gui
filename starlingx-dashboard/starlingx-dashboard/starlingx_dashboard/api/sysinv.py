@@ -26,7 +26,6 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from openstack_dashboard.api import base
-from starlingx_dashboard.api import base as stx_base
 
 import cgcs_patch.constants as patch_constants
 import sysinv.common.constants as constants
@@ -2005,12 +2004,14 @@ class InterfaceNetwork(base.APIResourceWrapper):
 
 
 def interface_network_list_by_host(request, host_uuid):
-    interface_networks = cgtsclient(request).interface_network.list_by_host(host_uuid)
+    interface_networks = cgtsclient(request).interface_network.list_by_host(
+        host_uuid)
     return [InterfaceNetwork(n) for n in interface_networks]
 
 
 def interface_network_list_by_interface(request, interface_uuid):
-    interface_networks = cgtsclient(request).interface_network.list_by_interface(interface_uuid)
+    interface_networks = cgtsclient(request).interface_network.\
+        list_by_interface(interface_uuid)
     return [InterfaceNetwork(n) for n in interface_networks]
 
 

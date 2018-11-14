@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -75,7 +75,8 @@ class AddSensorGroup(forms.SelfHandlingForm):
             del data['hostname']
 
             # The REST API takes care of creating the sensorgroup and assoc
-            sensorgroup = stx_api.sysinv.host_sensorgroup_create(request, **data)
+            sensorgroup = stx_api.sysinv.host_sensorgroup_create(request,
+                                                                 **data)
 
             msg = _('Sensor group was successfully created.')
             LOG.debug(msg)
@@ -208,9 +209,10 @@ class UpdateSensorGroup(forms.SelfHandlingForm):
         mysensorgroupname = data.pop('sensorgroupname', None)
 
         try:
-            sensorgroup = stx_api.sysinv.host_sensorgroup_update(request,
-                                                                 sensorgroup_id,
-                                                                 **data)
+            sensorgroup = \
+                stx_api.sysinv.host_sensorgroup_update(request,
+                                                       sensorgroup_id,
+                                                       **data)
 
             msg = _('SensorGroup "%s" was '
                     'successfully updated.') % mysensorgroupname
