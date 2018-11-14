@@ -1,0 +1,9 @@
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Code-Review+2: Angie Wang <angie.wang@windriver.com>
+Workflow+1: Angie Wang <angie.wang@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 14 Nov 2018 23:37:52 +0000
+Reviewed-on: https://review.openstack.org/618034
+Project: openstack/stx-gui
+Branch: refs/heads/master
