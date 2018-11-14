@@ -3,9 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-import six
 from django.conf import settings
-from horizon import exceptions
 
 from openstack_dashboard.api import base
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2016 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -62,7 +62,8 @@ class PatchOrchestrationTab(tabs.TableTab):
 
         strategy = None
         try:
-            strategy = stx_api.vim.get_strategy(request, stx_api.vim.STRATEGY_SW_PATCH)
+            strategy = stx_api.vim.get_strategy(request,
+                                                stx_api.vim.STRATEGY_SW_PATCH)
         except Exception as ex:
             LOG.exception(ex)
             exceptions.handle(request,
@@ -75,7 +76,8 @@ class PatchOrchestrationTab(tabs.TableTab):
         request = self.request
         stages = []
         try:
-            stages = stx_api.vim.get_stages(request, stx_api.vim.STRATEGY_SW_PATCH)
+            stages = stx_api.vim.get_stages(request,
+                                            stx_api.vim.STRATEGY_SW_PATCH)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve stages list.'))
@@ -100,8 +102,8 @@ class UpgradeOrchestrationTab(tabs.TableTab):
 
         strategy = None
         try:
-            strategy = stx_api.vim.get_strategy(request,
-                                                stx_api.vim.STRATEGY_SW_UPGRADE)
+            strategy = stx_api.vim.get_strategy(
+                request, stx_api.vim.STRATEGY_SW_UPGRADE)
         except Exception as ex:
             LOG.exception(ex)
             exceptions.handle(request,
@@ -114,7 +116,8 @@ class UpgradeOrchestrationTab(tabs.TableTab):
         request = self.request
         stages = []
         try:
-            stages = stx_api.vim.get_stages(request, stx_api.vim.STRATEGY_SW_UPGRADE)
+            stages = stx_api.vim.get_stages(request,
+                                            stx_api.vim.STRATEGY_SW_UPGRADE)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve stages list.'))

@@ -390,10 +390,6 @@ class AddInterface(forms.SelfHandlingForm):
 
         host_uuid = kwargs['initial']['ihost_uuid']
 
-        # Retrieve SDN configuration
-        sdn_enabled = kwargs['initial']['sdn_enabled']
-        sdn_l3_mode = kwargs['initial']['sdn_l3_mode_enabled']
-
         # Populate Address Pool selections
         pools = sysinv.address_pool_list(self.request)
         self.fields['ipv4_pool'].choices = _get_ipv4_pool_choices(pools)
@@ -640,23 +636,19 @@ class UpdateInterface(AddInterface):
         ifclass_val = kwargs['initial']['ifclass']
         host_uuid = kwargs['initial']['ihost_uuid']
 
-        # Get the SDN configuration
-        sdn_enabled = kwargs['initial']['sdn_enabled']
-        sdn_l3_mode = kwargs['initial']['sdn_l3_mode_enabled']
-
         this_interface_id = kwargs['initial']['id']
 
         iftype_val = kwargs['initial']['iftype']
 
-        interface_networks = sysinv.interface_network_list_by_interface(self.request,
-                                                                        this_interface_id)
+        interface_networks = sysinv.interface_network_list_by_interface(
+            self.request, this_interface_id)
         if ifclass_val == 'platform':
             # Load the networks associated with this interface
             network_choices = self.fields['networks'].choices
             network_choice_dict = dict(network_choices)
             initial_networks = []
             for i in interface_networks:
-                for uuid, name in network_choice_dict.items():
+                for uuid in network_choice_dict.items():
                     if i.network_uuid == uuid:
                         initial_networks.append(uuid)
 
@@ -750,7 +742,8 @@ class UpdateInterface(AddInterface):
         ifclass = cleaned_data.get('ifclass')
         interface_id = cleaned_data.get('id')
         networks = cleaned_data.pop('networks', [])
-        interface_networks = sysinv.interface_network_list_by_interface(self.request, interface_id)
+        interface_networks = sysinv.interface_network_list_by_interface(
+            self.request, interface_id)
         network_ids = []
         networks_to_add = []
         networks_to_remove = []
@@ -773,7 +766,8 @@ class UpdateInterface(AddInterface):
                 interface_networks_to_remove.append(i.uuid)
         cleaned_data['networks'] = network_ids
         cleaned_data['networks_to_add'] = networks_to_add
-        cleaned_data['interface_networks_to_remove'] = interface_networks_to_remove
+        cleaned_data['interface_networks_to_remove'] = \
+            interface_networks_to_remove
         return cleaned_data
 
     def handle(self, request, data):
@@ -855,7 +849,8 @@ class UpdateInterface(AddInterface):
             else:
                 del data['networks']
             if data['networks_to_add']:
-                data['networks_to_add'] = str(",".join(data['networks_to_add']))
+                data['networks_to_add'] = \
+                    str(",".join(data['networks_to_add']))
             else:
                 del data['networks_to_add']
             if data['interface_networks_to_remove']:

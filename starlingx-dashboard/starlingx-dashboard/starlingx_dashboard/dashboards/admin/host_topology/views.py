@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -159,14 +159,14 @@ class JSONView(View):
         tenant_id = self.request.user.tenant_id
         for resource in resources:
             if (resource.get('tenant_id') and
-                tenant_id != resource.get('tenant_id')):
+                    tenant_id != resource.get('tenant_id')):
                 continue
             resource['url'] = reverse(view, None, [str(resource['id'])])
 
     def _check_router_external_port(self, ports, router_id, network_id):
         for port in ports:
             if (port['network_id'] == network_id and
-                port['device_id'] == router_id):
+                    port['device_id'] == router_id):
                 return True
         return False
 

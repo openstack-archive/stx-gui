@@ -14,10 +14,8 @@
 #
 
 import logging
-try:
-    from urlparse import urlparse
-except ModuleNotFoundError:
-    from urllib.parse import urlparse
+
+from six.moves.urllib.parse import urlparse
 
 import requests
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -28,6 +28,8 @@ from starlingx_dashboard.dashboards.admin.inventory.ports import \
 from starlingx_dashboard.dashboards.admin.inventory.sensors import \
     views as sensor_views
 from starlingx_dashboard.dashboards.admin.inventory.storages import \
+    urls as storages_urls
+from starlingx_dashboard.dashboards.admin.inventory.storages import \
     views as storage_views
 from starlingx_dashboard.dashboards.admin.inventory.views import \
     AddView
@@ -37,8 +39,6 @@ from starlingx_dashboard.dashboards.admin.inventory.views import \
     IndexView
 from starlingx_dashboard.dashboards.admin.inventory.views import \
     UpdateView
-from starlingx_dashboard.dashboards.admin.inventory.storages \
-    import urls as storages_urls
 
 
 urlpatterns = [

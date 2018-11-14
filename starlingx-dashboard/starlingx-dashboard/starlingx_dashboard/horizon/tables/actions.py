@@ -16,8 +16,10 @@ DEFAULT_TABLE_LIMITS = [10, 20, 50, 100, 500, 1000]
 
 
 class FixedWithQueryFilter(FilterAction):
-    """A FilterAction that visually renders like a combination
-       FixedFilterAction and a FilterAction of type "query.
+    """FilterAction
+
+       A FilterAction that visually renders like a combination
+       FixedFilterAction and a FilterAction of type query.
 
        Before extracting data from the filter, always ensure to first call
        the method updateFromRequestDataToSession(..) which will copy current
@@ -38,7 +40,9 @@ class FixedWithQueryFilter(FilterAction):
         self.disabled_choices = []
 
     def _get_fieldFromGETorPOSTorSESSION(self, request, param_name):
-        """Utility method for getting 'named" data (param_name) from either
+        """Utility method
+
+           Utility method for getting 'named" data (param_name) from either
            GET/POST or Session .
            IMPORTANT NOTE:  Has the side-effect of storing the data into
                             the session

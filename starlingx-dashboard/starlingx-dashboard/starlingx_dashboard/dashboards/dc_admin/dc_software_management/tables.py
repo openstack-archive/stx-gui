@@ -115,7 +115,7 @@ class DeleteCloudPatchStrategy(tables.Action):
                 messages.error(request, "Strategy delete failed")
         except Exception as ex:
             LOG.exception(ex)
-            messages.error(request, ex.message)
+            messages.error(request, str(ex))
 
 
 class ApplyCloudPatchStrategy(tables.Action):
@@ -151,7 +151,7 @@ class ApplyCloudPatchStrategy(tables.Action):
                 messages.error(request, "Strategy apply failed")
         except Exception as ex:
             LOG.exception(ex)
-            messages.error(request, ex.message)
+            messages.error(request, str(ex))
 
 
 class AbortCloudPatchStrategy(tables.Action):
@@ -190,7 +190,7 @@ class AbortCloudPatchStrategy(tables.Action):
                 messages.error(request, "Strategy abort failed")
         except Exception as ex:
             LOG.exception(ex)
-            messages.error(request, ex.message)
+            messages.error(request, str(ex))
 
 
 STEP_STATE_CHOICES = (

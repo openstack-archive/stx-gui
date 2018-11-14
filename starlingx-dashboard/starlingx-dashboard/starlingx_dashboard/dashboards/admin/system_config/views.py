@@ -15,8 +15,6 @@ from horizon import forms
 from horizon import tables
 from horizon import tabs
 
-from openstack_dashboard import api
-
 from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.system_config.forms \
     import CreateSDNController
@@ -432,8 +430,8 @@ class UpdateSDNControllerView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             controller_uuid = self.kwargs['uuid']
             try:
-                self._object = stx_api.sysinv.sdn_controller_get(self.request,
-                                                                 controller_uuid)
+                self._object = stx_api.sysinv.sdn_controller_get(
+                    self.request, controller_uuid)
             except Exception:
                 redirect = self.success_url
                 msg = _('Unable to retrieve SDN controller details.')
