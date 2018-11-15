@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -209,7 +209,8 @@ class RelearnSensorModel(tables.Action):
     def single(self, table, request, obj_ids):
         LOG.debug("requesting relearn of sensor model for host "
                   "%s", table.kwargs['host'].uuid)
-        stx_api.sysinv.host_sensorgroup_relearn(request, table.kwargs['host'].uuid)
+        stx_api.sysinv.host_sensorgroup_relearn(request,
+                                                table.kwargs['host'].uuid)
 
 
 class SensorGroupsTable(tables.DataTable):

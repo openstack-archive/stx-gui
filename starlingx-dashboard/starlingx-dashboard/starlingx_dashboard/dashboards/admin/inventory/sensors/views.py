@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -74,8 +74,9 @@ class UpdateSensorGroupView(forms.ModalFormView):
             LOG.debug("sensorgroup_id=%s kwargs=%s",
                       sensorgroup_id, self.kwargs)
             try:
-                self._object = stx_api.sysinv.host_sensorgroup_get(self.request,
-                                                                   sensorgroup_id)
+                self._object = \
+                    stx_api.sysinv.host_sensorgroup_get(self.request,
+                                                        sensorgroup_id)
                 self._object.host_id = host_id
 
             except Exception:
@@ -147,7 +148,8 @@ class DetailSensorView(views.HorizonTemplateView):
         if not hasattr(self, "_sensor"):
             sensor_id = self.kwargs['sensor_id']
             try:
-                sensor = stx_api.sysinv.host_sensor_get(self.request, sensor_id)
+                sensor = stx_api.sysinv.host_sensor_get(self.request,
+                                                        sensor_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,
@@ -194,8 +196,9 @@ class DetailSensorGroupView(views.HorizonTemplateView):
         if not hasattr(self, "_sensorgroup"):
             sensorgroup_id = self.kwargs['sensorgroup_id']
             try:
-                sensorgroup = stx_api.sysinv.host_sensorgroup_get(self.request,
-                                                                  sensorgroup_id)
+                sensorgroup = \
+                    stx_api.sysinv.host_sensorgroup_get(self.request,
+                                                        sensorgroup_id)
             except Exception:
                 redirect = reverse('horizon:admin:inventory:index')
                 exceptions.handle(self.request,

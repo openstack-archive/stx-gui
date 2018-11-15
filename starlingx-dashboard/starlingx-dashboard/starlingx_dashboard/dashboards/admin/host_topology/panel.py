@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -33,5 +33,6 @@ class HostTopology(horizon.Panel):
             return False
         else:
             return True
+
 
 dashboard.Admin.register(HostTopology)

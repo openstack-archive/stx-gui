@@ -56,8 +56,8 @@ BM_TYPES_CHOICES = (
 
 def ifprofile_applicable(request, host, profile):
     for interface in profile.interfaces:
-        interface_networks = stx_api.sysinv.interface_network_list_by_interface(request,
-                                                                                interface.uuid)
+        interface_networks = stx_api.sysinv.\
+            interface_network_list_by_interface(request, interface.uuid)
         if (stx_api.sysinv.PERSONALITY_COMPUTE == host._personality and
                 any(interface_network.network_type == 'oam'
                     for interface_network in interface_networks)):
@@ -248,8 +248,8 @@ class UpdateHostInfoAction(workflows.Action):
                                     attrs={'class': 'switched',
                                            'data-switch-on': 'personality',
                                            'data-personality-' +
-                                           stx_api.sysinv.PERSONALITY_COMPUTE: _(
-                                               "Host Name")}))
+                                           stx_api.sysinv.PERSONALITY_COMPUTE:
+                                               _("Host Name")}))
 
     location = forms.CharField(label=_("Location"),
                                initial='location',
@@ -345,8 +345,8 @@ class UpdateHostInfoAction(workflows.Action):
             if host.nodes and host.cpus and host.ports:
                 # Populate Available Cpu Profile Choices
                 try:
-                    avail_cpu_profile_list = stx_api.sysinv.host_cpuprofile_list(
-                        self.request)
+                    avail_cpu_profile_list = \
+                        stx_api.sysinv.host_cpuprofile_list(self.request)
 
                     host_profile = icpu_utils.HostCpuProfile(
                         host.subfunctions,
@@ -393,8 +393,8 @@ class UpdateHostInfoAction(workflows.Action):
                 self.fields[
                     'interfaceProfile'].widget = forms.widgets.HiddenInput()
 
-            if ((personality == 'storage' or 'compute' in host._subfunctions) and
-                host.disks):
+            if ((personality == 'storage' or
+                 'compute' in host._subfunctions) and host.disks):
                 # Populate Available Disk Profile Choices
                 try:
                     disk_profile_tuple_list = [
@@ -467,10 +467,11 @@ class UpdateHostInfoAction(workflows.Action):
         if cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_STORAGE:
             self._subfunctions = stx_api.sysinv.PERSONALITY_STORAGE
             cleaned_data['subfunctions'] = self._subfunctions
-        elif cleaned_data['personality'] == stx_api.sysinv.PERSONALITY_CONTROLLER:
+        elif cleaned_data['personality'] == \
+                stx_api.sysinv.PERSONALITY_CONTROLLER:
             if self.system_type == constants.TS_AIO:
-                self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER + ',' +
-                                      stx_api.sysinv.PERSONALITY_COMPUTE)
+                self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER +
+                                      ',' + stx_api.sysinv.PERSONALITY_COMPUTE)
             else:
                 self._subfunctions = stx_api.sysinv.PERSONALITY_CONTROLLER
             cleaned_data['subfunctions'] = self._subfunctions
@@ -629,7 +630,8 @@ class BoardManagementAction(workflows.Action):
                 'class': 'switched',
                 'data-switch-on': 'bm_type',
                 'data-bm_type-' +
-                stx_api.sysinv.BM_TYPE_GENERIC: FIELD_LABEL_BM_CONFIRM_PASSWORD}),
+                stx_api.sysinv.BM_TYPE_GENERIC:
+                    FIELD_LABEL_BM_CONFIRM_PASSWORD}),
         required=False)
 
     def clean(self):
@@ -639,8 +641,6 @@ class BoardManagementAction(workflows.Action):
             if 'bm_ip' not in cleaned_data or not cleaned_data['bm_ip']:
                 raise forms.ValidationError(
                     _('Board management IP address is required.'))
-                raise forms.ValidationError(
-                    _('Board management MAC address is required.'))
 
             if 'bm_username' not in cleaned_data or not \
                     cleaned_data['bm_username']:

@@ -4,7 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-from openstack_dashboard.api.neutron import *
+from openstack_dashboard.api.neutron import neutronclient
+from openstack_dashboard.api.neutron import PortForwardingRule
+from openstack_dashboard.api.neutron import ProviderNetwork
+from openstack_dashboard.api.neutron import ProviderNetworkRange
+from openstack_dashboard.api.neutron import ProviderNetworkType
+from openstack_dashboard.api.neutron import ProviderTenantNetwork
+from openstack_dashboard.api.neutron import QoSPolicy
 
 
 def provider_network_type_list(request, **params):

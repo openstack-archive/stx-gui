@@ -1,5 +1,3 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
 # Copyright 2012 NEC Corporation
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -14,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2017 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 
 
@@ -51,8 +49,8 @@ class CreateView(forms.ModalFormView):
         if not hasattr(self, "_object"):
             try:
                 providernet_id = self.kwargs["providernet_id"]
-                self._object = stx_api.neutron.provider_network_get(self.request,
-                                                                    providernet_id)
+                self._object = stx_api.neutron.provider_network_get(
+                    self.request, providernet_id)
             except Exception:
                 redirect = reverse(self.failure_url,
                                    args=(self.kwargs['providernet_id'],))

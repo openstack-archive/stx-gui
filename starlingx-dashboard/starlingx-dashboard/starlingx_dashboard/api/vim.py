@@ -10,14 +10,12 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2018 Wind River Systems, Inc.
 #
 
 import logging
-try:
-    from urlparse import urlparse
-except ModuleNotFoundError:
-    from urllib.parse import urlparse
+
+from six.moves.urllib.parse import urlparse
 
 from openstack_dashboard.api import base
 

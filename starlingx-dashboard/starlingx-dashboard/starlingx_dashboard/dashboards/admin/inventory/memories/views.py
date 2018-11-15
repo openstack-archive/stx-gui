@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Wind River Systems, Inc.
+# Copyright (c) 2013-2018 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -85,13 +85,15 @@ class AddMemoryProfileView(forms.ModalFormView):
             host_id = self.kwargs['host_id']
             try:
                 host = stx_api.sysinv.host_get(self.request, host_id)
-                host.nodes = stx_api.sysinv.host_node_list(self.request, host.uuid)
+                host.nodes = stx_api.sysinv.host_node_list(self.request,
+                                                           host.uuid)
                 host.memory = \
                     stx_api.sysinv.host_memory_list(self.request, host.uuid)
 
                 numa_node_tuple_list = []
                 for m in host.memory:
-                    node = stx_api.sysinv.host_node_get(self.request, m.inode_uuid)
+                    node = stx_api.sysinv.host_node_get(self.request,
+                                                        m.inode_uuid)
                     numa_node_tuple_list.append((node.numa_node, m))
 
                 host.numa_nodes = numa_node_tuple_list

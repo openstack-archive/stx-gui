@@ -17,8 +17,6 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
-from openstack_dashboard import api
-
 from starlingx_dashboard import api as stx_api
 
 LOG = logging.getLogger(__name__)
@@ -904,9 +902,8 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
             LOG.debug(data)
 
             if send_to_sysinv:
-                my_storage = stx_api.sysinv.storpool_update(request,
-                                                            storage_config_uuid,
-                                                            **data)
+                my_storage = stx_api.sysinv.storpool_update(
+                    request, storage_config_uuid, **data)
 
                 if my_storage:
                     msg = _(
