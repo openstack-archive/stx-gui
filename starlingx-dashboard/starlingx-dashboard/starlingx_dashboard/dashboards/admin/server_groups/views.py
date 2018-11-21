@@ -106,7 +106,7 @@ class EditAttachmentsView(tables.DataTableView, forms.ModalFormView):
 
     def get_initial(self):
         try:
-            instances, has_more = api.nova.server_list(self.request)
+            instances, has_more = api.nova.server_list(self.request)  # noqa pylint: disable=unused-variable
         except Exception:
             instances = []
             exceptions.handle(self.request,
