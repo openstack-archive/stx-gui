@@ -78,7 +78,7 @@ class CreateForm(forms.SelfHandlingForm):
         all_projects = []
         try:
             # Get list of available projects.
-            all_projects, has_more = api.keystone.tenant_list(request)
+            all_projects, has_more = api.keystone.tenant_list(request)  # noqa pylint: disable=unused-variable
 
             projects_list = [(project.id, project.name)
                              for project in all_projects]
