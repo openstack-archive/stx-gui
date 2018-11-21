@@ -296,7 +296,7 @@ class ParamForm(ParamMixin, forms.SelfHandlingForm):
         return data
 
     def get_context_data(self, **kwargs):
-        context = super(EditParam, self).get_context_data(**kwargs)
+        context = super(ParamForm, self).get_context_data(**kwargs)
         context.update(self._lvg)
         return context
 
