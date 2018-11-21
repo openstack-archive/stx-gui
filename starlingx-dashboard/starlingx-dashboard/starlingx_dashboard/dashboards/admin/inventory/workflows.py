@@ -124,10 +124,9 @@ def profile_get_uuid(request, profilename):
 
     for iprofile in profiles:
         if iprofile.profilename == profilename:
-            break
-    else:
-        raise forms.ValidationError("Profile not found: %s" % profilename)
-    return iprofile.uuid
+            return iprofile.uuid
+
+    raise forms.ValidationError("Profile not found: %s" % profilename)
 
 
 class AddHostInfoAction(workflows.Action):
