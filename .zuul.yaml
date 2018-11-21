@@ -7,12 +7,21 @@
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint_zuul
     gate:
       jobs:
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     post:
       jobs:
         - publish-stx-tox
         - publish-stx-releasenotes
+
+- job:
+    name: stx-gui-pylint
+    parent: openstack-tox-pylint
+    description: Run pylint for stx-gui
+    vars:
+      tox_envlist: pylint_zuul

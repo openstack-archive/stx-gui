@@ -9,9 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import horizon
 
-# Load the api rest services into Horizon
-import starlingx_dashboard.api.rest  # noqa
-
 
 class DCAdmin(horizon.Dashboard):
     name = _("Distributed Cloud Admin")
