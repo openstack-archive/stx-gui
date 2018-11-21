@@ -39,7 +39,6 @@ DELETABLE_STATES = ("available", "error")
 class DeleteServerGroup(tables.DeleteAction):
     data_type_singular = _("Server Group")
     data_type_plural = _("Server Groups")
-    action_past = _("Scheduled deletion of")
 
     @staticmethod
     def action_present(count):
@@ -213,8 +212,6 @@ class ServerGroupsTable(tables.DataTable):
 
 class DetachServerGroup(tables.BatchAction):
     name = "detach"
-    action_present = _("Detach")
-    action_past = _("Detaching")  # This action is asynchronous.
     data_type_singular = _("Server Group")
     data_type_plural = _("Server Groups")
     classes = ('btn-danger', 'btn-detach')

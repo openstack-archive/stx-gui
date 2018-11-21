@@ -7,12 +7,30 @@
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     gate:
       jobs:
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     post:
       jobs:
         - publish-stx-tox
         - publish-stx-releasenotes
+
+- job:
+    name: stx-gui-pylint
+    parent: openstack-tox-pylint
+    description: Run pylint for stx-gui
+    vars:
+      tox_envlist: pylint_zuul
+    required-projects:
+      - name: github.com/starlingx-staging/stx-python-novaclient
+      - name: github.com/starlingx-staging/stx-python-neutronclient
+      - name: github.com/starlingx-staging/stx-horizon
+      - openstack/stx-distcloud-client
+      - openstack/stx-config
+      - openstack/stx-fault
+      - openstack/stx-update
+      - openstack/stx-nfv
