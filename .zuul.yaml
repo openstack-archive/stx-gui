@@ -7,11 +7,13 @@
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     gate:
       jobs:
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     post:
       jobs:
         - publish-stx-tox

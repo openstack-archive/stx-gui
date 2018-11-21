@@ -244,7 +244,7 @@ class UnsuppressEvent(tables.BatchAction):
 
 class EventsSuppressionTable(tables.DataTable):
     # noinspection PyMethodParameters
-    def description_inject(row_data):
+    def description_inject(self, row_data):
         description = \
             escape_html(str(row_data.description)).replace("\n", "<br/>")
         description = description.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")

@@ -2353,8 +2353,7 @@ class Device(base.APIResourceWrapper):
 
     def __init__(self, apiresource):
         super(Device, self).__init__(apiresource)
-        if not self.name:
-            self.name = '(' + str(self.uuid)[-8:] + ')'
+        self.name = '(' + str(self.uuid)[-8:] + ')'
 
 
 def host_device_list(request, host_id):
