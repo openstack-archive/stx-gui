@@ -58,7 +58,7 @@ class DetailView(tables.MultiTableView):
     def _get_tenant_list(self):
         if not hasattr(self, "_tenants"):
             try:
-                tenants, has_more = api.keystone.tenant_list(self.request)
+                tenants, has_more = api.keystone.tenant_list(self.request)  # noqa pylint: disable=unused-variable
             except Exception:
                 tenants = []
                 msg = _('Unable to retrieve instance project information.')

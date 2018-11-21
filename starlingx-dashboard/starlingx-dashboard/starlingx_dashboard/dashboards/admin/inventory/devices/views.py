@@ -140,10 +140,10 @@ class UsageView(tables.MultiTableView):
             try:
                 _object = stx_api.nova.get_detail_usage(self.request, dev_id)
                 _object.sort(key=lambda f: (f.host))
-                id = 0
+                _id = 0
                 for u in _object:
-                    id += 1
-                    u.id = id
+                    _id += 1
+                    u.id = _id
                 self._detail_object = _object
 
             except Exception:

@@ -269,10 +269,12 @@ class UpdateMemory(forms.SelfHandlingForm):
         try:
             for nd in node:
                 node_found = False
+                memory = None
                 for m in self.host.memorys:
                     for n in self.host.nodes:
                         if m.inode_uuid == n.uuid:
                             if int(n.numa_node) == int(node.index(nd)):
+                                memory = m
                                 node_found = True
                             break
                     if node_found:
@@ -288,7 +290,7 @@ class UpdateMemory(forms.SelfHandlingForm):
                         new_data['vm_hugepages_nr_1G_pending'] = pages_1G[nd]
 
                     if new_data:
-                        stx_api.sysinv.host_memory_update(request, m.uuid,
+                        stx_api.sysinv.host_memory_update(request, memory.uuid,
                                                           **new_data)
 
                 else:
