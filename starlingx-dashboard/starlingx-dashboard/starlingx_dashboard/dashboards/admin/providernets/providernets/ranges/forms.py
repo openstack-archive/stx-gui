@@ -103,7 +103,7 @@ class CreateProviderNetworkRange(forms.SelfHandlingForm):
                                                          **kwargs)
 
         tenant_choices = [('', _("Select a project"))]
-        tenants, has_more = api.keystone.tenant_list(request)
+        tenants, has_more = api.keystone.tenant_list(request)  # noqa pylint: disable=unused-variable
         for tenant in tenants:
             if tenant.enabled:
                 tenant_choices.append((tenant.id, tenant.name))
