@@ -28,9 +28,9 @@ LOG = logging.getLogger(__name__)
 def get_alarms_for_entity(alarms, entity_str):
     matched = []
     for alarm in alarms:
-        for id in alarm.entity_instance_id.split('.'):
+        for _id in alarm.entity_instance_id.split('.'):
             try:
-                if entity_str == id.split('=')[1]:
+                if entity_str == _id.split('=')[1]:
                     matched.append(alarm)
             except Exception:
                 # malformed entity_instance_id
@@ -73,7 +73,7 @@ class OverviewTab(tabs.TableTab):
     def _get_tenant_list(self):
         if not hasattr(self, "_tenants"):
             try:
-                tenants, has_more = api.keystone.tenant_list(self.request)
+                tenants, has_more = api.keystone.tenant_list(self.request)  # noqa pylint: disable=unused-variable
             except Exception:
                 tenants = []
                 msg = _('Unable to retrieve instance project information.')

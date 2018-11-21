@@ -115,7 +115,7 @@ class ActiveAlarmsTab(tabs.TableTab):
         search_opts = {}
         # get retrieve parameters from request/session env
         limit = \
-            self.request.GET.get(tables.AlarmsTable._meta.limit_param,
+            self.request.GET.get(tables.AlarmsTable.Meta.limit_param,
                                  None)
 
         search_opts = self.get_filters()
@@ -150,8 +150,8 @@ class ActiveAlarmsTab(tabs.TableTab):
             event_types = self.tab_group.kwargs['suppression_list']
         except Exception:
             exceptions.handle(self.request,
-                              _('Unable to retrieve event suppression table \ '
-                                'list.'))
+                              _('Unable to retrieve event suppression table'
+                                ' list.'))
         return event_types
 
 
@@ -236,10 +236,10 @@ class EventLogTab(tabs.TableTab):
 
         # get retrieve parameters from request/session env
         marker = \
-            self.request.GET.get(tables.EventLogsTable._meta.pagination_param,
+            self.request.GET.get(tables.EventLogsTable.Meta.pagination_param,
                                  None)
         limit = \
-            self.request.GET.get(tables.EventLogsTable._meta.limit_param,
+            self.request.GET.get(tables.EventLogsTable.Meta.limit_param,
                                  None)
         search_opts = self.get_filters({'marker': marker,
                                         'limit': limit,
