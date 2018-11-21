@@ -7,12 +7,31 @@
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     gate:
       jobs:
         - build-openstack-releasenotes
         - openstack-tox-pep8
         - openstack-tox-linters
+        - stx-gui-pylint
     post:
       jobs:
         - publish-stx-tox
         - publish-stx-releasenotes
+
+- job:
+    name: stx-gui-pylint
+    parent: openstack-tox-pylint
+    description: Run pylint for stx-gui
+    vars:
+      tox_envlist: pylint_zuul
+    required-projects:
+      - openstack/python-novaclient
+      - openstack/python-neutronclient
+      - openstack/horizon
+      - openstack/stx-distcloud-client
+      - openstack/stx-config/sysinv/cgts-client/cgts-client
+      - openstack/stx-config/sysinv/sysinv/sysinv
+      - openstack/stx-fault/python-fmclient/fmclient
+      - openstack/stx-update/cgcs-patch/cgcs-patch
+      - openstack/stx-nfv/nfv/nfv-client
