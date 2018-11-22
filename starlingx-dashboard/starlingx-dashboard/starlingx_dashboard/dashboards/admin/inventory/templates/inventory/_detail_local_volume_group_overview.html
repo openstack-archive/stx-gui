@@ -17,7 +17,9 @@
       </dl>
       <dl>
 	<dt>{% trans "Size" %}</dt>
-	<dd>{{ lvg.lvm_vg_size | filesizeformat  }}</dd>
+	<dd>{{ lvg.lvm_vg_size_gib }}</dd>
+	<dt>{% trans "Avail Size" %}</dt>
+	<dd>{{ lvg.lvm_vg_avail_size_gib }}</dd>
 	<dt>{% trans "Max Local Volumes" %}</dt>
 	<dd>{{ lvg.lvm_max_lv }}</dd>
 	<dt>{% trans "Current Local Volumes" %}</dt>

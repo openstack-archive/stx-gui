@@ -405,6 +405,19 @@ class LocalVolumeGroup(base.APIResourceWrapper):
     def __init__(self, apiresource):
         super(LocalVolumeGroup, self).__init__(apiresource)
 
+    @property
+    def lvm_vg_size_gib(self):
+        return math.floor(float(
+            self.lvm_vg_size) / (1024 ** 3) * 1000) / 1000.0
+
+    @property
+    def lvm_vg_avail_size_gib(self):
+        size_in_byte = 0
+        if self.lvm_vg_total_pe > 0:
+            size_in_byte = \
+                self.lvm_vg_size * self.lvm_vg_free_pe / self.lvm_vg_total_pe
+        return math.floor(float(size_in_byte) / (1024 ** 3) * 1000) / 1000.0
+
 
 class LocalVolumeGroupParam(object):
     def __init__(self, lvg_id, key, val):
