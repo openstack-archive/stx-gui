@@ -397,6 +397,7 @@ class LocalVolumeGroup(base.APIResourceWrapper):
               'lvm_max_pv',
               'lvm_cur_pv',
               'lvm_vg_size',
+              'lvm_vg_avail_size',
               'lvm_vg_total_pe',
               'lvm_vg_free_pe',
               'created_at',
@@ -404,6 +405,16 @@ class LocalVolumeGroup(base.APIResourceWrapper):
 
     def __init__(self, apiresource):
         super(LocalVolumeGroup, self).__init__(apiresource)
+
+    @property
+    def lvm_vg_size_gib(self):
+        return math.floor(float(
+            self.lvm_vg_size) / (1024 ** 3) * 1000) / 1000.0
+
+    @property
+    def lvm_vg_avail_size_gib(self):
+        return math.floor(float(
+            self.lvm_vg_avail_size) / (1024 ** 3) * 1000) / 1000.0
 
 
 class LocalVolumeGroupParam(object):
