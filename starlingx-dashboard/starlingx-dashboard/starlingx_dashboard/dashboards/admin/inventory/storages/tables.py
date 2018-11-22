@@ -463,9 +463,10 @@ class LocalVolumeGroupsTable(tables.DataTable):
                           verbose_name=('State'))
     access = tables.Column('lvm_vg_access',
                            verbose_name=('Access'))
-    size = tables.Column('lvm_vg_size',
-                         verbose_name=('Size'),
-                         filters=(filters.filesizeformat,))
+    size = tables.Column('lvm_vg_size_gib',
+                         verbose_name=('Size (GiB)'))
+    avail_size = tables.Column('lvm_vg_avail_size_gib',
+                               verbose_name=('Avail Size (GiB)'))
     pvs = tables.Column('lvm_cur_pv',
                         verbose_name=('Current Physical Volumes'))
     lvs = tables.Column('lvm_cur_lv',
@@ -483,7 +484,7 @@ class LocalVolumeGroupsTable(tables.DataTable):
     class Meta(object):
         name = "localvolumegroups"
         verbose_name = ("Local Volume Groups")
-        columns = ('name', 'state', 'access', 'size', 'pvs', 'lvs',)
+        columns = ('name', 'state', 'access', 'size', 'avail_size', 'pvs', 'lvs',)
         multi_select = False
         row_actions = (RemoveLocalVolumeGroup,)
         table_actions = (AddLocalVolumeGroup, CreateDiskProfile)
