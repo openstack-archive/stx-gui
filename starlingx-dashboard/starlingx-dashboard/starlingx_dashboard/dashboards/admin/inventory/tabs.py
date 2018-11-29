@@ -498,6 +498,8 @@ class StorageTab(tabs.TableTab):
                               redirect=redirect)
 
         context['cinder_backend'] = stx_api.sysinv.get_cinder_backend(request)
+        context['is_system_k8s_aio'] = \
+            stx_api.sysinv.is_system_k8s_aio(request)
 
         return context
 

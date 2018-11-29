@@ -324,6 +324,8 @@ class UpdateiStoragePoolsView(forms.ModalFormView):
                 # check before adding each value in case it is None
                 if s.cinder_pool_gib:
                     ctxt['configured_quota'] += s.cinder_pool_gib
+                if s.kube_pool_gib:
+                    ctxt['configured_quota'] += s.kube_pool_gib
                 if s.glance_pool_gib:
                     ctxt['configured_quota'] += s.glance_pool_gib
                 if s.ephemeral_pool_gib:
@@ -338,6 +340,7 @@ class UpdateiStoragePoolsView(forms.ModalFormView):
         form_data = {'uuid': ' ',
                      'tier_name': None,
                      'cinder_pool_gib': None,
+                     'kube_pool_gib': None,
                      'glance_pool_gib': None,
                      'ephemeral_pool_gib': None,
                      'object_pool_gib': None}
@@ -358,6 +361,9 @@ class UpdateiStoragePoolsView(forms.ModalFormView):
 
                     if 'cinder_pool_gib' in storage_attrs:
                         form_data['cinder_pool_gib'] = s.cinder_pool_gib
+
+                    if 'kube_pool_gib' in storage_attrs:
+                        form_data['kube_pool_gib'] = s.kube_pool_gib
 
                     if 'glance_pool_gib' in storage_attrs:
                         form_data['glance_pool_gib'] = s.glance_pool_gib

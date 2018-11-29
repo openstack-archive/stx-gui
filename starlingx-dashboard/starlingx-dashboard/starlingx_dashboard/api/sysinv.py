@@ -1400,9 +1400,9 @@ class StorageTier(base.APIResourceWrapper):
 class StorageCeph(base.APIResourceWrapper):
     """..."""
 
-    _attrs = ['cinder_pool_gib', 'glance_pool_gib', 'ephemeral_pool_gib',
-              'object_pool_gib', 'object_gateway', 'uuid', 'tier_name', 'link',
-              'ceph_total_space_gib']
+    _attrs = ['cinder_pool_gib', 'kube_pool_gib', 'glance_pool_gib',
+              'ephemeral_pool_gib', 'object_pool_gib', 'object_gateway',
+              'uuid', 'tier_name', 'link', 'ceph_total_space_gib']
 
     def __init__(self, apiresource):
         super(StorageCeph, self).__init__(apiresource)
@@ -1410,6 +1410,7 @@ class StorageCeph(base.APIResourceWrapper):
         if hasattr(self, 'uuid'):
             self._tier_name = self.tier_name
             self._cinder_pool_gib = self.cinder_pool_gib
+            self._kube_pool_gib = self.kube_pool_gib
             self._glance_pool_gib = self.glance_pool_gib
             self._ephemeral_pool_gib = self.ephemeral_pool_gib
             self._object_pool_gib = self.object_pool_gib
@@ -1418,6 +1419,7 @@ class StorageCeph(base.APIResourceWrapper):
         else:
             self._tier_name = None
             self._cinder_pool_gib = None
+            self._kube_pool_gib = None
             self._glance_pool_gib = None
             self._ephemeral_pool_gib = None
             self._object_pool_gib = None
@@ -1431,6 +1433,10 @@ class StorageCeph(base.APIResourceWrapper):
     @property
     def cinder_pool_gib(self):
         return self._cinder_pool_gib
+
+    @property
+    def kube_pool_gib(self):
+        return self._kube_pool_gib
 
     @property
     def glance_pool_gib(self):
@@ -1727,7 +1733,7 @@ def controllerfs_list(request):
     controllerfs = cgtsclient(request).controller_fs.list()
     ceph_mon_list = cgtsclient(request).ceph_mon.list()
 
-    if ceph_mon_list and not is_system_mode_simplex(request):
+    if ceph_mon_list and not is_system_k8s_aio(request):
         controllerfs.append(ceph_mon_list[0])
 
     return [ControllerFS(n) for n in controllerfs]
@@ -2535,3 +2541,25 @@ def get_system_type(request):
     systems = system_list(request)
     system_type = systems[0].to_dict().get('system_type')
     return system_type
+
+
+def is_kubernetes_config(request):
+    systems = system_list(request)
+    system_capabilities = systems[0].to_dict().get('capabilities')
+    if system_capabilities.get('kubernetes_enabled', False):
+        return True
+    return False
+
+
+def is_system_k8s_aio(request):
+    system_type = get_system_type(request)
+
+    if (system_type == SYSTEM_TYPE_AIO and
+            is_kubernetes_config(request)):
+        return True
+    return False
+
+
+def is_host_with_storage(request, host_id):
+    host = host_get(request, host_id)
+    return 'storage' in host.subfunctions or is_system_k8s_aio(request)
