@@ -13,15 +13,26 @@
         var glance = document.getElementById('id_glance_pool_gib'),
             ephemeral = document.getElementById('id_ephemeral_pool_gib'),
             cinder = document.getElementById('id_cinder_pool_gib'),
+            kube = document.getElementById('id_kube_pool_gib'),
             obj = document.getElementById('id_object_pool_gib');
 
         var dynamic_quota = document.getElementById('total_quota');
 
+        current_quota_total = 0
+        if (glance != null)
+            current_quota_total += (parseInt(glance.value) || 0)
 
-        current_quota_total = (parseInt(glance.value) || 0)
-                + (parseInt(cinder.value) || 0)
-                + (parseInt(ephemeral.value) || 0)
-                + (parseInt(obj.value) || 0);
+        if (ephemeral != null)
+            current_quota_total += (parseInt(ephemeral.value) || 0)
+
+        if (cinder != null)
+            current_quota_total += (parseInt(cinder.value) || 0)
+
+        if (kube != null)
+            current_quota_total += (parseInt(kube.value) || 0)
+
+        if (obj != null)
+            current_quota_total += (parseInt(obj.value) || 0);
 
         total_tier_size = parseInt(document.getElementById('total_tier_size').innerHTML) || 0;
         dynamic_quota.innerHTML = current_quota_total;
@@ -45,13 +56,19 @@
   <p>{% trans "From here you can update the quota allocated to the pools associated with this Ceph storage tier." %}</p>
   <p>{% trans "A quota value of 0 will allow the storage associated with that pool to consume all available space in the tier." %}</p>
   {% if tier_name == 'storage'  %}
-      <p>{% trans "A quota value of 0 is not allowed for the cinder pool or glance pool." %}</p>
+      <p>{% trans "A quota value of 0 is not allowed for the cinder, glance or kube pool." %}</p>
       <p>{% trans "The sum of the desired quotas must equal 100% of the cluster size." %}</p>
   {% else  %}
-      <p>{% trans "A quota value of 0 is allowed for the cinder pool." %}</p>
+      <p>{% trans "A quota value of 0 is allowed for the cinder or kube pool." %}</p>
   {% endif  %}
 
-  <p> <strong><span id="quota_text" style="color:red"><span id="total_quota">{{ configured_quota }}</span> GiB out of <span id="total_tier_size">{{ tier_total }}</span>  GiB configured</span></strong></p>
+  <p>
+    <strong><span id="quota_text" style="color:red">
+            <span id="total_quota">{{ configured_quota }}</span> GiB out of
+            <span id="total_tier_size">{{ tier_total }}</span>
+            GiB configured</span>
+    </strong>
+ </p>
 </div>
 {% endblock %}
 
