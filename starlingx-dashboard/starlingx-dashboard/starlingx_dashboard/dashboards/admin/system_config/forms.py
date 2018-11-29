@@ -818,6 +818,13 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
             min_value=0,
             widget=forms.NumberInput(attrs=js_attrs))
 
+        self.fields['kube_pool_gib'] = forms.IntegerField(
+            label=_("Kubernetes Pool (GiB)"),
+            required=True,
+            help_text=_("Storage space allocated to Kubernetes in gibibytes."),
+            min_value=0,
+            widget=forms.NumberInput(attrs=js_attrs))
+
         if self._tier_name == 'storage':
             self.fields['glance_pool_gib'] = forms.IntegerField(
                 label=_("Glance Image Pool (GiB)"),
@@ -869,6 +876,9 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
                     if hasattr(storage_config, 'cinder_pool_gib'):
                         STORAGE_VALUES['cinder_pool_gib'] = \
                             str(storage_config._cinder_pool_gib)
+                    if hasattr(storage_config, 'kube_pool_gib'):
+                        STORAGE_VALUES['kube_pool_gib'] = \
+                            str(storage_config._kube_pool_gib)
                     if hasattr(storage_config, 'glance_pool_gib'):
                         STORAGE_VALUES['glance_pool_gib'] = \
                             str(storage_config._glance_pool_gib)
@@ -895,6 +905,7 @@ class UpdateiStoragePools(forms.SelfHandlingForm):
             else:
                 storage_config_uuid = ' '
                 data = {'cinder_pool_gib': '',
+                        'kube_pool_gib': '',
                         'glance_pool_gib': '',
                         'ephemeral_pool_gib': '',
                         'object_pool_gib': ''}

@@ -21,7 +21,7 @@
 
  {{ "<br>With the following configuration:" }}
         <table class="{% block table_css_classes %}table table-bordered table-striped datatable {{ table.css_classes }}{% endblock %}">
-           {% if host.stors and 'storage' in host.subfunctions %}
+           {% if host.stors and is_host_with_storage %}
             <tr>
               <th>{% trans "Disk" %}</th>
               <th>{% trans "Storage" %}</th>

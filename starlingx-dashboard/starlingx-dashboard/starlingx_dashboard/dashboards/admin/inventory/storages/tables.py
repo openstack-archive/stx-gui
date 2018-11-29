@@ -33,17 +33,18 @@ class CreateStorageVolume(tables.LinkAction):
         return reverse(self.url, args=(host_id,))
 
     def allowed(self, request, datum):
+        is_system_k8s_aio = sysinv.is_system_k8s_aio(request)
         host = self.table.kwargs['host']
         self.verbose_name = _("Assign Storage Function")
 
         classes = [c for c in self.classes if c != "disabled"]
         self.classes = classes
 
-        if host._personality != 'storage':
+        if host._personality != 'storage' and not is_system_k8s_aio:
             return False
 
         if host._administrative == 'unlocked':
-            if 'storage' in host._subfunctions:
+            if 'storage' in host._subfunctions or is_system_k8s_aio:
                 if "disabled" not in self.classes:
                     self.classes = [c for c in self.classes] + ['disabled']
                     self.verbose_name = string_concat(self.verbose_name, ' ',
@@ -63,7 +64,7 @@ class CreateDiskProfile(tables.LinkAction):
         return reverse(self.url, args=(host_id,))
 
     def allowed(self, request, datum):
-        return True
+        return not sysinv.is_system_mode_simplex(request)
 
 
 class CreatePartition(tables.LinkAction):

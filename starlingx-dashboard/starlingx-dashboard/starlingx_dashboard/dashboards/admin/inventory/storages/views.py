@@ -201,6 +201,8 @@ class AddDiskProfileView(forms.ModalFormView):
         context = super(AddDiskProfileView, self).get_context_data(**kwargs)
         context['host_id'] = self.kwargs['host_id']
         context['host'] = self.get_myhost_data()
+        context['is_host_with_storage'] = sysinv.is_host_with_storage(
+            self.request, self.kwargs['host_id'])
         return context
 
     def get_initial(self):

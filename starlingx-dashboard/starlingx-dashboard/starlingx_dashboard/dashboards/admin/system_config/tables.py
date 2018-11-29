@@ -348,6 +348,10 @@ class iStoragePoolsTable(tables.DataTable):
         'cinder_pool_gib',
         verbose_name=_('Cinder Volume Storage (GiB)'))
 
+    kube_pool_gib = tables.Column(
+        'kube_pool_gib',
+        verbose_name=_('Kubernetes Storage (GiB)'))
+
     glance_pool_gib = tables.Column(
         'glance_pool_gib',
         verbose_name=_('Glance Image Storage (GiB)'))
