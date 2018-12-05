@@ -1,0 +1,65 @@
+
+#splash {
+  background: $splash-bg-color;
+  color: $splash-text-color;
+
+  .panel , .panel-heading, .panel-footer{
+    background: $splash-login-bg-color;
+    border-color: $splash-border-color;
+  }
+
+  .panel-body {
+    // Unstretch text fields
+    margin-right: 40px;
+    margin-left: 40px;
+  }
+
+  .panel-heading{
+    // White line
+    border-bottom-color: $splash-label-color;
+
+    /* vertical gradient (excluding IE9 and below - which clips the nav-tabs) */
+    background-color: mix($brand-bg-color, $splash-login-bg-color, 60%); // Old Browswers
+    background-image: -moz-linear-gradient(top, $brand-bg-color, $splash-login-bg-color); // FF 3.6+
+    background-image: -ms-linear-gradient(top, $brand-bg-color, $splash-login-bg-color); // IE10
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from($brand-bg-color), to($splash-login-bg-color)); // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, $brand-bg-color, $splash-login-bg-color); // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, $brand-bg-color, $splash-login-bg-color); // Opera 11.10
+    background-image: linear-gradient(top, $brand-bg-color, $splash-login-bg-color); // The standard
+    background-repeat: repeat-x;
+
+  }
+
+  .panel-footer {
+    // Hide lower line
+    border-top: none;
+
+    // Move over button
+    button {
+        margin-right: 40px;
+    }
+  }
+
+  .red-line {
+    height: 53px;
+    width: 43%;
+    border-bottom: 2px solid $windriver-red;
+    margin-bottom: -18px;
+    margin-left: -16px;
+  }
+
+  h3 {
+    display: block;
+    color: $splash-text-color;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    line-height: 39px;
+    text-shadow: 2px 2px 4px #000000;
+  }
+  form label {
+    color: $splash-label-color;
+    font-weight: normal;
+  }
+
+}

@@ -1,0 +1,39 @@
+// Exact selectors below required to override .table-striped
+.table tbody tr,
+.table-striped.datatable tbody tr {
+  &.status_down > td,
+  &.status_down.odd > td,
+  &.status_down.even > td {
+    background-color: $errorBackground;
+  }
+  &.warning > td,
+  &.warning.odd > td,
+  &.warning.even > td {
+    background-color: $warningBackground;
+  }
+}
+
+// Hover states for .table-hover
+.table-hover tbody tr,
+.table-striped.datatable tbody tr {
+  &.status_down:hover > td,
+  &.status_down.odd:hover > td,
+  &.status_down.even:hover > td {
+    background-color: darken($errorBackground, 5%);
+  }
+  &.status_unknown:hover > td,
+  &.status_unknown.odd:hover > td,
+  &.status_unknown.even:hover > td {
+    background-color: darken($warningBackground, 5%);
+  }
+}
+
+.table_actions .table_limit {
+    display: inline-block;
+    margin-left: 5px;
+    border: 1px;
+
+    .btn.btn-small .caret {
+        margin-top: 7px;
+    }
+}
