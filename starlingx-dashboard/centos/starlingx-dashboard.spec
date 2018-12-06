@@ -22,6 +22,7 @@ starlingx specific horizon plugins
 
 %define py_pkg_name          starlingx_dashboard
 %define enabled_dir          %{_datadir}/openstack-dashboard/openstack_dashboard/enabled/
+%define stx_themes_dir       %{_datadir}/openstack-dashboard/openstack_dashboard/themes/starlingx/
 
 %define debug_package %{nil}
 
@@ -42,6 +43,10 @@ install -m 644 dist/*.whl $RPM_BUILD_ROOT/wheels/
 install -d -m 755 %{buildroot}%{enabled_dir}
 install -p -D -m 755 %{py_pkg_name}/enabled/* %{buildroot}%{enabled_dir}
 
+install -d -m 755 %{buildroot}%{stx_themes_dir}
+cp -R %{py_pkg_name}/themes/starlingx/* %{buildroot}%{stx_themes_dir}
+chmod -R 755 %{buildroot}%{stx_themes_dir}/*
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -51,6 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %{python2_sitelib}/%{py_pkg_name}-%{version}*.egg-info
 
 %{enabled_dir}
+%{stx_themes_dir}
 
 %package wheels
 Summary: %{name} wheels

@@ -1,0 +1,92 @@
+@import "/themes/default/variables";
+
+/* Primary Brand Colors */
+$windriver-white: #ffffff;
+$windriver-black: #000000;
+$windriver-red: #CC0000;
+$windriver-lighter-red: #CC1515;
+$windriver-gray: #333333;
+$windriver-lighter-gray: #9f9f9f;
+
+/* Secondary Brand Colors */
+$windriver-slate-green: #336666;
+$windriver-slate-blue: #336699;
+$windriver-tan: #CC9966;
+$windriver-gold: #FFCC33;
+
+/* Global Styles */
+$text-color: #666;
+$link-color: $windriver-slate-blue;
+
+$gray-light: #cccccc;
+$font-size-base: 15px !default;
+$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+
+$sidebar-background-color: #666;
+$sidebar-active-color: $windriver-red;
+$context-delimiter-size: 13px;
+
+$errorBackground: #f2dede;
+$warningBackground: #fcf8e3;
+
+/* Bootstrap Customizations */
+$linkColor: $link-color;
+$textColor: $text-color;
+
+// Splash Screen Styles
+$splash-bg-color: #666;
+$splash-login-bg-color: #333;
+$splash-border-color: #000;
+$splash-text-color: #fff;
+$splash-label-color: #eee;
+
+// Dashboard Styles
+$sidebar-width: 220px;
+
+$brand-bg-color: $windriver-black;
+$brand-bg-highlight: #666;
+$brand-text-color: $windriver-white;
+$brand-width: $sidebar-width;
+$brand-height: 30px;
+
+$nav-tabs-bg-color: $windriver-white;
+$nav-tabs-link-color: $windriver-white;
+$nav-tabs-active-color: $text-color;
+$nav-tabs-hover-color: $windriver-black;
+
+$main-nav-bg-color: #666;
+$main-nav-title-color: $windriver-white;
+$main-nav-link-color: #ddd;
+$main-nav-width: $sidebar-width;
+
+$switch-bar-bg-color: $windriver-black;
+$switch-bar-bg-hover: $windriver-gray;
+$switch-bar-text-color: $windriver-red;
+
+$topbar-background-color: #4a4a4a;
+$topbar-title-color: $windriver-white;
+$topbar-text-color: #eee;
+$topbar-link-color: $topbar-text-color;
+$topbar-hover-color: $windriver-white;
+
+$badge-color-primary:         $windriver-slate-blue;
+$badge-color-danger:          $windriver-red;
+$badge-color-warning:         $windriver-gold;
+$badge-color:                 #fff;
+$badge-link-hover-color:      #fff;
+$badge-bg:                    $gray-light;
+$badge-active-color:          $linkColor;
+$badge-active-bg:             #fff;
+$badge-font-weight:           bold;
+$badge-line-height:           1;
+$badge-border-radius:         10px;
+$badge-font-size:             ceil(($font-size-small * 0.85)); // ~12px
+
+$modal-lg: 1200px; // overide default/bootstrap/_variable.sccs
+
+//Default theme overrides
+$brand-primary:         $windriver-slate-blue;
+$brand-success:         #5cb85c !default;
+$brand-info:            #5bc0de !default;
+$brand-warning:         $windriver-gold;
+$brand-danger:          $windriver-red;

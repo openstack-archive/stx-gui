@@ -1,0 +1,19 @@
+// Chart Usage Specifics
+.d3_pie_chart_usage {
+
+  // The inner arc
+  .arc.inner {
+    fill: #336699;
+    stroke: none;
+
+    // Specialness if its full
+    &.FULL {
+      fill: $windriver-red;
+    }
+
+    // Specialness if its almost full
+    &.NEARLY_FULL {
+      fill: $windriver-gold;
+    }
+  }
+}

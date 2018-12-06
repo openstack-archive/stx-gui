@@ -1,0 +1,45 @@
+
+.navbar-fixed-top, .topbar {
+    padding: 0px 0px;
+    background-color: $topbar-background-color;
+
+    a.navbar-brand {
+        padding-left: 0px;
+    }
+
+    h1.brand a {
+        background: none;
+    }
+
+    .navbar-default .navbar-nav {
+      .dropdown-menu {
+        background-color: white;
+      }
+      & > li > a{
+        color: $topbar-text-color;
+      }
+    }
+
+    .context_selection{
+      float: left;
+    }
+
+    .user_settings {
+      float: right;
+    }
+
+    // Styling for time & alarms
+    .navbar-center {
+      color: $topbar-text-color;
+      padding-top: 0.8em;
+
+      display: table;
+      margin-left: auto;
+      margin-right: auto;
+      float: none;
+
+      .datetime {
+        padding-right: 13px;
+      }
+    }
+}

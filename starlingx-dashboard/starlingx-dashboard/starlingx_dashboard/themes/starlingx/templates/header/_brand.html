@@ -1,0 +1,7 @@
+{% load branding %}
+{% load themes %}
+
+<a class="navbar-brand" href="{% site_branding_link %}" target="_self">
+  <!-- WRS addition -->
+  <img class="openstack-logo" src="{% themable_asset 'img/logo.png' %}" alt="{% site_branding %}">
+</a>
