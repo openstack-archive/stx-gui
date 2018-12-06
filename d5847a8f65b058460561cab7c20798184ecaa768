@@ -1,0 +1,10 @@
+Code-Review+2: Tyler Smith <tyler.smith@windriver.com>
+Code-Review+1: Bob Church <robert.church@windriver.com>
+Code-Review+1: Kristine Bujold <Kristine.Bujold@windriver.com>
+Workflow+1: Kristine Bujold <Kristine.Bujold@windriver.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 06 Dec 2018 14:58:57 +0000
+Reviewed-on: https://review.openstack.org/620935
+Project: openstack/stx-gui
+Branch: refs/heads/master
