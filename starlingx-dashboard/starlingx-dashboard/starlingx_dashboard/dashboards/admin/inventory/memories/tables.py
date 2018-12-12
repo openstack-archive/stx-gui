@@ -31,7 +31,7 @@ class UpdateMemory(tables.LinkAction):
         host = self.table.kwargs['host']
         return (host._administrative == 'locked' and
                 host.subfunctions and
-                'compute' in host.subfunctions)
+                'worker' in host.subfunctions)
 
 
 class CreateMemoryProfile(tables.LinkAction):
@@ -77,7 +77,7 @@ class MemorysTable(tables.DataTable):
                            verbose_name=_('Memory'))
 
     vm_huge = tables.Column(get_vm_hugepages,
-                            verbose_name=_('VM Pages'))
+                            verbose_name=_('Application Pages'))
 
     def get_object_id(self, datum):
         return str(datum.uuid)

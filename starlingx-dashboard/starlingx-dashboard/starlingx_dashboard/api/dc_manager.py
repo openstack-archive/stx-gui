@@ -132,8 +132,8 @@ def step_list(request):
 
 
 class Config(base.APIResourceWrapper):
-    _attrs = ['cloud', 'storage_apply_type', 'compute_apply_type',
-              'max_parallel_computes', 'alarm_restriction_type',
+    _attrs = ['cloud', 'storage_apply_type', 'worker_apply_type',
+              'max_parallel_workers', 'alarm_restriction_type',
               'default_instance_action']
 
 

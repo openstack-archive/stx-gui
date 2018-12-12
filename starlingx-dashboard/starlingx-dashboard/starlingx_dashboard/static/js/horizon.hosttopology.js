@@ -156,9 +156,9 @@ horizon.host_topology = {
         return;
     }
 
-    // Remove hosts without compute functionality
+    // Remove hosts without worker functionality
     model.hosts = $.grep(model.hosts, function (host, i){
-      if (host.subfunctions && host.subfunctions.indexOf('compute') !== -1){
+      if (host.subfunctions && host.subfunctions.indexOf('worker') !== -1){
         return true;
       }
       return false;

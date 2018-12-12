@@ -91,7 +91,7 @@ class CreateInterface(tables.LinkAction):
             if i.ifclass:
                 count = count + 1
 
-        if host.subfunctions and 'compute' not in host.subfunctions and \
+        if host.subfunctions and 'worker' not in host.subfunctions and \
                 count >= len(INTERFACE_CLASS_TYPES):
             return False
 

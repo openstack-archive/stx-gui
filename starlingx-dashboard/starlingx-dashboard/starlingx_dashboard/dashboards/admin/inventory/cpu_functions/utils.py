@@ -10,24 +10,24 @@ from django.utils.translation import ugettext_lazy as _
 PLATFORM_CPU_TYPE = "Platform"
 VSWITCH_CPU_TYPE = "Vswitch"
 SHARED_CPU_TYPE = "Shared"
-VMS_CPU_TYPE = "VMs"
+APPLICATIONS_CPU_TYPE = "Applications"
 NONE_CPU_TYPE = "None"
 
 CPU_TYPE_LIST = [PLATFORM_CPU_TYPE, VSWITCH_CPU_TYPE,
-                 SHARED_CPU_TYPE, VMS_CPU_TYPE,
+                 SHARED_CPU_TYPE, APPLICATIONS_CPU_TYPE,
                  NONE_CPU_TYPE]
 
 
 PLATFORM_CPU_TYPE_FORMAT = _("Platform")
 VSWITCH_CPU_TYPE_FORMAT = _("vSwitch")
 SHARED_CPU_TYPE_FORMAT = _("Shared")
-VMS_CPU_TYPE_FORMAT = _("VMs")
+APPLICATIONS_CPU_TYPE_FORMAT = _("Applications")
 NONE_CPU_TYPE_FORMAT = _("None")
 
 CPU_TYPE_FORMATS = {PLATFORM_CPU_TYPE: PLATFORM_CPU_TYPE_FORMAT,
                     VSWITCH_CPU_TYPE: VSWITCH_CPU_TYPE_FORMAT,
                     SHARED_CPU_TYPE: SHARED_CPU_TYPE_FORMAT,
-                    VMS_CPU_TYPE: VMS_CPU_TYPE_FORMAT,
+                    APPLICATIONS_CPU_TYPE: APPLICATIONS_CPU_TYPE_FORMAT,
                     NONE_CPU_TYPE: NONE_CPU_TYPE_FORMAT}
 
 
@@ -81,7 +81,7 @@ class CpuProfile(object):
                 cur_processor.vswitch += 1
             elif cpu.allocated_function == SHARED_CPU_TYPE:
                 cur_processor.shared += 1
-            elif cpu.allocated_function == VMS_CPU_TYPE:
+            elif cpu.allocated_function == APPLICATIONS_CPU_TYPE:
                 cur_processor.vms += 1
 
         self.cores_per_cpu = len(cores)
@@ -126,9 +126,9 @@ class HostCpuProfile(CpuProfile):
         result = True
         if platform_cores == 0:
             result = False
-        elif 'compute' in self.personality and vswitch_cores == 0:
+        elif 'worker' in self.personality and vswitch_cores == 0:
             result = False
-        elif 'compute' in self.personality and vm_cores == 0:
+        elif 'worker' in self.personality and vm_cores == 0:
             result = False
         return result
 
@@ -199,7 +199,7 @@ def restructure_host_cpu_data(host):
             else:
                 if (f == PLATFORM_CPU_TYPE or
                     (hasattr(host, 'subfunctions') and
-                     'compute' in host.subfunctions)):
+                     'worker' in host.subfunctions)):
                     if f != NONE_CPU_TYPE:
                         host.core_assignment.append(cpufunction)
                         for s in range(0, len(host.nodes)):
@@ -220,7 +220,7 @@ def check_core_functions(personality, icpus):
             vswitch_cores += 1
         elif allocated_function == SHARED_CPU_TYPE:
             shared_vcpu_cores += 1
-        elif allocated_function == VMS_CPU_TYPE:
+        elif allocated_function == APPLICATIONS_CPU_TYPE:
             vm_cores += 1
 
     # No limiations for shared_vcpu cores
@@ -228,10 +228,10 @@ def check_core_functions(personality, icpus):
     if platform_cores == 0:
         error_string = "There must be at least one" \
                        " core for %s." % PLATFORM_CPU_TYPE_FORMAT
-    elif 'compute' in personality and vswitch_cores == 0:
+    elif 'worker' in personality and vswitch_cores == 0:
         error_string = "There must be at least one" \
                        " core for %s." % VSWITCH_CPU_TYPE_FORMAT
-    elif 'compute' in personality and vm_cores == 0:
+    elif 'worker' in personality and vm_cores == 0:
         error_string = "There must be at least one" \
-                       " core for %s." % VMS_CPU_TYPE_FORMAT
+                       " core for %s." % APPLICATIONS_CPU_TYPE_FORMAT
     return error_string

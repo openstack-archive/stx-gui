@@ -38,12 +38,12 @@ class Client(object):
 
     def create_strategy(
             self, strategy_name, controller_apply_type, storage_apply_type,
-            swift_apply_type, compute_apply_type, max_parallel_compute_hosts,
+            swift_apply_type, worker_apply_type, max_parallel_worker_hosts,
             default_instance_action, alarm_restrictions):
         return sw_update.create_strategy(
             self.token_id, self.url, strategy_name, controller_apply_type,
             storage_apply_type,
-            swift_apply_type, compute_apply_type, max_parallel_compute_hosts,
+            swift_apply_type, worker_apply_type, max_parallel_worker_hosts,
             default_instance_action, alarm_restrictions)
 
     def delete_strategy(self, strategy_name, force):
@@ -72,11 +72,11 @@ def get_strategy(request, strategy_name):
 
 def create_strategy(
         request, strategy_name, controller_apply_type, storage_apply_type,
-        swift_apply_type, compute_apply_type, max_parallel_compute_hosts,
+        swift_apply_type, worker_apply_type, max_parallel_worker_hosts,
         default_instance_action, alarm_restrictions):
     strategy = _sw_update_client(request).create_strategy(
         strategy_name, controller_apply_type, storage_apply_type,
-        swift_apply_type, compute_apply_type, max_parallel_compute_hosts,
+        swift_apply_type, worker_apply_type, max_parallel_worker_hosts,
         default_instance_action, alarm_restrictions)
     return strategy
 

@@ -106,29 +106,29 @@ class CreateCloudPatchConfigForm(forms.SelfHandlingForm):
         choices=APPLY_TYPES,
         widget=forms.Select())
 
-    compute_apply_type = forms.ChoiceField(
-        label=_("Compute Apply Type"),
+    worker_apply_type = forms.ChoiceField(
+        label=_("Worker Apply Type"),
         required=True,
         choices=APPLY_TYPES,
         widget=forms.Select(
             attrs={
                 'class': 'switchable',
-                'data-slug': 'compute_apply_type'}))
+                'data-slug': 'worker_apply_type'}))
 
-    max_parallel_computes = forms.IntegerField(
-        label=_("Maximum Parallel Compute Hosts"),
+    max_parallel_workers = forms.IntegerField(
+        label=_("Maximum Parallel Worker Hosts"),
         initial=2,
         min_value=2,
         max_value=100,
         required=True,
-        error_messages={'invalid': _('Maximum Parallel Compute Hosts must be '
+        error_messages={'invalid': _('Maximum Parallel Worker Hosts must be '
                                      'between 2 and 100.')},
         widget=forms.TextInput(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'compute_apply_type',
-                'data-compute_apply_type-parallel':
-                    'Maximum Parallel Compute Hosts'}))
+                'data-switch-on': 'worker_apply_type',
+                'data-worker_apply_type-parallel':
+                    'Maximum Parallel Worker Hosts'}))
 
     default_instance_action = forms.ChoiceField(
         label=_("Default Instance Action"),

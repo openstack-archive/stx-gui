@@ -41,7 +41,7 @@ LOG = logging.getLogger(__name__)
 class HostsTab(tabs.TableTab):
     table_classes = (toplevel_tables.HostsController,
                      toplevel_tables.HostsStorage,
-                     toplevel_tables.HostsCompute,
+                     toplevel_tables.HostsWorker,
                      toplevel_tables.HostsUnProvisioned,)
     name = _("Hosts")
     slug = "hosts"
@@ -111,10 +111,10 @@ class HostsTab(tabs.TableTab):
 
         return storages
 
-    def get_hostscompute_data(self):
-        computes = self.get_hosts_data(stx_api.sysinv.PERSONALITY_COMPUTE)
+    def get_hostsworker_data(self):
+        workers = self.get_hosts_data(stx_api.sysinv.PERSONALITY_WORKER)
 
-        return computes
+        return workers
 
     def get_hostsunprovisioned_data(self):
         unprovisioned = self.get_hosts_data(stx_api.sysinv.PERSONALITY_UNKNOWN)
@@ -134,12 +134,12 @@ class HostsTab(tabs.TableTab):
 
         controllers = context['hostscontroller_table'].data
         storages = context['hostsstorage_table'].data
-        computes = context['hostscompute_table'].data
+        workers = context['hostsworker_table'].data
         unprovisioned = context['hostsunprovisioned_table'].data
 
         context['controllers'] = controllers
         context['storages'] = storages
-        context['computes'] = computes
+        context['workers'] = workers
         context['unprovisioned'] = unprovisioned
 
         totals = []
@@ -163,7 +163,7 @@ class HostsTab(tabs.TableTab):
             elif h._availability == 'failed':
                 fail_cnt += 1
 
-        for h in computes:
+        for h in workers:
             comp_cnt += 1
             if h._availability == 'degraded':
                 degr_cnt += 1
@@ -183,7 +183,7 @@ class HostsTab(tabs.TableTab):
         if (comp_cnt > 0):
             badge = "badge-success"
             totals.append(
-                {'name': "Compute", 'value': comp_cnt, 'badge': badge})
+                {'name': "Worker", 'value': comp_cnt, 'badge': badge})
 
         if (degr_cnt > 0):
             badge = "badge-warning"

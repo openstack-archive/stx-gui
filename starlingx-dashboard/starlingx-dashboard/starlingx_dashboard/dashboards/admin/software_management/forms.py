@@ -110,29 +110,29 @@ class CreatePatchStrategyForm(forms.SelfHandlingForm):
         choices=GENERIC_APPLY_TYPES,
         widget=forms.Select())
 
-    compute_apply_type = forms.ChoiceField(
-        label=_("Compute Apply Type"),
+    worker_apply_type = forms.ChoiceField(
+        label=_("Worker Apply Type"),
         required=True,
         choices=GENERIC_APPLY_TYPES,
         widget=forms.Select(
             attrs={
                 'class': 'switchable',
-                'data-slug': 'compute_apply_type'}))
+                'data-slug': 'worker_apply_type'}))
 
-    max_parallel_compute_hosts = forms.IntegerField(
-        label=_("Maximum Parallel Compute Hosts"),
+    max_parallel_worker_hosts = forms.IntegerField(
+        label=_("Maximum Parallel Worker Hosts"),
         initial=2,
         min_value=2,
         max_value=100,
         required=True,
-        error_messages={'invalid': _('Maximum Parallel Compute Hosts must be '
+        error_messages={'invalid': _('Maximum Parallel Worker Hosts must be '
                                      'between 2 and 100.')},
         widget=forms.TextInput(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'compute_apply_type',
-                'data-compute_apply_type-parallel':
-                    'Maximum Parallel Compute Hosts'}))
+                'data-switch-on': 'worker_apply_type',
+                'data-worker_apply_type-parallel':
+                    'Maximum Parallel Worker Hosts'}))
 
     default_instance_action = forms.ChoiceField(
         label=_("Default Instance Action"),
@@ -156,7 +156,7 @@ class CreatePatchStrategyForm(forms.SelfHandlingForm):
         system_type = stx_api.sysinv.get_system_type(request)
         if system_type == stx_api.sysinv.SYSTEM_TYPE_AIO:
             del self.fields['controller_apply_type']
-            self.fields['compute_apply_type'].choices = self.AIO_APPLY_TYPES
+            self.fields['worker_apply_type'].choices = self.AIO_APPLY_TYPES
 
         if stx_api.sysinv.is_system_mode_simplex(request):
             self.fields['default_instance_action'].choices = \
@@ -172,8 +172,8 @@ class CreatePatchStrategyForm(forms.SelfHandlingForm):
                 request, stx_api.vim.STRATEGY_SW_PATCH,
                 data.get('controller_apply_type', 'ignore'),
                 data.get('storage_apply_type', 'ignore'), 'ignore',
-                data['compute_apply_type'],
-                data['max_parallel_compute_hosts'],
+                data['worker_apply_type'],
+                data['max_parallel_worker_hosts'],
                 data['default_instance_action'],
                 data['alarm_restrictions'])
             if not response:
@@ -205,29 +205,29 @@ class CreateUpgradeStrategyForm(forms.SelfHandlingForm):
         choices=GENERIC_APPLY_TYPES,
         widget=forms.Select())
 
-    compute_apply_type = forms.ChoiceField(
-        label=_("Compute Apply Type"),
+    worker_apply_type = forms.ChoiceField(
+        label=_("Worker Apply Type"),
         required=True,
         choices=GENERIC_APPLY_TYPES,
         widget=forms.Select(
             attrs={
                 'class': 'switchable',
-                'data-slug': 'compute_apply_type'}))
+                'data-slug': 'worker_apply_type'}))
 
-    max_parallel_compute_hosts = forms.IntegerField(
-        label=_("Maximum Parallel Compute Hosts"),
+    max_parallel_worker_hosts = forms.IntegerField(
+        label=_("Maximum Parallel Worker Hosts"),
         initial=2,
         min_value=2,
         max_value=10,
         required=True,
-        error_messages={'invalid': _('Maximum Parallel Compute Hosts must be '
+        error_messages={'invalid': _('Maximum Parallel Worker Hosts must be '
                                      'between 2 and 10.')},
         widget=forms.TextInput(
             attrs={
                 'class': 'switched',
-                'data-switch-on': 'compute_apply_type',
-                'data-compute_apply_type-parallel':
-                    'Maximum Parallel Compute Hosts'}))
+                'data-switch-on': 'worker_apply_type',
+                'data-worker_apply_type-parallel':
+                    'Maximum Parallel Worker Hosts'}))
 
     alarm_restrictions = forms.ChoiceField(
         label=_("Alarm Restrictions"),
@@ -251,8 +251,8 @@ class CreateUpgradeStrategyForm(forms.SelfHandlingForm):
             response = stx_api.vim.create_strategy(
                 request, stx_api.vim.STRATEGY_SW_UPGRADE, 'ignore',
                 data.get('storage_apply_type', 'ignore'), 'ignore',
-                data['compute_apply_type'],
-                data['max_parallel_compute_hosts'],
+                data['worker_apply_type'],
+                data['max_parallel_worker_hosts'],
                 'migrate',
                 data['alarm_restrictions'])
             if not response:

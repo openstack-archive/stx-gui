@@ -88,7 +88,7 @@ class EditCloudPatchConfigView(forms.ModalFormView):
 
         return {'subcloud': config.cloud,
                 'storage_apply_type': config.storage_apply_type,
-                'compute_apply_type': config.compute_apply_type,
-                'max_parallel_computes': config.max_parallel_computes,
+                'worker_apply_type': config.worker_apply_type,
+                'max_parallel_workers': config.max_parallel_workers,
                 'default_instance_action': config.default_instance_action,
                 'alarm_restriction_type': config.alarm_restriction_type}

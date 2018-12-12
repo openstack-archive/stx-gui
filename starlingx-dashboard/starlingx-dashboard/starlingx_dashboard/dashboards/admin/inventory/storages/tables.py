@@ -378,8 +378,8 @@ class AddLocalVolumeGroup(tables.LinkAction):
         self.classes = classes
 
         if not host._administrative == 'locked':
-            if 'compute' in host._subfunctions and \
-               host.compute_config_required is False:
+            if 'worker' in host._subfunctions and \
+               host.worker_config_required is False:
                 if "disabled" not in self.classes:
                     self.classes = [c for c in self.classes] + ['disabled']
                     self.verbose_name = string_concat(self.verbose_name, ' ',
@@ -396,7 +396,7 @@ class AddLocalVolumeGroup(tables.LinkAction):
         if host._personality == 'controller':
             compatible_lvgs += [sysinv.LVG_CINDER_VOLUMES]
 
-        if 'compute' in host._subfunctions:
+        if 'worker' in host._subfunctions:
             compatible_lvgs += [sysinv.LVG_NOVA_LOCAL]
 
         allowed_lvgs = set(compatible_lvgs) - set(current_lvgs)
@@ -432,8 +432,8 @@ class RemoveLocalVolumeGroup(tables.DeleteAction):
 
         if lvg.lvm_vg_name == sysinv.LVG_NOVA_LOCAL:
             return ((host._administrative == 'locked') or
-                    (('compute' in host._subfunctions) and
-                     (host.compute_config_required is True)))
+                    (('worker' in host._subfunctions) and
+                     (host.worker_config_required is True)))
         elif lvg.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
             return (sysinv.CINDER_BACKEND_LVM not in cinder_backend and
                     sysinv.LVG_ADD in lvg.vg_state)
@@ -512,11 +512,11 @@ class AddPhysicalVolume(tables.LinkAction):
         if host._personality == sysinv.PERSONALITY_CONTROLLER:
             return True
 
-        # nova-local: Allow adding to any locked host with a compute
+        # nova-local: Allow adding to any locked host with a worker
         # subfunction. On an AIO, the previous check superceeds this.
         if host._administrative != 'locked':
-            if 'compute' in host._subfunctions and \
-               host.compute_config_required is False:
+            if 'worker' in host._subfunctions and \
+               host.worker_config_required is False:
                 if "disabled" not in self.classes:
                     self.classes = [c for c in self.classes] + ['disabled']
                     self.verbose_name = string_concat(self.verbose_name, ' ',
@@ -555,8 +555,8 @@ class RemovePhysicalVolume(tables.DeleteAction):
 
         if pv.lvm_vg_name == sysinv.LVG_NOVA_LOCAL:
             return ((host._administrative == 'locked') or
-                    (('compute' in host._subfunctions) and
-                     (host.compute_config_required is True)))
+                    (('worker' in host._subfunctions) and
+                     (host.worker_config_required is True)))
         elif pv.lvm_vg_name == sysinv.LVG_CINDER_VOLUMES:
             return (sysinv.CINDER_BACKEND_LVM not in cinder_backend and
                     sysinv.PV_ADD in pv.pv_state)
