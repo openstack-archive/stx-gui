@@ -145,7 +145,7 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
                 'platform_processor3'].help_text = \
                 "Processor 3 has %s physical cores." % avail_socket_cores
 
-        if 'compute' not in self.host.subfunctions:
+        if 'worker' not in self.host.subfunctions:
             self.fields['vswitch'].widget = forms.widgets.HiddenInput()
             self.fields[
                 'num_cores_on_processor0'].widget = forms.widgets.HiddenInput()
@@ -214,7 +214,7 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
 
         for s in range(0, 4):
             processor = 'num_shared_on_processor{0}'.format(s)
-            if ('compute' not in self.host.subfunctions or
+            if ('worker' not in self.host.subfunctions or
                     kwargs['initial'][processor] == 99):  # No Processor
                 self.fields[processor].widget = forms.widgets.HiddenInput()
             else:

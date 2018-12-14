@@ -48,7 +48,7 @@ class CreateProviderNetwork(forms.SelfHandlingForm):
                              max_value=9216,
                              help_text=(
         _("Specifies the maximum MTU value of any associated tenant "
-          "network.  Compute node data interface MTU values must be large "
+          "network.  Worker node data interface MTU values must be large "
           "enough to support the tenant MTU plus any additional provider "
           "encapsulation headers.  For example, VXLAN provider MTU of "
           "1500 requires a minimum data interface MTU of 1574 bytes (1600 "

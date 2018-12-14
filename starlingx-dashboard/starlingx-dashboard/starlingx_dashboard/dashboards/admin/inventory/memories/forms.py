@@ -36,11 +36,11 @@ class UpdateMemory(forms.SelfHandlingForm):
         required=False)
 
     vm_hugepages_nr_2M = forms.CharField(
-        label=_("# of VM 2M Hugepages Node 0"),
+        label=_("# of Application 2M Hugepages Node 0"),
         required=False)
 
     vm_hugepages_nr_1G = forms.CharField(
-        label=_("# of VM 1G Hugepages Node 0"),
+        label=_("# of Application 1G Hugepages Node 0"),
         required=False)
 
     platform_memory_two = forms.CharField(
@@ -48,11 +48,11 @@ class UpdateMemory(forms.SelfHandlingForm):
         required=False)
 
     vm_hugepages_nr_2M_two = forms.CharField(
-        label=_("# of VM 2M Hugepages Node 1"),
+        label=_("# of Application 2M Hugepages Node 1"),
         required=False)
 
     vm_hugepages_nr_1G_two = forms.CharField(
-        label=_("# of VM 1G Hugepages Node 1"),
+        label=_("# of Application 1G Hugepages Node 1"),
         required=False)
 
     platform_memory_three = forms.CharField(
@@ -60,11 +60,11 @@ class UpdateMemory(forms.SelfHandlingForm):
         required=False)
 
     vm_hugepages_nr_2M_three = forms.CharField(
-        label=_("# of VM 2M Hugepages Node 2"),
+        label=_("# of Application 2M Hugepages Node 2"),
         required=False)
 
     vm_hugepages_nr_1G_three = forms.CharField(
-        label=_("# of VM 1G Hugepages Node 2"),
+        label=_("# of Application 1G Hugepages Node 2"),
         required=False)
 
     platform_memory_four = forms.CharField(
@@ -72,11 +72,11 @@ class UpdateMemory(forms.SelfHandlingForm):
         required=False)
 
     vm_hugepages_nr_2M_four = forms.CharField(
-        label=_("# of VM 2M Hugepages Node 3"),
+        label=_("# of Application 2M Hugepages Node 3"),
         required=False)
 
     vm_hugepages_nr_1G_four = forms.CharField(
-        label=_("# of VM 1G Hugepages Node 3"),
+        label=_("# of Application 1G Hugepages Node 3"),
         required=False)
 
     failure_url = 'horizon:admin:inventory:detail'

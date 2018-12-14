@@ -32,7 +32,7 @@ class EditDevice(tables.LinkAction):
     def allowed(self, request, datum):
         host = self.table.kwargs['host']
         return (host._administrative == 'locked' and
-                stx_api.sysinv.SUBFUNCTIONS_COMPUTE in host.subfunctions)
+                stx_api.sysinv.SUBFUNCTIONS_WORKER in host.subfunctions)
 
 
 def get_viewdevice_link_url(device):

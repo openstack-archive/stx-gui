@@ -231,10 +231,10 @@ class ForceLockHost(tables.BatchAction):
                 "unsuccessful and this host MUST be locked.\n\n"
                 "If you proceed, then this action will be logged"
                 " and cannot be undone.") % datum.hostname
-        elif datum._personality == stx_api.sysinv.PERSONALITY_COMPUTE:
+        elif datum._personality == stx_api.sysinv.PERSONALITY_WORKER:
             return _(
                 "<b>WARNING</b>: This will cause a service OUTAGE"
-                " for all VMs currently using resources on '%s'.\n\n"
+                " for all Applications currently using resources on '%s'.\n\n"
                 "To avoid service outages, click 'Cancel' and use"
                 " 'Lock Host' to gracefully migrate "
                 "resources away from this host. "
@@ -593,7 +593,7 @@ class HostsStorageFilterAction(tables.FilterAction):
         return list(filter(comp, hosts))
 
 
-class HostsComputeFilterAction(tables.FilterAction):
+class HostsWorkerFilterAction(tables.FilterAction):
     def filter(self, table, hosts, filter_string):
         """Naive case-insensitive search."""
         q = filter_string.lower()
@@ -687,7 +687,7 @@ TASK_STATE_CHOICES = (
     ("none", True),
     ("Install Failed", False),
     ("Config out-of-date", False),
-    ("Compute config required", False),
+    ("Worker config required", False),
     ("Reinstall required", False),
     ("Config out-of-date<br />Not Patch Current<br />Reboot Required",
      False),
@@ -789,10 +789,10 @@ class HostsStorage(Hosts):
         hidden_title = False
 
 
-class HostsCompute(Hosts):
+class HostsWorker(Hosts):
     class Meta(object):
-        name = "hostscompute"
-        verbose_name = _("Compute Hosts")
+        name = "hostsworker"
+        verbose_name = _("Worker Hosts")
         status_columns = ["task"]
         row_class = UpdateRow
         multi_select = True
@@ -802,7 +802,7 @@ class HostsCompute(Hosts):
             PowerOnHost,
             PowerOffHost, RebootHost,
             ResetHost, ReinstallHost, PatchInstallAsync, DeleteHost)
-        table_actions = (HostsComputeFilterAction, LockHost,
+        table_actions = (HostsWorkerFilterAction, LockHost,
                          UnlockHost, PatchInstallAsync)
         hidden_title = False
 

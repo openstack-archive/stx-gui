@@ -303,10 +303,10 @@ class CloudPatchConfigTable(tables.DataTable):
     cloud = tables.Column('cloud', verbose_name=_('Cloud'))
     storage_apply_type = tables.Column('storage_apply_type',
                                        verbose_name=_('Storage Apply Type'))
-    compute_apply_type = tables.Column('compute_apply_type',
-                                       verbose_name=_('Compute Apply Type'))
-    max_parallel_computes = tables.Column(
-        'max_parallel_computes', verbose_name=_('Max Parallel Computes'))
+    worker_apply_type = tables.Column('worker_apply_type',
+                                      verbose_name=_('Worker Apply Type'))
+    max_parallel_workers = tables.Column(
+        'max_parallel_workers', verbose_name=_('Max Parallel Workers'))
     default_instance_action = tables.Column(
         'default_instance_action', verbose_name=_('Default Instance Action'))
     alarm_restriction_type = tables.Column(

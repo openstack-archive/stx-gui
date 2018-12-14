@@ -52,8 +52,8 @@
 	});
 
 	horizon.refresh.addRefreshFunction(function (html) {
-        var $old_table = $('#computes');
-        var $new_table = $(html).find('#computes');
+        var $old_table = $('#workers');
+        var $new_table = $(html).find('#workers');
         if (($old_table.children().length == 0 && $new_table.children().length> 0) ||
             ($old_table.children().length > 0 && $new_table.children().length == 0)) {
             $old_table.replaceWith($new_table);

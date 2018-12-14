@@ -34,12 +34,12 @@ SYSTEM_TYPE_STANDARD = constants.TIS_STD_BUILD
 SYSTEM_TYPE_AIO = constants.TIS_AIO_BUILD
 
 PERSONALITY_CONTROLLER = 'controller'
-PERSONALITY_COMPUTE = 'compute'
+PERSONALITY_WORKER = 'worker'
 PERSONALITY_NETWORK = 'network'
 PERSONALITY_STORAGE = 'storage'
 PERSONALITY_UNKNOWN = 'unknown'
 
-SUBFUNCTIONS_COMPUTE = 'compute'
+SUBFUNCTIONS_WORKER = 'worker'
 SUBFUNCTIONS_LOWLATENCY = 'lowlatency'
 
 BM_TYPE_NULL = ''
@@ -813,7 +813,7 @@ class Host(base.APIResourceWrapper):
 
     PERSONALITY_DISPLAY_CHOICES = (
         (PERSONALITY_CONTROLLER, _("Controller")),
-        (PERSONALITY_COMPUTE, _("Compute")),
+        (PERSONALITY_WORKER, _("Worker")),
         (PERSONALITY_NETWORK, _("Network")),
         (PERSONALITY_STORAGE, _("Storage")),
     )
@@ -906,7 +906,7 @@ class Host(base.APIResourceWrapper):
     def is_cpe(self):
         subfunctions = self._subfunctions.split(',')
         if PERSONALITY_CONTROLLER in subfunctions and \
-                PERSONALITY_COMPUTE in subfunctions:
+                PERSONALITY_WORKER in subfunctions:
             return True
         else:
             return False
@@ -926,8 +926,8 @@ class Host(base.APIResourceWrapper):
                                        self._subfunction_avail)
 
     @property
-    def compute_config_required(self):
-        return self.config_status == 'Compute config required'
+    def worker_config_required(self):
+        return self.config_status == 'Worker config required'
 
     @property
     def location(self):

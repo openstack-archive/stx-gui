@@ -27,20 +27,20 @@ from starlingx_dashboard import api as stx_api
 LOG = logging.getLogger(__name__)
 
 PERSONALITY_CHOICES = (
-    (stx_api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
+    (stx_api.sysinv.PERSONALITY_WORKER, _("Worker")),
     (stx_api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
     (stx_api.sysinv.PERSONALITY_STORAGE, _("Storage")),
 )
 
 FIELD_LABEL_PERFORMANCE_PROFILE = _("Performance Profile")
 PERFORMANCE_CHOICES = (
-    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE, _("Standard")),
-    (stx_api.sysinv.SUBFUNCTIONS_COMPUTE + ',' +
+    (stx_api.sysinv.SUBFUNCTIONS_WORKER, _("Standard")),
+    (stx_api.sysinv.SUBFUNCTIONS_WORKER + ',' +
      stx_api.sysinv.SUBFUNCTIONS_LOWLATENCY, _("Low Latency")),
 )
 
 PERSONALITY_CHOICES_WITHOUT_STORAGE = (
-    (stx_api.sysinv.PERSONALITY_COMPUTE, _("Compute")),
+    (stx_api.sysinv.PERSONALITY_WORKER, _("Worker")),
     (stx_api.sysinv.PERSONALITY_CONTROLLER, _("Controller")),
 )
 
@@ -58,11 +58,11 @@ def ifprofile_applicable(request, host, profile):
     for interface in profile.interfaces:
         interface_networks = stx_api.sysinv.\
             interface_network_list_by_interface(request, interface.uuid)
-        if (stx_api.sysinv.PERSONALITY_COMPUTE == host._personality and
+        if (stx_api.sysinv.PERSONALITY_WORKER == host._personality and
                 any(interface_network.network_type == 'oam'
                     for interface_network in interface_networks)):
             return False
-        if (stx_api.sysinv.PERSONALITY_COMPUTE not in host._subfunctions and
+        if (stx_api.sysinv.PERSONALITY_WORKER not in host._subfunctions and
                 interface.ifclass == 'data'):
             return False
     return True
@@ -84,7 +84,7 @@ def diskprofile_applicable(host, diskprofile):
     if not len(host.disks) >= len(diskprofile.disks):
         return False
 
-    if stx_api.sysinv.PERSONALITY_COMPUTE in host._subfunctions:
+    if stx_api.sysinv.PERSONALITY_WORKER in host._subfunctions:
         if diskprofile.lvgs:
             for lvg in diskprofile.lvgs:
                 if (hasattr(lvg, 'lvm_vg_name') and
@@ -109,7 +109,7 @@ def memoryprofile_applicable(host, personality, profile):
         return False
     if len(host.nodes) != len(profile.nodes):
         return False
-    if 'compute' not in personality:
+    if 'worker' not in personality:
         return False
     return True
 
@@ -149,7 +149,7 @@ class AddHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   stx_api.sysinv.PERSONALITY_COMPUTE: _(
+                   stx_api.sysinv.PERSONALITY_WORKER: _(
                        "Personality Sub-Type")}))
 
     hostname = forms.RegexField(label=FIELD_LABEL_HOSTNAME,
@@ -165,7 +165,7 @@ class AddHostInfoAction(workflows.Action):
                                     attrs={'class': 'switched',
                                            'data-switch-on': 'personality',
                                            'data-personality-' +
-                                           stx_api.sysinv.PERSONALITY_COMPUTE:
+                                           stx_api.sysinv.PERSONALITY_WORKER:
                                                FIELD_LABEL_HOSTNAME,
                                            }))
 
@@ -175,7 +175,7 @@ class AddHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   stx_api.sysinv.PERSONALITY_COMPUTE: FIELD_LABEL_MGMT_MAC,
+                   stx_api.sysinv.PERSONALITY_WORKER: FIELD_LABEL_MGMT_MAC,
                    'data-personality-' +
                    stx_api.sysinv.PERSONALITY_CONTROLLER: FIELD_LABEL_MGMT_MAC,
                    'data-personality-' +
@@ -196,19 +196,19 @@ class AddHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # All-in-one system, personality can be controller or compute.
+        # All-in-one system, personality can be controller or worker.
         systems = stx_api.sysinv.system_list(request)
         system_type = systems[0].to_dict().get('system_type')
         if system_type == constants.TS_AIO:
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # Remove compute personality if in DC mode and region
+        # Remove worker personality if in DC mode and region
         if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
                 and getattr(settings, 'DC_MODE', False):
             self.fields['personality'].choices = \
                 [choice for choice in self.fields['personality'].choices
-                 if choice[0] != stx_api.sysinv.PERSONALITY_COMPUTE]
+                 if choice[0] != stx_api.sysinv.PERSONALITY_WORKER]
 
     def clean(self):
         cleaned_data = super(AddHostInfoAction, self).clean()
@@ -231,7 +231,7 @@ class UpdateHostInfoAction(workflows.Action):
             attrs={'class': 'switched',
                    'data-switch-on': 'personality',
                    'data-personality-' +
-                   stx_api.sysinv.PERSONALITY_COMPUTE: _(
+                   stx_api.sysinv.PERSONALITY_WORKER: _(
                        "Performance Profile")}))
 
     hostname = forms.RegexField(label=_("Host Name"),
@@ -247,7 +247,7 @@ class UpdateHostInfoAction(workflows.Action):
                                     attrs={'class': 'switched',
                                            'data-switch-on': 'personality',
                                            'data-personality-' +
-                                           stx_api.sysinv.PERSONALITY_COMPUTE:
+                                           stx_api.sysinv.PERSONALITY_WORKER:
                                                _("Host Name")}))
 
     location = forms.CharField(label=_("Location"),
@@ -292,7 +292,7 @@ class UpdateHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # All-in-one system, personality can only be controller or compute.
+        # All-in-one system, personality can only be controller or worker.
         systems = stx_api.sysinv.system_list(request)
         self.system_mode = systems[0].to_dict().get('system_mode')
         self.system_type = systems[0].to_dict().get('system_type')
@@ -300,12 +300,12 @@ class UpdateHostInfoAction(workflows.Action):
             self.fields['personality'].choices = \
                 PERSONALITY_CHOICES_WITHOUT_STORAGE
 
-        # Remove compute personality if in DC mode and region
+        # Remove worker personality if in DC mode and region
         if getattr(self.request.user, 'services_region', None) == 'RegionOne' \
                 and getattr(settings, 'DC_MODE', False):
             self.fields['personality'].choices = \
                 [choice for choice in self.fields['personality'].choices
-                 if choice[0] != stx_api.sysinv.PERSONALITY_COMPUTE]
+                 if choice[0] != stx_api.sysinv.PERSONALITY_WORKER]
 
         # hostname cannot be modified once it is set
         if self.initial['hostname']:
@@ -334,7 +334,7 @@ class UpdateHostInfoAction(workflows.Action):
             host.ports = stx_api.sysinv.host_port_list(self.request, host.uuid)
             host.disks = stx_api.sysinv.host_disk_list(self.request, host.uuid)
 
-            if 'compute' in host.subfunctions:
+            if 'worker' in host.subfunctions:
                 mem_profile_configurable = True
                 host.memory = stx_api.sysinv.host_memory_list(
                     self.request, host.uuid)
@@ -393,7 +393,7 @@ class UpdateHostInfoAction(workflows.Action):
                     'interfaceProfile'].widget = forms.widgets.HiddenInput()
 
             if ((personality == 'storage' or
-                 'compute' in host._subfunctions) and host.disks):
+                 'worker' in host._subfunctions) and host.disks):
                 # Populate Available Disk Profile Choices
                 try:
                     disk_profile_tuple_list = [
@@ -470,7 +470,7 @@ class UpdateHostInfoAction(workflows.Action):
                 stx_api.sysinv.PERSONALITY_CONTROLLER:
             if self.system_type == constants.TS_AIO:
                 self._subfunctions = (stx_api.sysinv.PERSONALITY_CONTROLLER +
-                                      ',' + stx_api.sysinv.PERSONALITY_COMPUTE)
+                                      ',' + stx_api.sysinv.PERSONALITY_WORKER)
             else:
                 self._subfunctions = stx_api.sysinv.PERSONALITY_CONTROLLER
             cleaned_data['subfunctions'] = self._subfunctions

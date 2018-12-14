@@ -408,7 +408,7 @@ class AddLocalVolumeGroup(forms.SelfHandlingForm):
                 stx_api.sysinv.PERSONALITY_CONTROLLER):
             compatible_lvgs += [stx_api.sysinv.LVG_CINDER_VOLUMES]
 
-        if stx_api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
+        if stx_api.sysinv.SUBFUNCTIONS_WORKER in subfunctions:
             compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
 
         allowed_lvgs = set(compatible_lvgs) - set(current_lvgs)
@@ -542,7 +542,7 @@ class AddPhysicalVolume(forms.SelfHandlingForm):
             compatible_lvgs += [stx_api.sysinv.LVG_CGTS_VG,
                                 stx_api.sysinv.LVG_CINDER_VOLUMES]
 
-        if stx_api.sysinv.SUBFUNCTIONS_COMPUTE in subfunctions:
+        if stx_api.sysinv.SUBFUNCTIONS_WORKER in subfunctions:
             compatible_lvgs += [stx_api.sysinv.LVG_NOVA_LOCAL]
 
         avail_disk_list = stx_api.sysinv.host_disk_list(self.request,
