@@ -23,6 +23,7 @@ from cgtsclient.v1 import client as cgts_client
 from cgtsclient.v1 import icpu as icpu_utils
 
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from openstack_dashboard.api import base
@@ -949,7 +950,7 @@ class Host(base.APIResourceWrapper):
 
     @property
     def boottime(self):
-        return datetime.datetime.now() - datetime.timedelta(
+        return timezone.now() - datetime.timedelta(
             seconds=self.uptime)
 
     @property

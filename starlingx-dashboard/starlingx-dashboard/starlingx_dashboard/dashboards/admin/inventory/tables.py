@@ -11,13 +11,14 @@ import logging
 from django.core.urlresolvers import reverse  # noqa
 from django import shortcuts
 from django import template
-from django.template.defaultfilters import safe, timesince  # noqa
+from django.template.defaultfilters import safe  # noqa
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import messages
 from horizon import tables
+from horizon.utils import filters
 from horizon.utils import functions
 
 from starlingx_dashboard import api as stx_api
@@ -731,9 +732,9 @@ class Hosts(tables.DataTable):
                           display_choices=stx_api.sysinv.
                           Host.AVAIL_DISPLAY_CHOICES)
     uptime = tables.Column('boottime',
-                           verbose_name=_('Uptime'),
-                           filters=(timesince,),
-                           attrs={'data-type': "uptime"})
+                           verbose_name=_("Uptime"),
+                           filters=(filters.timesince_sortable,),
+                           attrs={'data-type': 'timesince'})
 
     task = tables.Column(get_task_or_status,
                          cell_attributes_getter=get_install_percent,
