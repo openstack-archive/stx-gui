@@ -17,6 +17,7 @@
               <th>{% trans "Numa Node" %}</th>
               <th>{% trans "Platform Reserved" %}</th>
               <th>{% trans "Application Hugepages" %}</th>
+              <th>{% trans "vSwitch Hugepages" %}</th>
             </tr>
             {% for node,m in host.numa_nodes %}
                 <tr>
@@ -25,6 +26,10 @@
                   <td>
                       {% trans " 2M Pages: " %} {{ m.vm_hugepages_nr_2M }} {{ "<br>" }}
                       {% trans " 1G Pages: " %} {{ m.vm_hugepages_nr_1G }} {{ "<br>" }}
+                  </td>
+                  <td>
+                      {% trans " Size (MB): " %} {{ m.vswitch_hugepages_size_mib }} {{ "<br>" }}
+                      {% trans " Pages: " %} {{ m.vswitch_hugepages_nr }} {{ "<br>" }}
                   </td>
                 </tr>
             {% endfor %}

@@ -10,7 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 
 from __future__ import absolute_import
@@ -154,6 +154,9 @@ class Memory(base.APIResourceWrapper):
               'vm_hugepages_possible_2M',
               'vm_hugepages_possible_1G',
               'vm_hugepages_use_1G',
+              'vswitch_hugepages_reqd',
+              'vswitch_hugepages_size_mib',
+              'vswitch_hugepages_nr',
               'uuid', 'ihost_uuid', 'inode_uuid',
               'minimum_platform_reserved_mib']
 
