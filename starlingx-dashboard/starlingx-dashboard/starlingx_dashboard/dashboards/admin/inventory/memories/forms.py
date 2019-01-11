@@ -23,6 +23,11 @@ LOG = logging.getLogger(__name__)
 
 
 class UpdateMemory(forms.SelfHandlingForm):
+    VSWITCH_HP_SIZE_CHOICES = (
+        ('2', _("2 MB")),
+        ('1024', _("1 GB"))
+    )
+
     host = forms.CharField(label=_("host"),
                            required=False,
                            widget=forms.widgets.HiddenInput)
@@ -43,6 +48,19 @@ class UpdateMemory(forms.SelfHandlingForm):
         label=_("# of Application 1G Hugepages Node 0"),
         required=False)
 
+    vswitch_hugepages_reqd = forms.CharField(
+        label=_("# of vSwitch 1G Hugepages Node 0"),
+        required=False)
+
+    vswitch_hugepages_size_mib = forms.ChoiceField(
+        label=_("vSwitch Hugepage Size Node 0"),
+        required=False,
+        choices=VSWITCH_HP_SIZE_CHOICES,
+        widget=forms.Select(
+            attrs={
+                'class': 'switchable',
+                'data-slug': 'vswitch_hugepages_size_mib'}))
+
     platform_memory_two = forms.CharField(
         label=_("Platform Memory for Node 1"),
         required=False)
@@ -54,6 +72,19 @@ class UpdateMemory(forms.SelfHandlingForm):
     vm_hugepages_nr_1G_two = forms.CharField(
         label=_("# of Application 1G Hugepages Node 1"),
         required=False)
+
+    vswitch_hugepages_reqd_two = forms.CharField(
+        label=_("# of vSwitch 1G Hugepages Node 1"),
+        required=False)
+
+    vswitch_hugepages_size_mib_two = forms.ChoiceField(
+        label=_("vSwitch Hugepage Size Node 1"),
+        required=False,
+        choices=VSWITCH_HP_SIZE_CHOICES,
+        widget=forms.Select(
+            attrs={
+                'class': 'switchable',
+                'data-slug': 'vswitch_hugepages_size_mib'}))
 
     platform_memory_three = forms.CharField(
         label=_("Platform Memory for Node 2"),
@@ -67,6 +98,19 @@ class UpdateMemory(forms.SelfHandlingForm):
         label=_("# of Application 1G Hugepages Node 2"),
         required=False)
 
+    vswitch_hugepages_reqd_three = forms.CharField(
+        label=_("# of vSwitch 1G Hugepages Node 2"),
+        required=False)
+
+    vswitch_hugepages_size_mib_three = forms.ChoiceField(
+        label=_("vSwitch Hugepage Size Node 2"),
+        required=False,
+        choices=VSWITCH_HP_SIZE_CHOICES,
+        widget=forms.Select(
+            attrs={
+                'class': 'switchable',
+                'data-slug': 'vswitch_hugepages_size_mib'}))
+
     platform_memory_four = forms.CharField(
         label=_("Platform Memory for Node 3"),
         required=False)
@@ -79,6 +123,19 @@ class UpdateMemory(forms.SelfHandlingForm):
         label=_("# of Application 1G Hugepages Node 3"),
         required=False)
 
+    vswitch_hugepages_reqd_four = forms.CharField(
+        label=_("# of vSwitch 1G Hugepages Node 3"),
+        required=False)
+
+    vswitch_hugepages_size_mib_four = forms.ChoiceField(
+        label=_("vSwitch Hugepage Size Node 3"),
+        required=False,
+        choices=VSWITCH_HP_SIZE_CHOICES,
+        widget=forms.Select(
+            attrs={
+                'class': 'switchable',
+                'data-slug': 'vswitch_hugepages_size_mib'}))
+
     failure_url = 'horizon:admin:inventory:detail'
 
     def __init__(self, request, *args, **kwargs):
@@ -90,22 +147,37 @@ class UpdateMemory(forms.SelfHandlingForm):
             {
                 'platform_memory': self.fields['platform_memory'],
                 'vm_hugepages_nr_2M': self.fields['vm_hugepages_nr_2M'],
-                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G']
+                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G'],
+                'vswitch_hugepages_size_mib':
+                    self.fields['vswitch_hugepages_size_mib'],
+                'vswitch_hugepages_reqd': self.fields['vswitch_hugepages_reqd']
             },
             {
                 'platform_memory': self.fields['platform_memory_two'],
                 'vm_hugepages_nr_2M': self.fields['vm_hugepages_nr_2M_two'],
-                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_two']
+                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_two'],
+                'vswitch_hugepages_size_mib':
+                    self.fields['vswitch_hugepages_size_mib_two'],
+                'vswitch_hugepages_reqd':
+                    self.fields['vswitch_hugepages_reqd_two']
             },
             {
                 'platform_memory': self.fields['platform_memory_three'],
                 'vm_hugepages_nr_2M': self.fields['vm_hugepages_nr_2M_three'],
-                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_three']
+                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_three'],
+                'vswitch_hugepages_size_mib':
+                    self.fields['vswitch_hugepages_size_mib_three'],
+                'vswitch_hugepages_reqd':
+                    self.fields['vswitch_hugepages_reqd_three']
             },
             {
                 'platform_memory': self.fields['platform_memory_four'],
                 'vm_hugepages_nr_2M': self.fields['vm_hugepages_nr_2M_four'],
-                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_four']
+                'vm_hugepages_nr_1G': self.fields['vm_hugepages_nr_1G_four'],
+                'vswitch_hugepages_size_mib':
+                    self.fields['vswitch_hugepages_size_mib_four'],
+                'vswitch_hugepages_reqd':
+                    self.fields['vswitch_hugepages_reqd_four']
             }
         ]
 
@@ -156,6 +228,26 @@ class UpdateMemory(forms.SelfHandlingForm):
                     if not vm_1g_supported:
                         vm_1G_field.widget.attrs['disabled'] = 'disabled'
 
+                    vswitch_hp_reqd_field = field_set['vswitch_hugepages_reqd']
+                    vswitch_hp_reqd_field.help_text = \
+                        'Maximum vSwitch pages'
+
+                    vswitch_hp_size_mib_field = \
+                        field_set['vswitch_hugepages_size_mib']
+                    vswitch_hp_size_mib_field.help_text = \
+                        'vSwitch hugepage size'
+
+                    if m.vswitch_hugepages_reqd:
+                        vswitch_hp_reqd_field.initial = \
+                            str(m.vswitch_hugepages_reqd)
+                    elif m.vswitch_hugepages_nr:
+                        vswitch_hp_reqd_field.initial = \
+                            str(m.vswitch_hugepages_nr)
+
+                    if m.vswitch_hugepages_size_mib:
+                        vswitch_hp_size_mib_field.initial = \
+                            str(m.vswitch_hugepages_size_mib)
+
                     break
 
         while count < 4:
@@ -165,6 +257,10 @@ class UpdateMemory(forms.SelfHandlingForm):
             field_set['vm_hugepages_nr_2M'].widget = \
                 forms.widgets.HiddenInput()
             field_set['vm_hugepages_nr_1G'].widget = \
+                forms.widgets.HiddenInput()
+            field_set['vswitch_hugepages_reqd'].widget = \
+                forms.widgets.HiddenInput()
+            field_set['vswitch_hugepages_size_mib'].widget = \
                 forms.widgets.HiddenInput()
             count += 1
 
@@ -184,23 +280,31 @@ class UpdateMemory(forms.SelfHandlingForm):
 
         if data['platform_memory_two'] or \
            data['vm_hugepages_nr_2M_two'] or \
-           data['vm_hugepages_nr_1G_two']:
+           data['vm_hugepages_nr_1G_two'] or \
+           data['vswitch_hugepages_size_mib_two'] or \
+           data['vswitch_hugepages_reqd_two']:
             node.append('node1')
 
         if data['platform_memory_three'] or \
            data['vm_hugepages_nr_2M_three'] or \
-           data['vm_hugepages_nr_1G_three']:
+           data['vm_hugepages_nr_1G_three'] or \
+           data['vswitch_hugepages_size_mib_three'] or \
+           data['vswitch_hugepages_reqd_three']:
             node.append('node2')
 
         if data['platform_memory_four'] or \
            data['vm_hugepages_nr_2M_four'] or \
-           data['vm_hugepages_nr_1G_four']:
+           data['vm_hugepages_nr_1G_four'] or \
+           data['vswitch_hugepages_size_mib_four'] or \
+           data['vswitch_hugepages_reqd_four']:
             node.append('node3')
 
         # host = api.sysinv.host_get(request, host_id)
         pages_1G = {}
         pages_2M = {}
         plat_mem = {}
+        pages_vs_size = {}
+        pages_vs_reqd = {}
 
         # Node 0 arguments
         if not data['platform_memory']:
@@ -218,6 +322,16 @@ class UpdateMemory(forms.SelfHandlingForm):
         else:
             pages_1G['node0'] = data['vm_hugepages_nr_1G']
 
+        if not data['vswitch_hugepages_size_mib']:
+            del data['vswitch_hugepages_size_mib']
+        else:
+            pages_vs_size['node0'] = data['vswitch_hugepages_size_mib']
+
+        if not data['vswitch_hugepages_reqd']:
+            del data['vswitch_hugepages_reqd']
+        else:
+            pages_vs_reqd['node0'] = data['vswitch_hugepages_reqd']
+
         # Node 1 arguments
         if not data['platform_memory_two']:
             del data['platform_memory_two']
@@ -233,6 +347,16 @@ class UpdateMemory(forms.SelfHandlingForm):
             del data['vm_hugepages_nr_1G_two']
         else:
             pages_1G['node1'] = data['vm_hugepages_nr_1G_two']
+
+        if not data['vswitch_hugepages_size_mib_two']:
+            del data['vswitch_hugepages_size_mib_two']
+        else:
+            pages_vs_size['node1'] = data['vswitch_hugepages_size_mib_two']
+
+        if not data['vswitch_hugepages_reqd_two']:
+            del data['vswitch_hugepages_reqd_two']
+        else:
+            pages_vs_reqd['node1'] = data['vswitch_hugepages_reqd_two']
 
         # Node 2 arguments
         if not data['platform_memory_three']:
@@ -250,6 +374,16 @@ class UpdateMemory(forms.SelfHandlingForm):
         else:
             pages_1G['node2'] = data['vm_hugepages_nr_1G_three']
 
+        if not data['vswitch_hugepages_size_mib_three']:
+            del data['vswitch_hugepages_size_mib_three']
+        else:
+            pages_vs_size['node2'] = data['vswitch_hugepages_size_mib_three']
+
+        if not data['vswitch_hugepages_reqd']:
+            del data['vswitch_hugepages_reqd']
+        else:
+            pages_vs_reqd['node2'] = data['vswitch_hugepages_reqd_three']
+
         # Node 3 arguments
         if not data['platform_memory_four']:
             del data['platform_memory_four']
@@ -265,6 +399,16 @@ class UpdateMemory(forms.SelfHandlingForm):
             del data['vm_hugepages_nr_1G_four']
         else:
             pages_1G['node3'] = data['vm_hugepages_nr_1G_four']
+
+        if not data['vswitch_hugepages_size_mib_four']:
+            del data['vswitch_hugepages_size_mib_four']
+        else:
+            pages_vs_size['node3'] = data['vswitch_hugepages_size_mib_four']
+
+        if not data['vswitch_hugepages_reqd_four']:
+            del data['vswitch_hugepages_reqd_four']
+        else:
+            pages_vs_reqd['node3'] = data['vswitch_hugepages_reqd_four']
 
         try:
             for nd in node:
@@ -288,6 +432,11 @@ class UpdateMemory(forms.SelfHandlingForm):
                         new_data['vm_hugepages_nr_2M_pending'] = pages_2M[nd]
                     if nd in pages_1G:
                         new_data['vm_hugepages_nr_1G_pending'] = pages_1G[nd]
+                    if nd in pages_vs_size:
+                        new_data['vswitch_hugepages_size_mib'] = \
+                            pages_vs_size[nd]
+                    if nd in pages_vs_reqd:
+                        new_data['vswitch_hugepages_reqd'] = pages_vs_reqd[nd]
 
                     if new_data:
                         stx_api.sysinv.host_memory_update(request, memory.uuid,
