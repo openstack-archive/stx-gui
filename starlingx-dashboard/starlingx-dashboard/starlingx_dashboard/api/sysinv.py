@@ -154,6 +154,9 @@ class Memory(base.APIResourceWrapper):
               'vm_hugepages_possible_2M',
               'vm_hugepages_possible_1G',
               'vm_hugepages_use_1G',
+              'vswitch_hugepages_reqd',
+              'vswitch_hugepages_size_mib',
+              'vswitch_hugepages_nr',
               'uuid', 'ihost_uuid', 'inode_uuid',
               'minimum_platform_reserved_mib']
 
