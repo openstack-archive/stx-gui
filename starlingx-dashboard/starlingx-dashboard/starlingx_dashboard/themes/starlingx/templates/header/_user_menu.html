@@ -18,6 +18,14 @@
           {% trans "Settings" %}
         </a>
       </li>
+	  {% if HORIZON_CONFIG.help_url %}
+	    <li>
+		  <a href="{{ HORIZON_CONFIG.help_url }}" target="_blank">
+		    <span class="fa fa-question-circle"></span>
+			{% trans "Help" %}
+		  </a>
+	    </li>
+	  {% endif %}
       <li>
         <a href="{% url 'horizon:project:api_access:openrc' %}">
           <span class="fa fa-download"></span>
