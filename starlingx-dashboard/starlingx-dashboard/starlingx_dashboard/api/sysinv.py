@@ -199,6 +199,15 @@ class Cpu(base.APIResourceWrapper):
         super(Cpu, self).__init__(apiresource)
 
 
+class Label(base.APIResourceWrapper):
+    """Wrapper for host labels"""
+
+    _attrs = ['uuid', 'host_uuid', 'label_key', 'label_value']
+
+    def __init__(self, apiresource):
+        super(Label, self).__init__(apiresource)
+
+
 class Port(base.APIResourceWrapper):
     """Wrapper for Inventory Ports"""
 
@@ -1795,6 +1804,11 @@ def host_node_get(request, node_id):
 def host_cpu_list(request, host_id):
     cpus = cgtsclient(request).icpu.list(host_id)
     return [Cpu(n) for n in cpus]
+
+
+def host_label_list(request, host_id):
+    labels = cgtsclient(request).label.list(host_id)
+    return [Label(n) for n in labels]
 
 
 def _update_cpu_capability(cpu_data):

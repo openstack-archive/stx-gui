@@ -18,6 +18,8 @@ from horizon import forms
 from horizon import messages
 
 from starlingx_dashboard.api import sysinv
+from starlingx_dashboard.dashboards.admin.inventory.cpu_functions \
+    import utils as cpufunctions_utils
 
 LOG = logging.getLogger(__name__)
 
@@ -145,7 +147,8 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
                 'platform_processor3'].help_text = \
                 "Processor 3 has %s physical cores." % avail_socket_cores
 
-        if 'worker' not in self.host.subfunctions:
+        if 'worker' not in self.host.subfunctions \
+                or not cpufunctions_utils.has_openstack_compute(self.host):
             self.fields['vswitch'].widget = forms.widgets.HiddenInput()
             self.fields[
                 'num_cores_on_processor0'].widget = forms.widgets.HiddenInput()
