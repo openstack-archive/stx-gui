@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -12,6 +12,7 @@ VSWITCH_CPU_TYPE = "Vswitch"
 SHARED_CPU_TYPE = "Shared"
 APPLICATIONS_CPU_TYPE = "Applications"
 NONE_CPU_TYPE = "None"
+COMPUTE_NODE_LABEL_KEY = 'openstack-compute-node'
 
 CPU_TYPE_LIST = [PLATFORM_CPU_TYPE, VSWITCH_CPU_TYPE,
                  SHARED_CPU_TYPE, APPLICATIONS_CPU_TYPE,
@@ -235,3 +236,17 @@ def check_core_functions(personality, icpus):
         error_string = "There must be at least one" \
                        " core for %s." % APPLICATIONS_CPU_TYPE_FORMAT
     return error_string
+
+
+def has_openstack_compute(host):
+    """Returns true if the host has the openstack compute label set """
+    labels = host.labels
+    if not labels:
+        return False
+
+    for label in labels:
+        if label.label_key == COMPUTE_NODE_LABEL_KEY:
+            return 'enabled' == label.label_value.lower()
+
+    # We haven't found the openstack compute node key. Return False
+    return False

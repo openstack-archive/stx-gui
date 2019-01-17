@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -44,6 +44,7 @@ class UpdateCpuFunctionsView(forms.ModalFormView):
                 host = sysinv.host_get(self.request, host_id)
                 host.nodes = sysinv.host_node_list(self.request, host.uuid)
                 host.cpus = sysinv.host_cpu_list(self.request, host.uuid)
+                host.labels = sysinv.host_label_list(self.request, host.uuid)
                 icpu_utils.restructure_host_cpu_data(host)
                 self._object = host
                 self._object.host_id = host_id
