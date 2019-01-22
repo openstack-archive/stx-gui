@@ -1,3 +1,10 @@
+/**
+ *  Copyright (c) 2019 Wind River Systems, Inc.
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ */
+
 /* Core functionality related to alam-banner. */
 horizon.alarmbanner = {
 
@@ -6,7 +13,7 @@ horizon.alarmbanner = {
 
         var $old = $(location).attr('pathname');
         var $url = $(location).attr('href');
-        $url = $url.replace($old, "/admin/fault_management/banner");
+        $url = $url.replace($old, "/admin/active_alarms/banner");
 
         horizon.ajax.queue({
             url: $url,
@@ -49,7 +56,7 @@ horizon.alarmbanner = {
     },
 
     onclick: function() {
-        var $fm = "/admin/fault_management";
+        var $fm = "/admin/active_alarms";
         var $dc = "/dc_admin/";
         var $cur = document.location.href;
         var $path = document.location.pathname;

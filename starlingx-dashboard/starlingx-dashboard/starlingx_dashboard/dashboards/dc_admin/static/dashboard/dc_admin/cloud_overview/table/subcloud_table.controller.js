@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Wind River Systems, Inc.
+ * Copyright (c) 2017-2019 Wind River Systems, Inc.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -386,7 +386,7 @@
       keystone.getCurrentUserSession().success(function(session){
         session.available_services_regions.indexOf(cloud.name)
         if (session.available_services_regions.indexOf(cloud.name) > -1) {
-          $window.location.href = "/auth/switch_services_region/"+ cloud.name + "/?next=/admin/fault_management/";
+          $window.location.href = "/auth/switch_services_region/"+ cloud.name + "/?next=/admin/active_alarms/";
         } else {
           toast.add('error', ctrl.endpointErrorMsg);
           // TODO(tsmith) should we force a logout here with an reason message?

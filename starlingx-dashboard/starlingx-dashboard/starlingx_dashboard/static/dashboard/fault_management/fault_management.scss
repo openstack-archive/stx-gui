@@ -1,0 +1,11 @@
+@import "active_alarms/active_alarms";
+@import "events/events";
+@import "events_suppression/events_suppression";
+
+.batch-action {
+  color: red;
+  float: right;
+  action-list {
+    padding-left: 0.3em;
+  }
+}
