@@ -1,10 +1,12 @@
 # The slug of the panel to be added to HORIZON_CONFIG. Required.
-PANEL = 'fault_management'
+PANEL = 'active_alarms'
+# The slug of the panel group the PANEL is associated with.
+PANEL_GROUP = 'fault_management'
 # The slug of the dashboard the PANEL associated with. Required.
 PANEL_DASHBOARD = 'admin'
-# The slug of the panel group the PANEL is associated with.
-PANEL_GROUP = 'platform'
 
 # Python panel class of the PANEL to be added.
+#ADD_PANEL = 'starlingx_dashboard.content.active_alarms.panel.ActiveAlarms'
+
 ADD_PANEL = 'starlingx_dashboard.dashboards.admin.' \
-            'fault_management.panel.FaultManagement'
+            'active_alarms.panel.ActiveAlarms'

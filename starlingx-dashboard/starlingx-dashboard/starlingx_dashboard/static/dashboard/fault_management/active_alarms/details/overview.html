@@ -1,0 +1,17 @@
+<div ng-controller="horizon.dashboard.fault_management.active_alarms.OverviewController as ctrl">
+  <div class="row">
+    <div class="col-md-12 detail">
+      <h3> {$ ctrl.alarm.alarm_id $} - {$ ctrl.alarm.reason_text $} </h3>
+      <hr>
+      <hz-resource-property-list
+        resource-type-name="OS::StarlingX::ActiveAlarms"
+        cls="dl-horizontal"
+        item="ctrl.alarm"
+        property-groups="[['uuid', 'alarm_id', 'severity', 'alarm_state', 'alarm_type', 'timestamp',
+                           'suppression_status', 'entity_instance_id', 'entity_type_id',
+                           'probable_cause', 'proposed_repair_action', 'service_affecting',
+                           'mgmt_affecting', 'reason_text']]">
+      </hz-resource-property-list>
+    </div>
+  </div>
+</div>
