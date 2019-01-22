@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -248,9 +248,14 @@ class EventSuppression(base.APIResourceWrapper):
         super(EventSuppression, self).__init__(apiresource)
 
 
-def event_suppression_list(request):
+def event_suppression_list(request, include_unsuppressed=False):
+    q = []
+    if not include_unsuppressed:
+        q.append(
+            dict(field='suppression_status', value='suppressed', op='eq',
+                 type='string'))
 
-    suppression_list = fmclient(request).event_suppression.list()
+    suppression_list = fmclient(request).event_suppression.list(q)
 
     return [EventSuppression(n) for n in suppression_list]
 
