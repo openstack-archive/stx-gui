@@ -22,6 +22,8 @@ from starlingx_dashboard.dashboards.admin.inventory.devices import \
     tables as device_tables
 from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as interface_tables
+from starlingx_dashboard.dashboards.admin.inventory.kubernetes_labels import \
+    tables as label_tables
 from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     tables as lldp_tables
 from starlingx_dashboard.dashboards.admin.inventory.memories import \
@@ -677,8 +679,20 @@ class LldpTab(tabs.TableTab):
         return host.lldpneighbours
 
 
+class LabelsTab(tabs.TableTab):
+    table_classes = (label_tables.LabelTable, )
+    name = _("Labels")
+    slug = "labels"
+    template_name = ("admin/inventory/_detail_labels.html")
+
+    def get_labels_data(self):
+        host = self.tab_group.kwargs['host']
+        host.labels.sort(key=lambda f: (f.host_uuid))
+        return host.labels
+
+
 class HostDetailTabs(tabs.TabGroup):
     slug = "inventory_details"
     tabs = (OverviewTab, CpuFunctionsTab, MemorysTab, StorageTab, PortsTab,
-            InterfacesTab, LldpTab, SensorTab, DevicesTab, )
+            InterfacesTab, LldpTab, SensorTab, DevicesTab, LabelsTab, )
     sticky = True
