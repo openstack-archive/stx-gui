@@ -19,6 +19,8 @@ from starlingx_dashboard.dashboards.admin.inventory.interfaces.route import \
     views as route_views
 from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     views as interface_views
+from starlingx_dashboard.dashboards.admin.inventory.k8s_labels import \
+    views as label_views
 from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     views as lldp_views
 from starlingx_dashboard.dashboards.admin.inventory.memories import \
@@ -150,5 +152,8 @@ urlpatterns = [
     url(r'^(?P<host_id>[^/]+)/storages/(?P<partition_uuid>[^/]+)/'
         'editpartition/$',
         storage_views.EditPartitionView.as_view(),
-        name='editpartition')
+        name='editpartition'),
+    url(r'^(?P<host_id>[^/]+)/assignlabel/$',
+        label_views.AssignLabelView.as_view(),
+        name='assignlabel')
 ]
