@@ -172,6 +172,10 @@ class DetailView(tabs.TabbedTableView):
                 host.sensorgroups = stx_api.sysinv.host_sensorgroup_list(
                     self.request, host.uuid)
 
+                # Get K8s labels
+                host.labels = stx_api.sysinv.host_label_list(self.request,
+                                                             host.uuid)
+
                 # Add patching status data to hosts
                 phost = stx_api.patch.get_host(self.request, host.hostname)
                 if phost is not None:
