@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Assign Label" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Assign Label") %}
+{% endblock page_header %}
+
+{% block main %}
+    {% include "admin/inventory/k8s_labels/_assignlabel.html" %}
+{% endblock %}
