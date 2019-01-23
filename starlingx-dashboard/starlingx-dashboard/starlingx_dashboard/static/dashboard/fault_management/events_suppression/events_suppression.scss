@@ -1,0 +1,4 @@
+// This enables \n to render properly, we use this for the description col
+[resource-type-name="OS::StarlingX::EventsSuppression"] table hz-field.ng-scope.ng-isolate-scope {
+    white-space: pre-wrap;
+}
