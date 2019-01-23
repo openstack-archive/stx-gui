@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -22,6 +22,8 @@ from starlingx_dashboard.dashboards.admin.inventory.devices import \
     tables as device_tables
 from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as interface_tables
+from starlingx_dashboard.dashboards.admin.inventory.k8s_labels import \
+    tables as label_tables
 from starlingx_dashboard.dashboards.admin.inventory.lldp import \
     tables as lldp_tables
 from starlingx_dashboard.dashboards.admin.inventory.memories import \
@@ -676,8 +678,20 @@ class LldpTab(tabs.TableTab):
         return host.lldpneighbours
 
 
+class LabelsTab(tabs.TableTab):
+    table_classes = (label_tables.LabelTable, )
+    name = _("Labels")
+    slug = "labels"
+    template_name = ("admin/inventory/_detail_labels.html")
+
+    def get_labels_data(self):
+        host = self.tab_group.kwargs['host']
+        host.labels.sort(key=lambda f: (f.numa_node))
+        return host.labels
+
+
 class HostDetailTabs(tabs.TabGroup):
     slug = "inventory_details"
     tabs = (OverviewTab, CpuFunctionsTab, MemorysTab, StorageTab, PortsTab,
-            InterfacesTab, LldpTab, SensorTab, DevicesTab, )
+            InterfacesTab, LldpTab, SensorTab, DevicesTab, LabelsTab, )
     sticky = True

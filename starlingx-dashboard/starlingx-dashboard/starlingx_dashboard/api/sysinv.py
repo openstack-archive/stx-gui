@@ -136,6 +136,39 @@ def cgtsclient(request):
                               insecure=insecure, cacert=cacert)
 
 
+class Label(base.APIResourceWrapper):
+    """Wrapper for Inventory Labels"""
+
+    _attrs = ['uuid',
+              'label_key',
+              'label_value',
+              'host_uuid'
+              ]
+
+    def __init__(self, apiresource):
+        super(Label, self).__init__(apiresource)
+
+
+def host_label_list(request, host_id):
+    labels = cgtsclient(request).label.list(host_id)
+    return [Label(n) for n in labels]
+
+
+def host_label_get(request, label_id):
+    label = cgtsclient(request).label.get(label_id)
+    if not label:
+        raise ValueError('No match found for label ID "%s".' % label_id)
+    return Label(label)
+
+
+def host_label_assign(request, host_uuid, label):
+    return cgtsclient(request).label.assign(host_uuid, label)
+
+
+def host_label_remove(request, label_id):
+    return cgtsclient(request).label.remove(label_id)
+
+
 class Memory(base.APIResourceWrapper):
     """Wrapper for Inventory System"""
 
