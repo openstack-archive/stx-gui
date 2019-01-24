@@ -11,10 +11,10 @@ import logging
 from django.utils.translation import pgettext_lazy
 from django.utils.translation import ugettext_lazy as _
 
+from starlingx_dashboard.dashboards.admin.datanets.datanets.ranges \
+    import tables as sr_tables
 from starlingx_dashboard.dashboards.admin.inventory.interfaces import \
     tables as if_tables
-from starlingx_dashboard.dashboards.admin.providernets.providernets.ranges \
-    import tables as sr_tables
 
 LOG = logging.getLogger(__name__)
 

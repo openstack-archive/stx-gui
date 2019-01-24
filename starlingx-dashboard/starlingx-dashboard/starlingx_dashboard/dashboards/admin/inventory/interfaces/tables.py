@@ -195,7 +195,7 @@ class InterfacesTable(tables.DataTable):
                                       verbose_name=_('Platform Network(s)'))
 
     providernetworks = tables.Column('providernetworks',
-                                     verbose_name=_('Provider Network(s)'))
+                                     verbose_name=_('Data Network(s)'))
     attributes = tables.Column(get_attributes,
                                verbose_name=_('Attributes'))
 
