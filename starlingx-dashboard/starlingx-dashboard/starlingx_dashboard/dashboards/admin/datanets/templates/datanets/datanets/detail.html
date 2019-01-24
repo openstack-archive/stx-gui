@@ -1,6 +1,8 @@
-{% load i18n sizeformat %}
+{% extends 'base.html' %}
+{% load i18n breadcrumb_nav %}
+{% block title %}{% trans "Data Network Detail"%}{% endblock %}
 
-<div class="info row-fluid detail">
+{% block main %}
   {% include "admin/datanets/datanets/_detail_overview.html" %}
   <hr>
   <div id="ranges">
@@ -9,5 +11,4 @@
   <div id="tenant_networks">
     {{ tenant_networks_table.render }}
   </div>
-</div>
-
+{% endblock %}

@@ -73,9 +73,8 @@ class ProvidernetDetailView(tabs.TabbedTableView):
         if not hasattr(self, "_providernet"):
             try:
                 providernet_id = self.kwargs['providernet_id']
-                providernet = stx_api.neutron.provider_network_get(
+                providernet = stx_api.sysinv.data_network_get(
                     self.request, providernet_id)
-                providernet.set_id_as_name_if_empty(length=0)
 
                 alarms = stx_api.fm.alarm_list(self.request)
                 # Filter out unrelated alarms
@@ -98,18 +97,8 @@ class ProvidernetDetailView(tabs.TabbedTableView):
 
     def get_nova_data(self):
         if not hasattr(self, "_providernet_nova"):
-            try:
-                providernet_id = self.kwargs['providernet_id']
-                providernet_nova = stx_api.nova.provider_network_get(
-                    self.request, providernet_id)
-            except Exception:
-                redirect = self.failure_url
-                exceptions.handle(self.request,
-                                  _('Unable to retrieve details for '
-                                    'provider network "%s".') % providernet_id,
-                                  redirect=redirect)
-
-            self._providernet_nova = providernet_nova
+            # TODO(datanetworks): depends on upstream support
+            self._providernet_nova = None
         return self._providernet_nova
 
     def get_tabs(self, request, *args, **kwargs):
@@ -122,7 +111,7 @@ class ProvidernetDetailView(tabs.TabbedTableView):
 
 class HostTopologyView(views.HorizonTemplateView):
     template_name = 'admin/host_topology/index.html'
-    page_title = _("Provider Network Topology")
+    page_title = _("Data Network Topology")
 
     def _has_permission(self, policy):
         has_permission = True
@@ -220,7 +209,7 @@ class JSONView(View):
     def _get_pnets(self, request):
         pnets = []
         try:
-            pnets = stx_api.neutron.provider_network_list(request)
+            pnets = stx_api.sysinv.data_network_list(request)
         except Exception as ex:
             exceptions.handle(ex)
         data = [p.to_dict() for p in pnets]

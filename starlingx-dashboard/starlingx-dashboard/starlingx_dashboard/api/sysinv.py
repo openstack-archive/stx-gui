@@ -1935,7 +1935,7 @@ class Interface(base.APIResourceWrapper):
 
     _attrs = ['id', 'uuid', 'ifname', 'ifclass', 'iftype', 'imtu', 'imac',
               'networktype', 'networks', 'aemode', 'txhashpolicy', 'vlan_id',
-              'uses', 'used_by', 'ihost_uuid', 'providernetworks',
+              'uses', 'used_by', 'ihost_uuid', 'datanetworks',
               'ipv4_mode', 'ipv6_mode', 'ipv4_pool', 'ipv6_pool',
               'sriov_numvfs']
 
@@ -1943,6 +1943,10 @@ class Interface(base.APIResourceWrapper):
         super(Interface, self).__init__(apiresource)
         if not self.ifname:
             self.ifname = '(' + str(self.uuid)[-8:] + ')'
+
+    @property
+    def datanetworks_csv(self):
+        return ",".join(self.datanetworks)
 
 
 def host_interface_list(request, host_id):
@@ -2578,3 +2582,64 @@ def is_system_k8s_aio(request):
 def is_host_with_storage(request, host_id):
     host = host_get(request, host_id)
     return 'storage' in host.subfunctions or is_system_k8s_aio(request)
+
+
+class DataNetwork(base.APIResourceWrapper):
+    """..."""
+
+    _attrs = ['id', 'uuid', 'network_type', 'name', 'mtu', 'description',
+              'multicast_group', 'port_num', 'ttl', 'mode']
+
+    def __init__(self, apiresource):
+        super(DataNetwork, self).__init__(apiresource)
+
+
+DATANETWORK_TYPE_FLAT = "flat"
+DATANETWORK_TYPE_VLAN = "vlan"
+DATANETWORK_TYPE_VXLAN = "vxlan"
+
+data_network_type_choices_list = [
+    (DATANETWORK_TYPE_FLAT, DATANETWORK_TYPE_FLAT),
+    (DATANETWORK_TYPE_VLAN, DATANETWORK_TYPE_VLAN),
+    (DATANETWORK_TYPE_VXLAN, DATANETWORK_TYPE_VXLAN),
+]
+
+
+def data_network_type_choices():
+    return data_network_type_choices_list
+
+
+def data_network_create(request, **kwargs):
+    LOG.info("data_network_create(): kwargs=%s", kwargs)
+    datanet = cgtsclient(request).datanetwork.create(**kwargs)
+    return DataNetwork(datanet)
+
+
+def data_network_list(request):
+    datanets = cgtsclient(request).datanetwork.list()
+    return [DataNetwork(n) for n in datanets]
+
+
+def data_network_get(request, datanet_id):
+    datanet = cgtsclient(request).datanetwork.get(datanet_id)
+    if not datanet:
+        raise ValueError('No match found for datanet_id "%s".' % datanet_id)
+    return DataNetwork(datanet)
+
+
+def data_network_modify(request, datanet_id, **kwargs):
+    LOG.info("data_network_modify(): datanet_id,=%s, kwargs=%s",
+             datanet_id, kwargs)
+    patch = []
+    for key, value in kwargs.items():
+        patch.append(dict(path='/' + key, value=value, op='replace'))
+
+    datanet = cgtsclient(request).datanetwork.update(datanet_id, patch)
+    if not datanet:
+        raise ValueError('No match found for datanet_id "%s".' % datanet_id)
+    return DataNetwork(datanet)
+
+
+def data_network_delete(request, datanet_id):
+    LOG.info("data_network_delete(): datanet_id=%s", datanet_id)
+    return cgtsclient(request).datanetwork.delete(datanet_id)
