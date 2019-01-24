@@ -1,5 +1,8 @@
 <hz-resource-property-list
   resource-type-name="OS::StarlingX::Events"
   item="item"
-  property-groups="[['uuid', 'event_type']]">
+  property-groups="[['uuid', 'event_log_type', 'suppression'],
+                    ['event_type', 'entity_type_id', 'service_affecting'],
+                    ['probable_cause', 'proposed_repair_action']]">
+
 </hz-resource-property-list>

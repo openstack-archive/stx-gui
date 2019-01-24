@@ -49,7 +49,7 @@
     }
 
     function getAlarms() {
-      var results = apiService.get('/api/fm/alarm_list/?include_suppress=True')
+      var results = apiService.get('/api/fm/alarm_list/')
       return results
         .error(function () {
           toastService.clearErrors();

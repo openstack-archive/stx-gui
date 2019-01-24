@@ -46,14 +46,6 @@
       }));
     });
 
-    describe('urlFunction', function() {
-      it("get url", inject(function($injector) {
-        var detailRoute = $injector.get('horizon.app.core.detailRoute');
-        var result = service.urlFunction({uuid:"123abc"});
-        expect(result).toBe(detailRoute + "OS::StarlingX::Events/123abc");
-      }));
-    });
-
   });
 
 })();

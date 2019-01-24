@@ -27,7 +27,6 @@
 
   service.$inject = [
     '$filter',
-    'horizon.app.core.detailRoute',
     'horizon.app.core.openstack-service-api.fm',
     '$q',
     'horizon.framework.conf.resource-type-registry.service',
@@ -44,13 +43,12 @@
    * but do not need to be restricted to such use.  Each exposed function
    * is documented below.
    */
-  function service($filter, detailRoute, api, $q, registry, resourceType) {
+  function service($filter, api, $q, registry, resourceType) {
 
     var showSuppressColumn = null;
 
     return {
       getPromise: getPromise,
-      urlFunction: urlFunction,
       suppressColAllowedPromiseFunction: suppressColAllowedPromiseFunction,
       getSuppressionList: getSuppressionList,
       setEventType: setEventType
@@ -81,10 +79,6 @@
 
         return item;
       }
-    }
-
-    function urlFunction(item) {
-      return detailRoute + 'OS::StarlingX::Events/' + item.uuid;
     }
 
     function getSuppressionList() {

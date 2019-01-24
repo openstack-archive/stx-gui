@@ -68,8 +68,7 @@
     .tableColumns
     .append({
       id: 'alarm_id',
-      priority: 1,
-      urlFunction: service.urlFunction
+      priority: 1
     })
     .append({
       id: 'reason_text',
