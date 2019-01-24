@@ -2,7 +2,7 @@
     <li>
         <strong>{{ interfaces.ifname }}</strong> {{":  "}} {{ interfaces.ifclass }}
         {% if interfaces.ifclass == 'data' %}
-            {{"("}} {{ interfaces.providernetworks }} {{")"}}
+            {{"("}} {{ interfaces.datanetworks_csv }} {{")"}}
         {% endif %}
         {{ " | " }} {{ interfaces.iftype }}
         {% if interfaces.iftype != 'ae' and interfaces.iftype != 'vlan' %}

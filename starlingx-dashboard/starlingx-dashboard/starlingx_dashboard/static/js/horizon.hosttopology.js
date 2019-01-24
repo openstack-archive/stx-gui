@@ -186,8 +186,8 @@ horizon.host_topology = {
       // 'expand' a single IF connected to many pnets into multiple 'connections'
       $.each(host.interfaces, function(index, interface) {
         var if_connections = []
-        if (interface.providernetworks) {
-          $.each(interface.providernetworks.split(','), function(index, providernet_name) {
+        if (interface.datanetworks_csv) {
+          $.each(interface.datanetworks_csv.split(','), function(index, providernet_name) {
             var connection = {}
             // Attach the interface to the connection
             connection.interface = interface;

@@ -1,0 +1,24 @@
+{% load i18n sizeformat %}
+
+<div class="detail">
+  <h4>{% trans "Segmentation Range" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ providernet_range.name|default:_("None") }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ providernet_range.description|default:_("None") }}</dd>
+    <dt>{% trans "Project ID" %}</dt>
+    <dd>{{ providernet_range.tenant_id|default:"-" }}</dd>
+    <dt>{% trans "Shared" %}</dt>
+    <dd>{{ providernet_range.shared|yesno|capfirst }}</dd>
+    <dt>{% trans "Minimum" %}</dt>
+    <dd>{{ providernet_range.minimum|default:_("None") }}</dd>
+    <dt>{% trans "Maximum" %}</dt>
+    <dd>{{ providernet_range.maximum|default:_("None") }}</dd>
+    {% if providernet_range.vxlan %}
+    <dt>{% trans "Provider Attributes" %}</dt>
+    <dd>{% include "admin/datanets/datanets/ranges/_vxlan.html" with vxlan=providernet_range.vxlan %}</dd>
+    {% endif %}
+  </dl>
+</div>

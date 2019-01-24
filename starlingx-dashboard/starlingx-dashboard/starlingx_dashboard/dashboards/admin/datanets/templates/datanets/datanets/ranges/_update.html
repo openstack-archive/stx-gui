@@ -1,0 +1,29 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}update_provider_network_range_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:datanets:datanets:editrange' providernet_id providernet_range_id %}{% endblock %}
+
+{% block modal-header %}{% trans "Edit Segmentation Range" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <dl>
+      <dt>{% trans "ID" %}</dt>
+      <dd>{{ providernet_range_id }}</dd>
+    </dl>
+    <hr>
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>{% trans "You may update the editable properties of your segmentation range here." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %} </a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save Changes" %}"/>
+{% endblock %}
