@@ -1,5 +1,7 @@
 <hz-resource-property-list
   resource-type-name="OS::StarlingX::ActiveAlarms"
   item="item"
-  property-groups="[['uuid', 'mgmt_affecting']]">
+  property-groups="[['uuid', 'alarm_state', 'alarm_type', 'entity_type_id'],
+                    ['service_affecting', 'mgmt_affecting', 'probable_cause'],
+                    ['proposed_repair_action']]">
 </hz-resource-property-list>

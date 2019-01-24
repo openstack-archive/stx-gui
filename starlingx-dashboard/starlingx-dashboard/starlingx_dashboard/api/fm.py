@@ -107,6 +107,10 @@ def alarm_list(request, search_opts=None):
     paginate = False
     include_suppress = False
 
+    # If expand is set to true then all the data of the alarm is returned not
+    # just a subset.
+    expand = False
+
     if search_opts is None:
         search_opts = {}
 
@@ -124,6 +128,9 @@ def alarm_list(request, search_opts=None):
         elif suppression == FM_SUPPRESS_HIDE:
             include_suppress = False
 
+    if "expand" in search_opts:
+        expand = True
+
     if 'paginate' in search_opts:
         paginate = search_opts.pop('paginate')
         if paginate:
@@ -131,7 +138,7 @@ def alarm_list(request, search_opts=None):
 
     alarms = fmclient(request).alarm.list(
         limit=limit, marker=marker, sort_key=sort_key, sort_dir=sort_dir,
-        include_suppress=include_suppress)
+        include_suppress=include_suppress, expand=expand)
 
     has_more_data = False
     if paginate and len(alarms) > page_size:
@@ -178,6 +185,11 @@ class EventLog(base.APIResourceWrapper):
 
 def event_log_list(request, search_opts=None):
     paginate = False
+
+    # If expand is set to true then all the data of the alarm is returned not
+    # just a subset.
+    expand = False
+
     if search_opts is None:
         search_opts = {}
 
@@ -210,13 +222,17 @@ def event_log_list(request, search_opts=None):
         elif suppression == FM_SUPPRESS_HIDE:
             include_suppress = False
 
+    if "expand" in search_opts:
+        expand = True
+
     logs = fmclient(request)\
         .event_log.list(q=query,
                         limit=limit,
                         marker=marker,
                         alarms=alarms,
                         logs=logs,
-                        include_suppress=include_suppress)
+                        include_suppress=include_suppress,
+                        expand=expand)
 
     has_more_data = False
     if paginate and len(logs) > page_size:

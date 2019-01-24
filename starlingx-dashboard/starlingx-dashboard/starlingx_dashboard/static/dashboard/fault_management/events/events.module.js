@@ -30,8 +30,7 @@
    */
   angular
     .module('horizon.dashboard.fault_management.events', [
-      'ngRoute',
-      'horizon.dashboard.fault_management.events.details'
+      'ngRoute'
     ])
     .constant('horizon.dashboard.fault_management.events.resourceType', 'OS::StarlingX::Events')
     .run(run)
@@ -76,8 +75,7 @@
     })
     .append({
       id: 'event_log_id',
-      priority: 1,
-      urlFunction: service.urlFunction
+      priority: 1
     })
     .append({
       id: 'reason_text',

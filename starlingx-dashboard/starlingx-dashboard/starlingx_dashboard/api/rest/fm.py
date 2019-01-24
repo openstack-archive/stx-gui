@@ -35,7 +35,8 @@ class Alarms(generic.View):
 
     @rest_utils.ajax()
     def get(self, request):
-        search_opts = {'suppression': 'SUPPRESS_SHOW'}
+        search_opts = {'suppression': 'SUPPRESS_SHOW', 'expand': True}
+
         result = fm.alarm_list(request, search_opts=search_opts)
 
         return {'items': [sc.to_dict() for sc in result]}
@@ -59,7 +60,8 @@ class Events(generic.View):
 
     @rest_utils.ajax()
     def get(self, request):
-        search_opts = {'suppression': 'SUPPRESS_SHOW'}
+        search_opts = {'suppression': 'SUPPRESS_SHOW', 'expand': True}
+
         result, _more = fm.event_log_list(request, search_opts=search_opts)
 
         return {'items': [sc.to_dict() for sc in result]}
