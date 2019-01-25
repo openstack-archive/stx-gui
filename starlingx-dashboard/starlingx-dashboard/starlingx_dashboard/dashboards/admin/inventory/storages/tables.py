@@ -33,18 +33,19 @@ class CreateStorageVolume(tables.LinkAction):
         return reverse(self.url, args=(host_id,))
 
     def allowed(self, request, datum):
-        is_system_k8s_aio = sysinv.is_system_k8s_aio(request)
+        host_id = self.table.kwargs['host_id']
+        is_host_with_storage = sysinv.is_host_with_storage(request, host_id)
         host = self.table.kwargs['host']
         self.verbose_name = _("Assign Storage Function")
 
         classes = [c for c in self.classes if c != "disabled"]
         self.classes = classes
 
-        if host._personality != 'storage' and not is_system_k8s_aio:
+        if not is_host_with_storage:
             return False
 
         if host._administrative == 'unlocked':
-            if 'storage' in host._subfunctions or is_system_k8s_aio:
+            if is_host_with_storage:
                 if "disabled" not in self.classes:
                     self.classes = [c for c in self.classes] + ['disabled']
                     self.verbose_name = string_concat(self.verbose_name, ' ',
