@@ -1,0 +1,25 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}create_provider_network_form{% endblock %}
+{% block form_action %}{% url 'horizon:admin:datanets:datanets:create' %}
+{% endblock %}
+
+{% block modal-header %}{% trans "Create Data Network" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "You can create a provider network and later segment this network for access by one or more tenant networks."%}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a class="btn btn-default cancel" data-dismiss="modal">{% trans "Cancel" %}</a>
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Data Network" %}" />
+{% endblock %}

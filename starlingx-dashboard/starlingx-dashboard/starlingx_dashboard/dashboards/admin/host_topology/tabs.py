@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018 Wind River Systems, Inc.
+# Copyright (c) 2016-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -15,12 +15,12 @@ from horizon import tabs
 from openstack_dashboard import api as api
 
 from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.dashboards.admin.datanets.datanets import \
+    tables as pn_tables
 from starlingx_dashboard.dashboards.admin.host_topology import \
     tables as tables
 from starlingx_dashboard.dashboards.admin.inventory import \
     tabs as i_tabs
-from starlingx_dashboard.dashboards.admin.providernets.providernets import \
-    tables as pn_tables
 
 LOG = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ class OverviewTab(tabs.TableTab):
     table_classes = (tables.ProviderNetworkRangeTable,
                      pn_tables.ProviderNetworkTenantNetworkTable)
     template_name = 'admin/host_topology/detail/providernet.html'
-    name = "Provider Network Detail"
+    name = "Data Network Detail"
     slug = 'providernet_details_overview'
     failure_url = reverse_lazy('horizon:admin:host_topology:index')
 
@@ -83,14 +83,8 @@ class OverviewTab(tabs.TableTab):
         return self._tenants
 
     def get_tenant_networks_data(self):
-        try:
-            providernet_id = self.tab_group.kwargs['providernet_id']
-            networks = stx_api.neutron.provider_network_list_tenant_networks(
-                self.request, providernet_id=providernet_id)
-        except Exception:
-            networks = []
-            msg = _('Tenant network list can not be retrieved.')
-            exceptions.handle(self.request, msg)
+        # TODO(datanetworks): need to refactor for Stein
+        networks = []
         return networks
 
     def get_provider_network_ranges_data(self):

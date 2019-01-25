@@ -4,7 +4,7 @@
 {% if host %}
 <h4>Selected Entity: <a href="{% url 'horizon:admin:inventory:detail' host.id %}" >{{host.hostname}}</a></h4>
 {% else %}
-<h4>Selected Entity: <a href="{% url 'horizon:admin:providernets:providernets:detail' providernet.id %}" >{{providernet.name}}</a></h4>
+<h4>Selected Entity: <a href="{% url 'horizon:admin:datanets:datanets:detail' providernet.id %}" >{{providernet.name}}</a></h4>
 {% endif %}
 
 {% block main %}

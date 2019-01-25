@@ -260,10 +260,10 @@ class UpdateView(forms.ModalFormView):
 
     def get_initial(self):
         interface = self._get_object()
-        providernetworks = []
-        if interface.providernetworks:
-            for pn in interface.providernetworks.split(","):
-                providernetworks.append(str(pn))
+        datanetworks_csv = []
+        if interface.datanetworks_csv:
+            for pn in interface.datanetworks_csv.split(","):
+                datanetworks_csv.append(str(pn))
         try:
             host = stx_api.sysinv.host_get(self.request, interface.host_id)
         except Exception:
@@ -290,10 +290,10 @@ class UpdateView(forms.ModalFormView):
                 # 'uses': interface.uses,
                 'ifclass': interface.ifclass,
                 'networktype': interface.networktype,
-                'providernetworks_data': providernetworks,
-                'providernetworks_data-external': providernetworks,
-                'providernetworks_pci': providernetworks,
-                'providernetworks_sriov': providernetworks,
+                'datanetworks_csv_data': datanetworks_csv,
+                'datanetworks_csv_data-external': datanetworks_csv,
+                'datanetworks_csv_pci': datanetworks_csv,
+                'datanetworks_csv_sriov': datanetworks_csv,
                 'sriov_numvfs': interface.sriov_numvfs,
                 'imtu': interface.imtu,
                 'ipv4_mode': getattr(interface, 'ipv4_mode', 'disabled'),
