@@ -489,8 +489,9 @@ class StorageTab(tabs.TableTab):
 
     def get_context_data(self, request):
         context = super(StorageTab, self).get_context_data(request)
+        host = self.tab_group.kwargs['host']
         try:
-            context['host'] = self.tab_group.kwargs['host']
+            context['host'] = host
         except Exception:
             redirect = reverse('horizon:admin:inventory:index')
             exceptions.handle(self.request,
@@ -498,8 +499,8 @@ class StorageTab(tabs.TableTab):
                               redirect=redirect)
 
         context['cinder_backend'] = stx_api.sysinv.get_cinder_backend(request)
-        context['is_system_k8s_aio'] = \
-            stx_api.sysinv.is_system_k8s_aio(request)
+        context['is_host_with_storage'] =  \
+            stx_api.sysinv.is_host_with_storage(request, host.uuid)
 
         return context
 
