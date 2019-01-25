@@ -1338,7 +1338,7 @@ def extoam_list(request):
 
 class Cluster(base.APIResourceWrapper):
     """..."""
-    _attrs = ['uuid', 'cluster_uuid', 'type', 'name']
+    _attrs = ['uuid', 'cluster_uuid', 'type', 'name', 'deployment_model']
 
     def __init__(self, apiresource):
         super(Cluster, self).__init__(apiresource)
@@ -1347,6 +1347,7 @@ class Cluster(base.APIResourceWrapper):
             self._uuid = self.uuid
             self._name = self.name
             self._type = self.type
+            self._deployment_model = self.deployment_model
             self._cluster_uuid = self.cluster_uuid
         else:
             self._uuid = None
@@ -1367,8 +1368,20 @@ class Cluster(base.APIResourceWrapper):
         return self._type
 
     @property
+    def deployment_model(self):
+        return self._deployment_model
+
+    @property
     def cluster_uuid(self):
         return self._cluster_uuid
+
+
+def cluster_get(request, name):
+    clusters = cgtsclient(request).cluster.list()
+    for c in clusters:
+        if name == c.name:
+            return Cluster(c)
+    return None
 
 
 def cluster_list(request):
@@ -1554,7 +1567,8 @@ class ControllerFS(base.APIResourceWrapper):
 
 class CephMon(base.APIResourceWrapper):
     """..."""
-    _attrs = ['device_path', 'ceph_mon_gib', 'hostname', 'uuid', 'link']
+    _attrs = ['device_path', 'ceph_mon_gib', 'hostname',
+              'ihost_uuid', 'uuid', 'link']
 
     def __init__(self, apiresource):
         super(CephMon, self).__init__(apiresource)
@@ -1563,10 +1577,12 @@ class CephMon(base.APIResourceWrapper):
             self._device_path = self.device_path
             self._ceph_mon_gib = self.ceph_mon_gib
             self._hostname = self.hostname
+            self._ihost_uuid = self.ihost_uuid
         else:
             self._device_path = None
             self._ceph_mon_gib = None
             self._hostname = None
+            self._ihost_uuid = None
 
     @property
     def device_path(self):
@@ -1579,6 +1595,10 @@ class CephMon(base.APIResourceWrapper):
     @property
     def hostname(self):
         return self._hostname
+
+    @property
+    def ihost_uuid(self):
+        return self._ihost_uuid
 
 
 class STORAGE(base.APIResourceWrapper):
@@ -1736,20 +1756,38 @@ def storagefs_list(request):
     # so the first element is enough for obtaining the needed data.
 
     controllerfs_obj = None
-    ceph_mon_obj = None
+    mon_obj = None
 
     if ceph_mon_list:
-        ceph_mon_obj = ceph_mon_list[0]
+        # Get storage-0 configuration
+        for mon_obj in ceph_mon_list:
+            if mon_obj.hostname == constants.STORAGE_0_HOSTNAME:
+                break
+        else:
+            mon_obj = ceph_mon_list[0]
 
-    return [STORAGE(controllerfs_obj, ceph_mon_obj)]
+    return [STORAGE(controllerfs_obj, mon_obj)]
 
 
 def controllerfs_list(request):
     controllerfs = cgtsclient(request).controller_fs.list()
     ceph_mon_list = cgtsclient(request).ceph_mon.list()
+    hosts = cgtsclient(request).ihost.list()
 
-    if ceph_mon_list and not is_system_k8s_aio(request):
-        controllerfs.append(ceph_mon_list[0])
+    if ceph_mon_list:
+        host = None
+        for host in hosts:
+            # Get any unlocked controller,
+            # both have the same configuration
+            if (host.personality == constants.CONTROLLER and
+                    host.administrative == constants.ADMIN_UNLOCKED):
+                break
+
+        if host and is_host_with_storage(request, host.uuid):
+            for mon in ceph_mon_list:
+                if mon.hostname == host.hostname:
+                    controllerfs.append(mon)
+                    break
 
     return [ControllerFS(n) for n in controllerfs]
 
@@ -2570,18 +2608,33 @@ def is_kubernetes_config(request):
     return False
 
 
-def is_system_k8s_aio(request):
-    system_type = get_system_type(request)
-
-    if (system_type == SYSTEM_TYPE_AIO and
-            is_kubernetes_config(request)):
-        return True
-    return False
+def get_ceph_storage_model(request):
+    cluster = cluster_get(request, constants.CLUSTER_CEPH_DEFAULT_NAME)
+    return cluster.deployment_model
 
 
 def is_host_with_storage(request, host_id):
+    storage_model = get_ceph_storage_model(request)
+
+    if storage_model == constants.CEPH_AIO_SX_MODEL:
+        # We have a single host, no need to query further
+        return True
+
     host = host_get(request, host_id)
-    return 'storage' in host.subfunctions or is_system_k8s_aio(request)
+
+    if storage_model == constants.CEPH_STORAGE_MODEL:
+        if host._personality == constants.STORAGE:
+            return True
+        else:
+            return False
+    elif storage_model == constants.CEPH_CONTROLLER_MODEL:
+        if host._personality == constants.CONTROLLER:
+            return True
+        else:
+            return False
+    else:
+        # Storage model is undefined
+        return False
 
 
 class DataNetwork(base.APIResourceWrapper):
