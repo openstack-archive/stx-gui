@@ -18,10 +18,10 @@ from starlingx_dashboard.dashboards.admin.datanets.datanets import \
 class DataNetworkTab(tabs.TableTab):
     table_classes = (datanets_tables.DataNetworksTable,)
     name = _("Data Networks")
-    slug = "provider_networks"
+    slug = "data_networks"
     template_name = ("horizon/common/_detail_table.html")
 
-    def get_provider_networks_data(self):
+    def get_data_networks_data(self):
         try:
             datanets = \
                 stx_sysinv.data_network_list(self.tab_group.request)

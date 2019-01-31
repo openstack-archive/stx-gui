@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -16,6 +16,6 @@ urlpatterns = [
 
     url(r'^(?P<host_id>[^/]+)/host/$',
         views.HostDetailView.as_view(), name='host'),
-    url(r'^(?P<providernet_id>[^/]+)/providernet/$',
-        views.ProvidernetDetailView.as_view(), name='providernet')
+    url(r'^(?P<datanet_id>[^/]+)/datanet/$',
+        views.DatanetDetailView.as_view(), name='datanet')
 ]

@@ -39,8 +39,6 @@ class CreateDataNetwork(forms.SelfHandlingForm):
     description = forms.CharField(max_length=255,
                                   label=_("Description"),
                                   required=False)
-    network_type = forms.ChoiceField(label=_("Type"),
-                                     required=True)
     mtu = forms.IntegerField(
         label=_("MTU"),
         required=True,
@@ -54,6 +52,70 @@ class CreateDataNetwork(forms.SelfHandlingForm):
               "encapsulation headers.  For example, VXLAN provider MTU of "
               "1500 requires a minimum data interface MTU of 1574 bytes (1600 "
               "bytes is recommended.")))
+
+    network_type = forms.ChoiceField(label=_("Type"),
+                                     required=True,
+                                     widget=forms.Select(
+                                     attrs={
+                                         'class': 'switchable',
+                                         'data-slug': 'dn_type'}))
+
+    # VXLAN specific fields
+    mode_choices = [('dynamic', _('Multicast VXLAN')),
+                    ('static', _('Static VXLAN'))]
+    mode = forms.ChoiceField(label=_("Mode"),
+                             initial='dynamic',
+                             required=False,
+                             choices=mode_choices,
+                             widget=forms.Select(
+                                 attrs={
+                                     'class': 'switchable switched',
+                                     'data-switch-on': 'dn_type',
+                                     'data-dn_type-vxlan': 'Mode',
+                                     'data-slug': 'vxlan_mode'}))
+
+    multicast_group_help = (_("Specify the IPv4 or IPv6 multicast address "
+                              "for these VXLAN instances"))
+    multicast_group = forms.CharField(
+        max_length=255,
+        label=_("Multicast Group Address"),
+        initial="239.0.0.1",
+        required=False,
+        help_text=multicast_group_help,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'switchable switched',
+                'data-slug': 'vxlan_multicast_group',
+                'data-switch-on': 'vxlan_mode',
+                'data-vxlan_mode-dynamic': 'Multicast Group Address'})
+    )
+
+    port_num_choices = [('4789', _('IANA Assigned VXLAN UDP port (4789)')),
+                        ('4790', _('IANA Assigned VXLAN-GPE UDP port (4790)')),
+                        ('8472', _('Legacy VXLAN UDP port (8472)'))]
+    port_num = forms.ChoiceField(label=_("UDP Port"),
+                                 required=True,
+                                 choices=port_num_choices,
+                                 widget=forms.Select(
+                                     attrs={
+                                         'class': 'switchable switched',
+                                         'data-switch-on': 'dn_type',
+                                         'data-dn_type-vxlan': 'UDP Port',
+                                         'data-slug': 'port_num_slug'}))
+
+    ttl = forms.IntegerField(label=_("TTL"),
+                             required=False,
+                             initial=1,
+                             min_value=1,
+                             max_value=255,
+                             widget=forms.TextInput(
+                                 attrs={
+                                     'class': 'switchable switched',
+                                     'data-switch-on': 'dn_type',
+                                     'data-dn_type-vxlan': 'TTL',
+                                     'data-slug': 'ttl_slug'}),
+                             help_text=(
+        _("Specify the time-to-live value for these VXLAN instances")))
 
     @classmethod
     def _instantiate(cls, request, *args, **kwargs):
@@ -83,6 +145,12 @@ class CreateDataNetwork(forms.SelfHandlingForm):
                       'description': data['description'],
                       'mtu': data['mtu']}
 
+            if data['network_type'] == stx_api.sysinv.DATANETWORK_TYPE_VXLAN:
+                params.update({'mode': data['mode'],
+                               'port_num': data['port_num'],
+                               'ttl': data['ttl']})
+                if data['mode'] == 'dynamic':
+                    params.update({'multicast_group': data['multicast_group']})
             network = stx_api.sysinv.data_network_create(request,
                                                          **params)
             msg = (_('Data network %s was successfully created.') %
@@ -128,13 +196,13 @@ class UpdateDataNetwork(forms.SelfHandlingForm):
             params = {'description': data['description'],
                       'mtu': data['mtu']}
 
-            providernet = stx_api.sysinv.data_network_modify(
+            datanet = stx_api.sysinv.data_network_modify(
                 request, data['id'], **params)
             msg = (_('Data network %s was successfully updated.') %
                    data['name'])
             LOG.info(msg)
             messages.success(request, msg)
-            return providernet
+            return datanet
         except sysinv_exceptions.CgtsclientException as e:
             msg = _('Failed to update data network %s') % data['name']
             LOG.info(msg)

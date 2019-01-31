@@ -53,7 +53,7 @@ class DetailView(tables.MultiTableView):
                      providernet_tables.ProviderNetworkTenantNetworkTable)
     template_name = 'admin/datanets/datanets/detail.html'
     failure_url = reverse_lazy('horizon:admin:datanets:index')
-    page_title = '{{ "Data Network Detail: "|add:providernet.name }}'
+    page_title = '{{ "Data Network Detail: "|add:datanet.name }}'
 
     def _get_tenant_list(self):
         if not hasattr(self, "_tenants"):
@@ -116,7 +116,7 @@ class DetailView(tables.MultiTableView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-        context["providernet"] = self._get_data()
+        context["datanet"] = self._get_data()
         context["nova_providernet"] = self._get_nova_data()
         return context
 
@@ -144,12 +144,12 @@ class UpdateView(forms.ModalFormView):
         return self._object
 
     def get_initial(self):
-        providernet = self._get_object()
-        return {'id': providernet.id,
-                'name': providernet.name,
-                'network_type': providernet.network_type,
-                'mtu': providernet.mtu,
-                'description': providernet.description,
+        datanet = self._get_object()
+        return {'id': datanet.id,
+                'name': datanet.name,
+                'network_type': datanet.network_type,
+                'mtu': datanet.mtu,
+                'description': datanet.description,
                 }
 
 

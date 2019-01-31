@@ -14,7 +14,6 @@ from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard import api as api
 
-from starlingx_dashboard import api as stx_api
 from starlingx_dashboard.dashboards.admin.datanets.datanets import \
     tables as pn_tables
 from starlingx_dashboard.dashboards.admin.host_topology import \
@@ -47,7 +46,7 @@ class AlarmsTab(tabs.TableTab):
     def get_alarms_data(self):
         entity = self.tab_group.kwargs.get('host')
         if not entity:
-            entity = self.tab_group.kwargs.get('providernet')
+            entity = self.tab_group.kwargs.get('datanet')
         return entity.alarms
 
 
@@ -65,9 +64,9 @@ class HostDetailTabs(tabs.TabGroup):
 class OverviewTab(tabs.TableTab):
     table_classes = (tables.ProviderNetworkRangeTable,
                      pn_tables.ProviderNetworkTenantNetworkTable)
-    template_name = 'admin/host_topology/detail/providernet.html'
+    template_name = 'admin/host_topology/detail/datanet.html'
     name = "Data Network Detail"
-    slug = 'providernet_details_overview'
+    slug = 'datanet_details_overview'
     failure_url = reverse_lazy('horizon:admin:host_topology:index')
 
     def _get_tenant_list(self):
@@ -88,31 +87,18 @@ class OverviewTab(tabs.TableTab):
         return networks
 
     def get_provider_network_ranges_data(self):
-        try:
-            providernet_id = self.tab_group.kwargs['providernet_id']
-            ranges = stx_api.neutron.provider_network_range_list(
-                self.request, providernet_id=providernet_id)
-        except Exception:
-            ranges = []
-            msg = _('Segmentation id range list can not be retrieved.')
-            exceptions.handle(self.request, msg)
-        tenant_dict = self._get_tenant_list()
-        for r in ranges:
-            r.set_id_as_name_if_empty()
-            # Set tenant name
-            tenant = tenant_dict.get(r.tenant_id, None)
-            r.tenant_name = getattr(tenant, 'name', None)
+        ranges = []
         return ranges
 
     def get_context_data(self, request):
         context = super(OverviewTab, self).get_context_data(request)
         try:
-            context['providernet'] = self.tab_group.kwargs['providernet']
-            context['nova_providernet'] = \
-                self.tab_group.kwargs['nova_providernet']
+            context['datanet'] = self.tab_group.kwargs['datanet']
+            context['nova_datanet'] = \
+                self.tab_group.kwargs['nova_datanet']
         except Exception:
             exceptions.handle(self.request,
-                              _('Unable to retrieve providernet details.'))
+                              _('Unable to retrieve datanet details.'))
         return context
 
 

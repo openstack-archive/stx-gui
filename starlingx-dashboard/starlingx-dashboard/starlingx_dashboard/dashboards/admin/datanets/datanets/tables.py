@@ -83,19 +83,18 @@ class AddDataNetworkRange(tables.LinkAction):
     url = "horizon:admin:datanets:datanets:addrange"
     classes = ("ajax-modal", "btn-edit")
 
-    def allowed(self, request, providernet):
-        if providernet:
-            return providernet.network_type not in ('flat')
+    def allowed(self, request, datanet):
+        if datanet:
+            return datanet.network_type not in ('flat')
         return super(AddDataNetworkRange, self).allowed(request,
-                                                        providernet)
+                                                        datanet)
 
 
 class DataNetworksFilterAction(tables.FilterAction):
     def filter(self, table, datanets, filter_string):
         """Naive case-insensitive search."""
         q = filter_string.lower()
-        return [providernet for providernet in datanets
-                if q in providernet.name.lower()]
+        return [dn for dn in datanets if q in dn.name.lower()]
 
 
 def _format_providernet_ranges(data):
@@ -115,7 +114,7 @@ class DataNetworksTable(tables.DataTable):
         return str(datum.uuid)
 
     class Meta(object):
-        name = "provider_networks"
+        name = "data_networks"
         verbose_name = _("Data Networks")
         table_actions = (CreateDataNetwork, DeleteDataNetwork,
                          DataNetworksFilterAction)
