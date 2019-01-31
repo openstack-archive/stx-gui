@@ -109,7 +109,7 @@ horizon.host_topology = {
             $(this).toggle(show_entry);
         });
     });
-    // Initialize providernet list sorting behaviour
+    // Initialize datanet list sorting behaviour
     $('#network_list_search').keyup(function(){
         var text = $(this).val().toLowerCase();
         $('#network_list > a').each(function(){
@@ -183,23 +183,23 @@ horizon.host_topology = {
       });
 
       host.connections = [];
-      // 'expand' a single IF connected to many pnets into multiple 'connections'
+      // 'expand' a single IF connected to many dnets into multiple 'connections'
       $.each(host.interfaces, function(index, interface) {
         var if_connections = []
-        if (interface.datanetworks_csv) {
-          $.each(interface.datanetworks_csv.split(','), function(index, providernet_name) {
+        if (interface.datanetworks) {
+          $.each(interface.datanetworks, function(index, datanet_name) {
             var connection = {}
             // Attach the interface to the connection
             connection.interface = interface;
 
-            // Loop through networks and attach the full pnet to the connection
-            $.each(model.networks, function(index, providernet){
-              if (providernet_name == providernet.name) {
-                connection.providernet = providernet;
+            // Loop through networks and attach the full dnet to the connection
+            $.each(model.networks, function(index, datanet){
+              if (datanet_name == datanet.name) {
+                connection.datanet = datanet;
               }
             });
 
-            connection.id = interface.ifname + "-" + providernet_name;
+            connection.id = interface.ifname + "-" + datanet_name;
 
             // search for and attach lldp info for the port
             connection.lldp_labels = [];
@@ -233,7 +233,7 @@ horizon.host_topology = {
 
       var hasconns = (host.connections.length <= 0) ? false : true;
       main_connection = self.select_main_connection(host.connections);
-      host.parent_network = (hasconns) ? main_connection.providernet.id : self.model.networks[0].id;
+      host.parent_network = (hasconns) ? main_connection.datanet.id : self.model.networks[0].id;
       var height = element_properties.conn_margin*(host.connections.length - 1);
       host.lldp_heights = [];
       $.each(host.connections,function(index, connection) {
@@ -303,10 +303,10 @@ horizon.host_topology = {
           network.hosts.push(host);
         }
 
-        // Add any hosts with a connection to this pnet (for use in list linking)
-        // And propagate the pnet's alarm status to the connection
+        // Add any hosts with a connection to this dnet (for use in list linking)
+        // And propagate the dnet's alarm status to the connection
         $.each(host.connections,function(index, connection) {
-          if (connection.providernet.name === network.name){
+          if (connection.datanet.name === network.name){
             network.connected_hosts.push(host);
             if (network.alarm_level > connection.alarm_level)
               connection.alarm_level = network.alarm_level;
@@ -348,8 +348,8 @@ horizon.host_topology = {
     self.network_height = (self.network_height > element_properties.network_min_height) ?
       self.network_height : element_properties.network_min_height;
 
-    //console.log(model);
-    self.draw_topology();
+    // console.log(model); // Uncomment for console debug logs
+    self.draw_topology(); 
     self.$loading_template.hide();
   },
   load_detail:function(spin){
@@ -403,7 +403,7 @@ horizon.host_topology = {
         }
       });
     });
-    // Special functionality on loaded providernet detail view
+    // Special functionality on loaded datanet detail view
     this.$detail_view.find('table#provider_network_ranges tr:not(:first):not(:last)').each(function(i,d) {
       $.each(self.selected_entity.alarms, function(index, alarm) {
         $(d).removeClass('status_down')
@@ -419,7 +419,7 @@ horizon.host_topology = {
     if (alarm.alarm_id !== self.segment_alarm_id)
       return false; // Unrelated alarm
     if (alarm.reason_text.indexOf("ranges") == -1)
-      return false; // Generic providernetwork alarm, for flat networks
+      return false; // Generic datanetwork alarm, for flat networks
 
     // Retrieve the csv (with spaces) of failed segment ranges
     desc = alarm.reason_text.substring(alarm.reason_text.indexOf("ranges")+7, alarm.reason_text.indexOf(" on host"));
@@ -462,7 +462,7 @@ horizon.host_topology = {
     }
     entry.addClass('active');
     $.each(host.connections, function(index, connection) {
-      connected_entry = $('#network_list a#net-'+connection.providernet.name);
+      connected_entry = $('#network_list a#net-'+connection.datanet.name);
       connected_entry.addClass('related');
       connected_entry.prependTo('#network_list');
     });
@@ -494,7 +494,7 @@ horizon.host_topology = {
       connected_entry.prependTo('#host_list');
     });
 
-    self.detail_url = $(location).attr('href')+network.id+"/providernet/"
+    self.detail_url = $(location).attr('href')+network.id+"/datanet/"
     $.each(self.model.networks, function(index, model_network) {
       if (model_network.name === network.name)
         self.selected_entity = model_network;
@@ -653,7 +653,7 @@ horizon.host_topology = {
       .select('.network-name')
       .text(function(d) { return d.name; });
 
-    // Set the alarm styles for the providernet
+    // Set the alarm styles for the datanet
     network.each(function(d) {
       if (d.alarm_level) {
         d3.select(this).select('.network-rect-hash').attr('visibility','visible');
@@ -774,7 +774,7 @@ horizon.host_topology = {
 
     port.each(function(d,i){
       var index_diff = self.get_network_index(this.parentNode._portdata.parent_network) -
-        self.get_network_index(d.providernet.id);
+        self.get_network_index(d.datanet.id);
       this._index_diff = index_diff = (index_diff >= 0)? ++index_diff : index_diff;
       this._direction = (this._index_diff < 0)? 'right' : 'left';
       this._index  = this.parentNode._portdata[this._direction] ++;
@@ -803,7 +803,7 @@ horizon.host_topology = {
         return this.parentNode.parentNode._portdata.port_height;
       })
       .attr('stroke', function(d, i) {
-        return self.get_network_color(d.providernet.id);
+        return self.get_network_color(d.datanet.id);
       })
       .attr('x1',0).attr('y1',0).attr('y2',0)
       .attr('x2',function(d,i) {
@@ -925,7 +925,7 @@ horizon.host_topology = {
     var MAX_INT = 4294967295;
     var min_conn_length = MAX_INT;
     $.each(connections, function(index, connection){
-      var conn_length = _self.sum_conn_length(connection.providernet, connections);
+      var conn_length = _self.sum_conn_length(connection.datanet, connections);
       if(conn_length < min_conn_length){
         min_conn_length = conn_length;
         main_conn_index = index;
@@ -933,12 +933,12 @@ horizon.host_topology = {
     });
     return connections[main_conn_index];
   },
-  sum_conn_length: function(providernet, connections){
+  sum_conn_length: function(datanet, connections){
     var self = this;
     var sum_conn_length = 0;
-    var base_index = self.get_network_index(providernet.id);
+    var base_index = self.get_network_index(datanet.id);
     $.each(connections, function(index, connection){
-      sum_conn_length += base_index - self.get_network_index(connection.providernet.id);
+      sum_conn_length += base_index - self.get_network_index(connection.datanet.id);
     });
     return sum_conn_length;
   },

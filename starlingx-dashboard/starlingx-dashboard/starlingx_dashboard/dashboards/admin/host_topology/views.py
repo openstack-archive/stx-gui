@@ -58,55 +58,56 @@ class HostDetailView(i_views.DetailView):
         return self._host
 
 
-class ProvidernetDetailView(tabs.TabbedTableView):
+class DatanetDetailView(tabs.TabbedTableView):
     tab_group_class = topology_tabs.ProvidernetDetailTabs
     template_name = 'admin/host_topology/detail/tabbed_detail.html'
     failure_url = reverse_lazy('horizon:admin:host_topology:index')
 
     def get_context_data(self, **kwargs):
-        context = super(ProvidernetDetailView, self).get_context_data(**kwargs)
-        context["providernet"] = self.get_data()
-        context["nova_providernet"] = self.get_nova_data()
+        context = super(DatanetDetailView, self).get_context_data(**kwargs)
+        context["datanet"] = self.get_data()
+        context["nova_datanet"] = self.get_nova_data()
         return context
 
     def get_data(self):
-        if not hasattr(self, "_providernet"):
+        if not hasattr(self, "_datanet"):
             try:
-                providernet_id = self.kwargs['providernet_id']
-                providernet = stx_api.sysinv.data_network_get(
-                    self.request, providernet_id)
+                datanet_id = self.kwargs['datanet_id']
+                datanet = stx_api.sysinv.data_network_get(
+                    self.request, datanet_id)
 
                 alarms = stx_api.fm.alarm_list(self.request)
                 # Filter out unrelated alarms
-                providernet.alarms = \
+                datanet.alarms = \
                     topology_tabs.get_alarms_for_entity(alarms,
-                                                        providernet.id) + \
+                                                        datanet.id) + \
                     topology_tabs.get_alarms_for_entity(alarms,
-                                                        providernet.name)
+                                                        datanet.name)
                 # Sort alarms by severity
-                providernet.alarms.sort(key=lambda a: (a.severity))
+                datanet.alarms.sort(key=lambda a: (a.severity))
 
             except Exception:
                 redirect = self.failure_url
                 exceptions.handle(self.request,
                                   _('Unable to retrieve details for '
-                                    'provider network "%s".') % providernet_id,
+                                    'provider network "%s".') % datanet_id,
                                   redirect=redirect)
-            self._providernet = providernet
-        return self._providernet
+            self._datanet = datanet
+        return self._datanet
 
     def get_nova_data(self):
-        if not hasattr(self, "_providernet_nova"):
-            # TODO(datanetworks): depends on upstream support
-            self._providernet_nova = None
-        return self._providernet_nova
+        if not hasattr(self, "_datanet_nova"):
+            # TODO(datanetworks): depends on upstream support for
+            # nova providernet-show
+            self._datanet_nova = None
+        return self._datanet_nova
 
     def get_tabs(self, request, *args, **kwargs):
-        providernet = self.get_data()
-        nova_providernet = self.get_nova_data()
+        datanet = self.get_data()
+        nova_datanet = self.get_nova_data()
         return self.tab_group_class(
-            request, providernet=providernet,
-            nova_providernet=nova_providernet, **kwargs)
+            request, datanet=datanet,
+            nova_datanet=nova_datanet, **kwargs)
 
 
 class HostTopologyView(views.HorizonTemplateView):
@@ -131,9 +132,6 @@ class HostTopologyView(views.HorizonTemplateView):
     def get_context_data(self, **kwargs):
         context = super(HostTopologyView, self).get_context_data(**kwargs)
 
-        context['launch_instance_allowed'] = self._has_permission(
-            (("compute", "compute:create"),))
-        context['instance_quota_exceeded'] = self._quota_exceeded('instances')
         return context
 
 
@@ -206,18 +204,18 @@ class JSONView(View):
             data.append(host_data)
         return data
 
-    def _get_pnets(self, request):
-        pnets = []
+    def _get_dnets(self, request):
+        dnets = []
         try:
-            pnets = stx_api.sysinv.data_network_list(request)
+            dnets = stx_api.sysinv.data_network_list(request)
         except Exception as ex:
             exceptions.handle(ex)
-        data = [p.to_dict() for p in pnets]
+        data = [p.to_dict() for p in dnets]
         return data
 
     def get(self, request, *args, **kwargs):
         data = {'hosts': self._get_hosts(request),
-                'networks': self._get_pnets(request),
+                'networks': self._get_dnets(request),
                 'alarms': self._get_alarms(request), }
         json_string = json.dumps(data, ensure_ascii=False)
         return HttpResponse(json_string, content_type='text/json')

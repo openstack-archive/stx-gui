@@ -5,15 +5,27 @@
 <div class="info detail">
   <dl class="dl-horizontal">
     <dt>{% trans "Name" %}</dt>
-    <dd>{{ providernet.name|default:_("None") }}</dd>
+    <dd>{{ datanet.name|default:_("None") }}</dd>
     <dt>{% trans "ID" %}</dt>
-    <dd>{{ providernet.id|default:_("None") }}</dd>
+    <dd>{{ datanet.id|default:_("None") }}</dd>
     <dt>{% trans "Type" %}</dt>
-    <dd>{{ providernet.type|default:_("None") }}</dd>
+    <dd>{{ datanet.network_type|default:_("None") }}</dd>
     <dt>{% trans "MTU" %}</dt>
-    <dd>{{ providernet.mtu|default:_("-") }}</dd>
+    <dd>{{ datanet.mtu|default:_("-") }}</dd>
     <dt>{% trans "Description" %}</dt>
-    <dd>{{ providernet.description|default:_("None") }}</dd>
+    <dd>{{ datanet.description|default:_("None") }}</dd>
+    {% if datanet.network_type == 'vxlan' %}
+    <dt>{% trans "Mode" %}</dt>
+    <dd>{{ datanet.mode }}</dd>
+    <dt>{% trans "UDP Port Number" %}</dt>
+    <dd>{{ datanet.port_num }}</dd>
+    <dt>{% trans "Time to Live" %}</dt>
+    <dd>{{ datanet.ttl }}</dd>
+    {% endif %}
+    {% if datanet.mode == 'dynamic' %}
+    <dt>{% trans "Multicast Group Address" %}</dt>
+    <dd>{{ datanet.multicast_group|default:_("-") }}</dd>
+    {% endif %}
     {% if nova_providernet %}
     <dt>{% trans "PCI PFs Configured" %}</dt>
     <dd>{{ nova_providernet.pci_pfs_configured|default:_("0") }}</dd>

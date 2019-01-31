@@ -20,9 +20,9 @@
 
 <div id="hostTopologyContainer">
   <div id="topologyCanvasContainer">
-    <div class="nodata">{% blocktrans %}There are no hosts or provider networks to display.{% endblocktrans %}</div>
+    <div class="nodata">{% blocktrans %}There are no hosts or data networks to display.{% endblocktrans %}</div>
     {% include "admin/host_topology/_svg_element.html" %}
-    <div id="detail_view">{% blocktrans %}Select a host or providernet to view its details.  The current view can be moved by clicking and dragging.{% endblocktrans %}</div>
+    <div id="detail_view">{% blocktrans %}Select a host or datanet to view its details.  The current view can be moved by clicking and dragging.{% endblocktrans %}</div>
   </div>
   <span data-hosttopology="{% url 'horizon:admin:host_topology:json' %}" id="hosttopology"></span>
   <div id="topologyMessages"></div>
