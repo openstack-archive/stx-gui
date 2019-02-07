@@ -60,6 +60,14 @@ try:
 except Exception:
     pass
 
+# Change session and CSRF cookie names to prevent login conflict with
+# containerized horizon.
+# NOTE: These settings break upstream angularJS forms such as the launch
+# instance wizard.  If this plugin is to be used in a standard horizon
+# deployment these settings must be overwritten to their default values.
+CSRF_COOKIE_NAME = 'platformcsrftoken'
+SESSION_COOKIE_NAME = 'platformsessionid'
+
 # check if it is in distributed cloud
 DC_MODE = False
 if distributed_cloud_role and distributed_cloud_role in ['systemcontroller',
