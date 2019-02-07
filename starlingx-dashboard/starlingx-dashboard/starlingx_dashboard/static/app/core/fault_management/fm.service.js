@@ -30,10 +30,7 @@
       updateEventSuppression: updateEventSuppression
     };
 
-    var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
-    $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
-    $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
-    $http.defaults.headers.put['X-CSRFToken'] = csrf_token;
+    $http.defaults.xsrfCookieName = 'platformcsrftoken';
 
     return service;
 
