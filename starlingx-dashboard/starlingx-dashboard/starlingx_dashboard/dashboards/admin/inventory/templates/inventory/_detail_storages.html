@@ -9,8 +9,7 @@
       <div id="partitions">
         {{ partitions_table.render }}
       </div>
-
-      {% if host.personality == "Storage" or is_system_k8s_aio %}
+      {% if is_host_with_storage %}
         <div id="storagevolumes">
           {{ storagevolumes_table.render }}
         </div>

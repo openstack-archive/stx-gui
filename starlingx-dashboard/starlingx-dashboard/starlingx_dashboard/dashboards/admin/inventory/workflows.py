@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -9,6 +9,7 @@
 import logging
 
 import cpu_functions.utils as icpu_utils
+import sysinv.common.constants as sysinv_const
 
 from cgtsclient.common import constants
 from cgtsclient import exc
@@ -23,6 +24,7 @@ from horizon.utils import validators
 from horizon import workflows
 
 from starlingx_dashboard import api as stx_api
+from starlingx_dashboard.api import sysinv
 
 LOG = logging.getLogger(__name__)
 
@@ -392,7 +394,10 @@ class UpdateHostInfoAction(workflows.Action):
                 self.fields[
                     'interfaceProfile'].widget = forms.widgets.HiddenInput()
 
+            stor_model = sysinv.get_ceph_storage_model(request)
             if ((personality == 'storage' or
+                 (personality == 'controller' and
+                  stor_model == sysinv_const.CEPH_CONTROLLER_MODEL) or
                  'worker' in host._subfunctions) and host.disks):
                 # Populate Available Disk Profile Choices
                 try:
