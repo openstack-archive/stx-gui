@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -171,6 +171,10 @@ class DetailView(tabs.TabbedTableView):
                                                                host.uuid)
                 host.sensorgroups = stx_api.sysinv.host_sensorgroup_list(
                     self.request, host.uuid)
+
+                # Get K8s labels
+                host.labels = stx_api.sysinv.host_label_list(self.request,
+                                                             host.uuid)
 
                 # Add patching status data to hosts
                 phost = stx_api.patch.get_host(self.request, host.hostname)
