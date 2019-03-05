@@ -339,6 +339,8 @@ class StorageVolumesTable(tables.DataTable):
                           verbose_name=('OSD ID'))
     function = tables.Column('function',
                              verbose_name=('Function'))
+    state = tables.Column('state',
+                          verbose_name=('State'))
     idisk_uuid = tables.Column('idisk_uuid',
                                verbose_name=('Disk UUID'))
     journal_path = tables.Column('journal_path',
@@ -354,8 +356,8 @@ class StorageVolumesTable(tables.DataTable):
     class Meta(object):
         name = "storagevolumes"
         verbose_name = ("Storage Functions")
-        columns = ('uuid', 'function', 'osdid', 'idisk_uuid', 'journal_path',
-                   'journal_size_mib', 'journal_location')
+        columns = ('uuid', 'function', 'osdid', 'state', 'idisk_uuid',
+                   'journal_path', 'journal_size_mib', 'journal_location')
         multi_select = False
         row_actions = (DeleteStor, EditStor,)
         table_actions = (CreateStorageVolume, CreateDiskProfile,)
