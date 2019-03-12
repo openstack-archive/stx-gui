@@ -18,6 +18,7 @@ from horizon import forms
 from horizon import messages
 
 from starlingx_dashboard.api import sysinv
+from starlingx_dashboard.horizon.forms.fields import DynamicIntegerField
 
 LOG = logging.getLogger(__name__)
 
@@ -35,19 +36,19 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
         required=False,
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
-    platform_processor0 = forms.DynamicIntegerField(
+    platform_processor0 = DynamicIntegerField(
         label=_("# of Platform Physical Cores on Processor 0:"),
         min_value=0, max_value=99,
         required=False)
-    platform_processor1 = forms.DynamicIntegerField(
+    platform_processor1 = DynamicIntegerField(
         label=_("# of Platform Physical Cores on Processor 1:"),
         min_value=0, max_value=99,
         required=False)
-    platform_processor2 = forms.DynamicIntegerField(
+    platform_processor2 = DynamicIntegerField(
         label=_("# of Platform Physical Cores on Processor 2:"),
         min_value=0, max_value=99,
         required=False)
-    platform_processor3 = forms.DynamicIntegerField(
+    platform_processor3 = DynamicIntegerField(
         label=_("# of Platform Physical Cores on Processor 3:"),
         min_value=0, max_value=99,
         required=False)
@@ -56,19 +57,19 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
         label=_("------------------------ Function ------------------------"),
         required=False,
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    num_cores_on_processor0 = forms.DynamicIntegerField(
+    num_cores_on_processor0 = DynamicIntegerField(
         label=_("# of vSwitch Physical Cores on Processor 0:"),
         min_value=0, max_value=99,
         required=False)
-    num_cores_on_processor1 = forms.DynamicIntegerField(
+    num_cores_on_processor1 = DynamicIntegerField(
         label=_("# of vSwitch Physical Cores on Processor 1:"),
         min_value=0, max_value=99,
         required=False)
-    num_cores_on_processor2 = forms.DynamicIntegerField(
+    num_cores_on_processor2 = DynamicIntegerField(
         label=_("# of vSwitch Physical Cores on Processor 2:"),
         min_value=0, max_value=99,
         required=False)
-    num_cores_on_processor3 = forms.DynamicIntegerField(
+    num_cores_on_processor3 = DynamicIntegerField(
         label=_("# of vSwitch Physical Cores on Processor 3:"),
         min_value=0, max_value=99,
         required=False)
@@ -77,19 +78,19 @@ class UpdateCpuFunctions(forms.SelfHandlingForm):
         label=_("------------------------ Function ------------------------"),
         required=False,
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    num_shared_on_processor0 = forms.DynamicIntegerField(
+    num_shared_on_processor0 = DynamicIntegerField(
         label=_("# of Shared Physical Cores on Processor 0:"),
         min_value=0, max_value=99,
         required=False)
-    num_shared_on_processor1 = forms.DynamicIntegerField(
+    num_shared_on_processor1 = DynamicIntegerField(
         label=_("# of Shared Physical Cores on Processor 1:"),
         min_value=0, max_value=99,
         required=False)
-    num_shared_on_processor2 = forms.DynamicIntegerField(
+    num_shared_on_processor2 = DynamicIntegerField(
         label=_("# of Shared Physical Cores on Processor 2:"),
         min_value=0, max_value=99,
         required=False)
-    num_shared_on_processor3 = forms.DynamicIntegerField(
+    num_shared_on_processor3 = DynamicIntegerField(
         label=_("# of Shared Physical Cores on Processor 3:"),
         min_value=0, max_value=99,
         required=False)

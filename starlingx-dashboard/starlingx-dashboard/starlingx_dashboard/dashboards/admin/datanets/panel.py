@@ -14,7 +14,7 @@ from openstack_dashboard.dashboards.admin import dashboard
 class Datanets(horizon.Panel):
     name = _("Data Networks")
     slug = 'datanets'
-    permissions = ('openstack.services.platform', 'openstack.services.network')
+    permissions = ('openstack.services.platform', )
 
     def allowed(self, context):
         if context['request'].user.services_region == 'SystemController':
