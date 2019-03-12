@@ -75,25 +75,6 @@
           });
         }
     }); // horizon.addInitFunction
-
-
-    horizon.refresh.addRefreshFunction(function (html) {
-        var $sold_status = $('#active-sensor-stats');
-        var $snew_status = $(html).find('#active-sensor-stats');
-        if ($snew_status.html() != $sold_status.html()) {
-            $sold_status.replaceWith($snew_status);
-        }
-
-        var $old_table = $('#sensorgroups');
-        var $new_table = $(html).find('#sensorgroups');
-        if ($old_table.length && $new_table.length) {
-            var $new_table_actions = $new_table.find('.table_actions');
-            var $old_table_actions = $old_table.find('.table_actions');
-            if ($new_table_actions.html() != $old_table_actions.html())
-                $old_table_actions.replaceWith($new_table_actions);
-        }
-    }); // horizon.addRefreshFunction
-
   </script>
 {% endblock %}
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -11,9 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 
-from openstack_dashboard.api import ceph
-
 from starlingx_dashboard.api import base as stx_base
+from starlingx_dashboard.api import ceph
 from starlingx_dashboard.api import sysinv
 from starlingx_dashboard.dashboards.admin.storage_overview import constants
 from starlingx_dashboard.dashboards.admin.storage_overview import tables
