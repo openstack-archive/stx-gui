@@ -9,6 +9,7 @@ import json
 import logging
 
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse  # noqa
@@ -217,5 +218,6 @@ class JSONView(View):
         data = {'hosts': self._get_hosts(request),
                 'networks': self._get_dnets(request),
                 'alarms': self._get_alarms(request), }
-        json_string = json.dumps(data, ensure_ascii=False)
+        json_string = json.dumps(data, ensure_ascii=False,
+                                 cls=DjangoJSONEncoder)
         return HttpResponse(json_string, content_type='text/json')
