@@ -77,19 +77,6 @@ class EditDataNetwork(tables.LinkAction):
     classes = ("ajax-modal", "btn-edit")
 
 
-class AddDataNetworkRange(tables.LinkAction):
-    name = "addrange"
-    verbose_name = _("Create Segmentation Range")
-    url = "horizon:admin:datanets:datanets:addrange"
-    classes = ("ajax-modal", "btn-edit")
-
-    def allowed(self, request, datanet):
-        if datanet:
-            return datanet.network_type not in ('flat')
-        return super(AddDataNetworkRange, self).allowed(request,
-                                                        datanet)
-
-
 class DataNetworksFilterAction(tables.FilterAction):
     def filter(self, table, datanets, filter_string):
         """Naive case-insensitive search."""
@@ -119,8 +106,7 @@ class DataNetworksTable(tables.DataTable):
         table_actions = (CreateDataNetwork, DeleteDataNetwork,
                          DataNetworksFilterAction)
         row_actions = (EditDataNetwork,
-                       DeleteDataNetwork,
-                       AddDataNetworkRange)
+                       DeleteDataNetwork)
 
 
 def _get_link_url(datum):

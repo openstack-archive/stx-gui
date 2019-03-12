@@ -34,8 +34,6 @@ from starlingx_dashboard.dashboards.admin.datanets.datanets import \
     forms as datanet_forms
 from starlingx_dashboard.dashboards.admin.datanets.datanets.ranges \
     import tables as range_tables
-from starlingx_dashboard.dashboards.admin.datanets.datanets.ranges \
-    import views as range_views
 from starlingx_dashboard.dashboards.admin.datanets.datanets import \
     tables as providernet_tables
 
@@ -151,15 +149,3 @@ class UpdateView(forms.ModalFormView):
                 'mtu': datanet.mtu,
                 'description': datanet.description,
                 }
-
-
-class CreateRangeView(range_views.CreateView):
-    template_name = 'admin/datanets/datanets/add_range.html'
-    success_url = 'horizon:admin:datanets:index'
-    failure_url = 'horizon:admin:datanets:index'
-
-    def get_success_url(self):
-        return reverse(self.success_url)
-
-    def get_failure_url(self):
-        return reverse(self.failure_url)

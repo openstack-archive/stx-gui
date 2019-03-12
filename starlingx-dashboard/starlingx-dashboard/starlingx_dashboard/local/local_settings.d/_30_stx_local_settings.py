@@ -1,7 +1,13 @@
+#
+# Copyright (c) 2019 Wind River Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
 import os
 
-from openstack_dashboard.local import configss
 from openstack_dashboard.settings import HORIZON_CONFIG
+from starlingx_dashboard import configss
 from tsconfig.tsconfig import distributed_cloud_role
 
 
@@ -312,7 +318,9 @@ LOGGING = {
     },
 }
 
-# Session timeout overrides
+# Session overrides
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = '/var/tmp'
 
 # SESSION_TIMEOUT is a method to supersede the token timeout with a shorter
 # horizon session timeout (in seconds).  So if your token expires in 60
@@ -325,8 +333,11 @@ SESSION_TIMEOUT = 3000
 # value of 600 will log users out after 50 minutes.
 TOKEN_TIMEOUT_MARGIN = 600
 
-# The timezone of the server. This should correspond with the timezone
-# of your entire OpenStack installation, and hopefully be in UTC.
-# In this case, we set the value to None so that the interface uses the system
-# timezone by default
-TIME_ZONE = None
+
+# Retrieve the current system timezone
+USE_TZ = True
+try:
+    tz = os.path.realpath('/etc/localtime')
+    TIME_ZONE = tz.split('zoneinfo/')[1]
+except Exception:
+    TIME_ZONE = 'UTC'
