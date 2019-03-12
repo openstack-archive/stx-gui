@@ -1,0 +1,39 @@
+{% load i18n %}
+
+{% if dc_admin %}
+<span class="alarmbanner">
+  Clouds:&nbsp;
+  <strong>Critical:</strong>
+  <span class="badge{% if critical != 0 %} badge-danger{% endif %}">{{ critical }}</span>
+  <strong>&nbsp;Degraded:</strong>
+  <span class="badge{% if degraded != 0 %} badge-warning{% endif %}">{{ degraded }}</span>
+  <strong>&nbsp;OK:</strong>
+  <span class="badge{% if OK != 0 %} badge-success{% endif %}">{{ OK }}</span>
+  {% if disabled != 0 %}
+  <strong>&nbsp;Disabled:</strong>
+  <span class="badge badge-danger">{{ disabled }}</span>
+  {% endif %}
+</span>
+{% else %}
+<span class="alarmbanner" onclick="bannerclick()" style="cursor:pointer">
+  <strong>C:</strong>
+  <span class="badge{% if summary.critical != 0 %} badge-danger{% endif %}">{{ summary.critical }}</span>
+  <strong>&nbsp;M:</strong>
+  <span class="badge{% if summary.major != 0 %} badge-danger{% endif %}">{{ summary.major }}</span>
+  <strong>&nbsp;m:</strong>
+  <span class="badge{% if summary.minor != 0 %} badge-warning{% endif %}">{{ summary.minor }}</span>
+  <strong>&nbsp;W:</strong>
+  <span class="badge{% if summary.warnings != 0 %} badge-success{% endif %}">{{ summary.warnings }}</span>
+</span>
+{% endif %}
+<script type="text/javascript" charset="utf-8">
+function bannerclick() {
+  var $fm = "/admin/active_alarms";
+  var $dc = "/dc_admin/";
+  var $cur = document.location.href;
+  var $path = document.location.pathname;
+  if ($path.match($fm) === null && $path.match($dc) === null) {
+      document.location.href = $cur.replace($path, $fm);
+  }
+}
+</script>
