@@ -119,8 +119,7 @@ class DataNetworksTable(tables.DataTable):
         table_actions = (CreateDataNetwork, DeleteDataNetwork,
                          DataNetworksFilterAction)
         row_actions = (EditDataNetwork,
-                       DeleteDataNetwork,
-                       AddDataNetworkRange)
+                       DeleteDataNetwork)
 
 
 def _get_link_url(datum):

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Wind River Systems, Inc.
+# Copyright (c) 2015-2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -14,7 +14,7 @@ from openstack_dashboard.dashboards.admin import dashboard
 class Datanets(horizon.Panel):
     name = _("Data Networks")
     slug = 'datanets'
-    permissions = ('openstack.services.platform', 'openstack.services.network')
+    permissions = ('openstack.services.platform', )
 
     def allowed(self, context):
         if context['request'].user.services_region == 'SystemController':
