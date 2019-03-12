@@ -19,7 +19,6 @@
 from collections import OrderedDict
 import logging
 
-from django.core.urlresolvers import reverse  # noqa
 from django.core.urlresolvers import reverse_lazy  # noqa
 from django.utils.translation import ugettext_lazy as _  # noqa
 
@@ -34,8 +33,6 @@ from starlingx_dashboard.dashboards.admin.datanets.datanets import \
     forms as datanet_forms
 from starlingx_dashboard.dashboards.admin.datanets.datanets.ranges \
     import tables as range_tables
-from starlingx_dashboard.dashboards.admin.datanets.datanets.ranges \
-    import views as range_views
 from starlingx_dashboard.dashboards.admin.datanets.datanets import \
     tables as providernet_tables
 
@@ -69,7 +66,7 @@ class DetailView(tables.MultiTableView):
 
     def get_tenant_networks_data(self):
         try:
-            # TODO(datanetworks): get tenant networks when in upstream neutron
+            # TODO(datanets): get tenant networks when in upstream neutron
             networks = []
         except Exception:
             networks = []
@@ -151,15 +148,3 @@ class UpdateView(forms.ModalFormView):
                 'mtu': datanet.mtu,
                 'description': datanet.description,
                 }
-
-
-class CreateRangeView(range_views.CreateView):
-    template_name = 'admin/datanets/datanets/add_range.html'
-    success_url = 'horizon:admin:datanets:index'
-    failure_url = 'horizon:admin:datanets:index'
-
-    def get_success_url(self):
-        return reverse(self.success_url)
-
-    def get_failure_url(self):
-        return reverse(self.failure_url)

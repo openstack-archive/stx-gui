@@ -1,16 +1,34 @@
 #
 # Copyright (c) 2018 Intel Corporation
+# Copyright (c) 2019 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
+from openstack_dashboard.api import base
+from openstack_dashboard.api.neutron import NeutronAPIDictWrapper
 from openstack_dashboard.api.neutron import neutronclient
-from openstack_dashboard.api.neutron import PortForwardingRule
-from openstack_dashboard.api.neutron import ProviderNetwork
-from openstack_dashboard.api.neutron import ProviderNetworkRange
-from openstack_dashboard.api.neutron import ProviderNetworkType
-from openstack_dashboard.api.neutron import ProviderTenantNetwork
 from openstack_dashboard.api.neutron import QoSPolicy
+
+
+class PortForwardingRule(base.APIDictWrapper):
+    pass
+
+
+class ProviderNetworkType(NeutronAPIDictWrapper):
+    """Wrapper for neutron Provider Network Types."""
+
+
+class ProviderNetworkRange(NeutronAPIDictWrapper):
+    """Wrapper for neutron Provider Networks Id Ranges."""
+
+
+class ProviderNetwork(NeutronAPIDictWrapper):
+    """Wrapper for neutron Provider Networks."""
+
+
+class ProviderTenantNetwork(NeutronAPIDictWrapper):
+    """Wrapper for neutron Provider Tenant Networks."""
 
 
 def provider_network_type_list(request, **params):

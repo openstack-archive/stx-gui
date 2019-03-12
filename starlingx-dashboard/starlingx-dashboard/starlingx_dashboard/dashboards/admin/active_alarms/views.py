@@ -18,9 +18,9 @@
 import logging
 
 from django.utils.translation import ugettext_lazy as _  # noqa
-from django.views.generic import TemplateView
 
 from horizon import exceptions
+from horizon import views
 from openstack_dashboard.api.base import is_service_enabled
 from starlingx_dashboard.api import dc_manager
 from starlingx_dashboard.api import fm
@@ -29,8 +29,8 @@ from starlingx_dashboard.api import fm
 LOG = logging.getLogger(__name__)
 
 
-class BannerView(TemplateView):
-    template_name = 'header/_alarm_banner.html'
+class BannerView(views.HorizonTemplateView):
+    template_name = 'admin/active_alarms/_alarm_banner.html'
 
     def get_context_data(self, **kwargs):
 
@@ -39,7 +39,7 @@ class BannerView(TemplateView):
         if not self.request.is_ajax():
             raise exceptions.NotFound()
 
-        if (not self.request.user.is_authenticated() or
+        if (not self.request.user.is_authenticated or
                 not self.request.user.is_superuser):
             context["alarmbanner"] = False
         elif 'dc_admin' in self.request.META.get('HTTP_REFERER'):

@@ -16,7 +16,7 @@ from openstack_dashboard.dashboards.admin import dashboard
 class HostTopology(horizon.Panel):
     name = _("Data Network Topology")
     slug = 'host_topology'
-    permissions = ('openstack.services.platform', 'openstack.services.network')
+    permissions = ('openstack.services.platform', )
 
     def allowed(self, context):
         if context['request'].user.services_region == 'SystemController':

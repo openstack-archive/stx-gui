@@ -33,8 +33,6 @@ VIEW_MOD = 'starlingx_dashboard.dashboards.admin.datanets.datanets.' \
 urlpatterns = [
     url(r'^create/$', views.CreateView.as_view(),
         name='create'),
-    url(PROVIDERNETS % 'addrange',
-        views.CreateRangeView.as_view(), name='addrange'),
     url(PROVIDERNETS % 'update', views.UpdateView.as_view(),
         name='update'),
     url(PROVIDERNETS % 'detail', views.DetailView.as_view(),

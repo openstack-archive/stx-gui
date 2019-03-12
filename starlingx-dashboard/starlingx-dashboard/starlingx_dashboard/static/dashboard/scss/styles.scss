@@ -1,0 +1,33 @@
+// Data List for sysinv
+.dl-horizontal-wide {
+    @extend .dl-horizontal;
+    dt {
+        width: 22em;
+    }
+    dd {
+        margin-left: 23em;
+    }
+}
+
+// Fault management summary formatting
+#active-alarm-stats {
+    margin: 10px 5px;
+    & > span {
+        margin: 0px 5px;
+    }
+}
+
+// System patch summary formatting
+#patching-status {
+    margin-top: 10px;
+}
+
+// Hosts summary formatting
+#hosts-stats {
+    margin-top: 10px;
+}
+
+// Sensor summary formatting
+#active-sensor-stats {
+    margin-top: 10px;
+}
