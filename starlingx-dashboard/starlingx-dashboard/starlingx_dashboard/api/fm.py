@@ -15,6 +15,7 @@ from django.conf import settings
 
 from openstack_dashboard.api import base
 
+from starlingx_dashboard.api import base as stx_base
 
 # Fault management values
 FM_ALL = 'ALL'
@@ -118,7 +119,7 @@ def alarm_list(request, search_opts=None):
     marker = search_opts.get('marker', None)
     sort_key = search_opts.get('sort_key', None)
     sort_dir = search_opts.get('sort_dir', None)
-    page_size = base.get_request_page_size(request, limit)
+    page_size = stx_base.get_request_page_size(request, limit)
 
     if "suppression" in search_opts:
         suppression = search_opts.pop('suppression')
@@ -195,7 +196,7 @@ def event_log_list(request, search_opts=None):
 
     limit = search_opts.get('limit', None)
     marker = search_opts.get('marker', None)
-    page_size = base.get_request_page_size(request, limit)
+    page_size = stx_base.get_request_page_size(request, limit)
 
     if 'paginate' in search_opts:
         paginate = search_opts.pop('paginate')

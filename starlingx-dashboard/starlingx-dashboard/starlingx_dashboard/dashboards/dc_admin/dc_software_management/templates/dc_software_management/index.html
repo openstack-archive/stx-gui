@@ -13,16 +13,3 @@
   </div>
 </div>
 {% endblock %}
-
-{% block js %}
-  {{ block.super }}
-  <script type="text/javascript" charset="utf-8">
-	horizon.refresh.addRefreshFunction(function (html) {
-        var $old_strategy = $('#cloud-patch-strategy-detail');
-        var $new_strategy = $(html).find('#cloud-patch-strategy-detail');
-        if ($new_strategy.html() != $old_strategy.html()) {
-            $old_strategy.replaceWith($new_strategy);
-        }
-	});
-  </script>
-{% endblock %}
