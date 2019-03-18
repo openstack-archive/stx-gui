@@ -23,7 +23,7 @@ class EditView(forms.ModalFormView):
     template_name = 'admin/inventory/storages/lvg/edit.html'
     success_url = 'horizon:admin:inventory:localvolumegroupdetail'
 
-    def get_form(self, form_class):
+    def get_form(self, form_class): #pylint: disable=signature-differs
         self.form = super(EditView, self).get_form(form_class)
         return self.form
 
