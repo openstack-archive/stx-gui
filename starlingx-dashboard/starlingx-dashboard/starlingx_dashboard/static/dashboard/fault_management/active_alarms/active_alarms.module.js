@@ -55,8 +55,7 @@
     // set default url for index view. this will be used for reproducing
     // sidebar and breadcrumb when refreshing or accessing directly
     // details view.
-    // TODO(kbujold): Uncomment when we rebase to Stein, to fix upstream bug 1746706
-    //.setDefaultIndexUrl('/admin/fault_management/')
+    .setDefaultIndexUrl('/admin/active_alarms/')
 
     // specify items for table row items, summary view and details view
     .setProperties(properties())
