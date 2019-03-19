@@ -109,6 +109,12 @@ SERVICE_PARAM_ODL_ROUTER_PLUGINS = [
     'odl-router',
     'networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin']
 
+# Kubernetes Labels
+K8S_LABEL_OPENSTACK_CONTROL_PLANE = 'openstack-control-plane'
+K8S_LABEL_OPENSTACK_COMPUTE_NODE = 'openstack-compute-node'
+K8S_LABEL_OPENVSWITCH = 'openvswitch'
+K8S_LABEL_SRIOV = 'sriov'
+
 LOG = logging.getLogger(__name__)
 
 

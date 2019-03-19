@@ -35,7 +35,20 @@ class AssignKubeLabel(tables.LinkAction):
 
     def allowed(self, request, datum):
         host = self.table.kwargs['host']
-        return host_locked(host)
+
+        labels = stx_api.sysinv.host_label_list(request,
+                                                host.uuid)
+
+        current_labels = [label.label_key for label in labels]
+        valid_labels = [stx_api.sysinv.K8S_LABEL_OPENSTACK_CONTROL_PLANE,
+                        stx_api.sysinv.K8S_LABEL_OPENSTACK_COMPUTE_NODE,
+                        stx_api.sysinv.K8S_LABEL_OPENVSWITCH,
+                        stx_api.sysinv.K8S_LABEL_SRIOV]
+        available_labels_list = []
+        for label_key in valid_labels:
+            if label_key not in current_labels:
+                available_labels_list.append(label_key)
+        return host_locked(host) and available_labels_list
 
 
 class RemoveLabel(tables.DeleteAction):
