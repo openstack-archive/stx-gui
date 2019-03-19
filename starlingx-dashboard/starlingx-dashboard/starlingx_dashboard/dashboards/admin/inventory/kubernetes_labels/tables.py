@@ -1,7 +1,8 @@
 #
-# Copyright (c) 2019 Wind River Systems, Inc.
-#
 # SPDX-License-Identifier: Apache-2.0
+#
+# Copyright (c) 2019 Wind River Systems, Inc.
+# Copyright (C) 2019 Intel Corporation
 #
 
 import logging
