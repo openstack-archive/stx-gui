@@ -57,6 +57,11 @@
     // get items for table
     .setListFunction(service.getPromise)
 
+    // set default url for index view. this will be used for reproducing
+    // sidebar and breadcrumb when refreshing or accessing directly
+    // details view.
+    .setDefaultIndexUrl('/admin/events_suppression/')
+
     // specify table columns
     .tableColumns
     .append({
