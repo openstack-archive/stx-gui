@@ -21,6 +21,20 @@ from starlingx_dashboard import api as stx_api
 LOG = logging.getLogger(__name__)
 
 
+LABEL_KEY_CUSTOM = "customized_label"
+LABEL_KEY_CHOICES = (
+    (stx_api.sysinv.K8S_LABEL_OPENSTACK_CONTROL_PLANE,
+        _("openstack-control-plane")),
+    (stx_api.sysinv.K8S_LABEL_OPENSTACK_COMPUTE_NODE,
+        _("openstack-compute-node")),
+    (stx_api.sysinv.K8S_LABEL_OPENVSWITCH,
+        _("openvswitch")),
+    (stx_api.sysinv.K8S_LABEL_SRIOV,
+        _("sriov")),
+    (LABEL_KEY_CUSTOM, _("customized label")),
+)
+
+
 class AssignLabel(forms.SelfHandlingForm):
     host_uuid = forms.CharField(
         label=_("host_uuid"),
@@ -34,28 +48,66 @@ class AssignLabel(forms.SelfHandlingForm):
         required=False,
         widget=forms.widgets.HiddenInput)
 
-    labelkey = forms.CharField(
+    labelkey = forms.ChoiceField(
         label=_("Label Key"),
-        required=True)
+        required=True,
+        choices=LABEL_KEY_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'labelkey'}))
 
-    labelvalue = forms.CharField(
-        label=_("Label Value"),
-        required=True)
+    clabelkey = forms.CharField(
+        label=_("Customized Label Key"),
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'switched',
+            'data-switch-on': 'labelkey',
+            'data-slug': 'clabelkey',
+            'data-labelkey-customized_label': _("Customized Label Key")}))
+
+    clabelvalue = forms.CharField(
+        label=_("Customized Label Value"),
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'switched',
+            'data-switch-on': 'labelkey',
+            'data-slug': 'clabelvalue',
+            'data-labelkey-customized_label': _("Customized Label Value")}))
 
     failure_url = 'horizon:admin:inventory:detail'
 
     def __init__(self, *args, **kwargs):
         super(AssignLabel, self).__init__(*args, **kwargs)
 
+        # Populate available labels
+        host_uuid = kwargs['initial']['host_uuid']
+
+        labels = stx_api.sysinv.host_label_list(self.request,
+                                                host_uuid)
+
+        current_labels = [label.label_key for label in labels]
+        available_labels_list = []
+        for label_key in LABEL_KEY_CHOICES:
+            if label_key[0] not in current_labels:
+                available_labels_list.append(label_key)
+        self.fields['labelkey'].choices = available_labels_list
+
     def clean(self):
         cleaned_data = super(AssignLabel, self).clean()
         return cleaned_data
 
     def handle(self, request, data):
-        labelkey = data['labelkey']
-        labelvalue = data['labelvalue']
+        labelkey = data['labelkey'][:]
+        clabelkey = data['clabelkey']
+        clabelvalue = data['clabelvalue']
+
         attributes = {}
-        attributes[labelkey] = labelvalue
+        if labelkey == LABEL_KEY_CUSTOM:
+            if not clabelvalue:
+                clabelvalue = "enabled"
+            attributes[clabelkey] = clabelvalue
+        else:
+            attributes[labelkey] = "enabled"
         try:
             new_labels = stx_api.sysinv.host_label_assign(
                 request,
