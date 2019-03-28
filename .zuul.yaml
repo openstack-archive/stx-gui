@@ -30,3 +30,4 @@
       - openstack/stx-fault
       - openstack/stx-update
       - openstack/stx-nfv
+      - openstack/stx-ha
