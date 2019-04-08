@@ -49,7 +49,7 @@ def _get_ipv6_pool_choices(pools):
 def _get_network_choices(networks):
     PLATFORM_NETWORK_TYPES = ['pxeboot',
                               'mgmt',
-                              'infra',
+                              'cluster-host',
                               'oam']
     choices = []
     for n in networks:
@@ -554,7 +554,7 @@ class AddInterface(forms.SelfHandlingForm):
                     network_types.append(network.type)
                 data['networks'] = network_ids
 
-            if any(network_type in ['mgmt', 'infra', 'oam']
+            if any(network_type in ['mgmt', 'cluster-host', 'oam']
                    for network_type in network_types):
                 del data['imtu']
             else:
