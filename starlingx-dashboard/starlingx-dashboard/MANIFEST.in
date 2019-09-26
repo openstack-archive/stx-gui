@@ -1,1 +1,0 @@
-recursive-include starlingx_dashboard *.js *.html *.scss *.mo *.po *.example *.eot *.svg *.ttf *.woff *.png *.ico *.wsgi *.gif *.csv *.template
